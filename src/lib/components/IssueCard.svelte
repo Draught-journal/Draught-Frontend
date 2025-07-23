@@ -1,85 +1,62 @@
 <script lang="ts">
 	let showImage = false;
-	let hasBeenHovered = false;
-	let isDebouncing = false;
-	let isImageHovered = false;
-	const debounceDelay = 500; // 500ms delay between toggles
+	let ready = false;
+	let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-	function handleArticleHover() {
-		if (!hasBeenHovered && !isDebouncing) {
-			showImage = true;
-			hasBeenHovered = true;
+	const debounceDelay = 500;
+	const hoverDelay = 200;
+
+	function transitionToImage() {
+		clearTimers();
+		showImage = true;
+		ready = false;
+		timeoutId = setTimeout(() => (ready = true), hoverDelay);
+	}
+
+	function toggleImageVisibility() {
+		if (!ready) return;
+
+		clearTimers();
+		showImage = !showImage;
+
+		if (showImage) {
+			timeoutId = setTimeout(() => (ready = true), hoverDelay);
+		} else {
+			ready = false;
+			timeoutId = setTimeout(() => (ready = true), debounceDelay);
 		}
 	}
 
-	function handleArticleLeave() {
-		// Only reset if we're not hovering over the image
-		if (!isImageHovered) {
-			setTimeout(() => {
-				showImage = false;
-				hasBeenHovered = false;
-				isDebouncing = false;
-			}, 100);
+	function clearTimers() {
+		if (timeoutId) {
+			clearTimeout(timeoutId);
+			timeoutId = null;
 		}
-	}
-
-	function handleImageHover() {
-		isImageHovered = true;
-		if (hasBeenHovered && !isDebouncing) {
-			isDebouncing = true;
-			showImage = !showImage;
-
-			setTimeout(() => {
-				isDebouncing = false;
-			}, debounceDelay);
-		}
-	}
-
-	function handleImageLeave() {
-		isImageHovered = false;
-		// Small delay before allowing article leave to reset
-		setTimeout(() => {
-			if (!isImageHovered) {
-				showImage = false;
-				hasBeenHovered = false;
-				isDebouncing = false;
-			}
-		}, 150);
 	}
 </script>
 
-<article class="issue" on:mouseenter={handleArticleHover} on:mouseleave={handleArticleLeave}>
+<article class="issue" on:mouseenter={transitionToImage}>
 	<div class="content" class:hidden={showImage}>
 		<div class="heading">
-			<div class="tag">
-				<p>(feature)</p>
-			</div>
-			<div class="title">
-				<p>Title of peice here</p>
-			</div>
-			<div class="aurthor">
-				<p>Author Name</p>
-			</div>
+			<div class="tag"><p>(feature)</p></div>
+			<div class="title"><p>Title of piece here</p></div>
+			<div class="author"><p>Author Name</p></div>
 		</div>
 		<br />
-		<div class="issue__number">
-			<p>2.1.1</p>
-		</div>
-		<br />
-		<br />
+		<div class="issue__number"><p>2.1.1</p></div>
+		<br /><br />
 		<div class="blurb">
 			<p>
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-				labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-				laboris nisi ut aliquip ex ea commodo consequat.
+				labore et dolore magna aliqua.
 			</p>
 		</div>
 	</div>
+
 	<div
 		class="thumbnail"
 		class:visible={showImage}
-		on:mouseenter={handleImageHover}
-		on:mouseleave={handleImageLeave}
+		on:mouseenter={toggleImageVisibility}
 		role="button"
 		tabindex="0"
 	>
@@ -109,18 +86,21 @@
 		opacity: 0;
 		transform: translateY(-10px);
 		pointer-events: none;
+		transition:
+			opacity 0.3s ease,
+			transform 0.3s ease;
 	}
 
 	.thumbnail {
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%) scale(0.95);
 		opacity: 0;
-		transition:
-			opacity 0.3s ease-in-out,
-			transform 0.3s ease-in-out;
 		pointer-events: none;
+		transition:
+			opacity 0.3s ease,
+			transform 0.3s ease;
 		cursor: pointer;
 	}
 
