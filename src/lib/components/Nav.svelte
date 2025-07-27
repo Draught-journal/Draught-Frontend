@@ -113,7 +113,7 @@
 	nav {
 		padding: 1rem;
 		width: 100%;
-		max-width: calc(var(--content-width) * 80 / 100);
+		/* max-width: calc(var(--content-width) * 80 / 100); */
 		margin: 0 auto;
 		position: fixed;
 		top: 0;
@@ -127,6 +127,7 @@
 			opacity 0.3s ease-in-out;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: min-content 1fr;
 		gap: 1rem;
 	}
 
@@ -139,6 +140,7 @@
 	nav.active {
 		background-color: white;
 		max-height: 100dvh;
+		height: 100dvh;
 		overflow-y: auto;
 	}
 
@@ -193,6 +195,7 @@
 		background-color: var(--color-bg);
 		border-top: 1px solid var(--color-border);
 		animation: slideDown 0.3s ease-in-out;
+		text-align: center;
 	}
 
 	.home-content {
