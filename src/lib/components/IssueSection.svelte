@@ -45,7 +45,7 @@
 				{
 					// Trigger when the element is completely out of view
 					threshold: 0,
-					rootMargin: '-50px 0px 0px 0px' // Account for nav height
+					rootMargin: '-250px 0px 0px 0px' // Account for nav height
 				}
 			);
 

@@ -2,8 +2,26 @@
 	import { navStore } from '../stores/navStore.js';
 	import { onMount } from 'svelte';
 
-	$: hasActiveViews = Object.values($navStore.activeViews).some((active) => active);
-	$: {
+	let navState = $state<{
+		issueText: string;
+		showIssue: boolean;
+		showNav: boolean;
+		activeViews: {
+			home: boolean;
+			issue: boolean;
+			index: boolean;
+		};
+	}>();
+
+	navStore.subscribe((value) => {
+		navState = value;
+	});
+
+	const hasActiveViews = $derived(
+		navState ? Object.values(navState.activeViews).some((active) => active) : false
+	);
+
+	$effect(() => {
 		if (typeof document !== 'undefined') {
 			if (hasActiveViews) {
 				document.body.style.overflow = 'hidden';
@@ -11,7 +29,7 @@
 				document.body.style.overflow = '';
 			}
 		}
-	}
+	});
 
 	function toggleView(view: 'home' | 'issue' | 'index') {
 		navStore.update((store) => ({
@@ -33,32 +51,32 @@
 	});
 </script>
 
-<nav class:hidden={!$navStore.showNav} class:active={hasActiveViews}>
+<nav class:hidden={!navState?.showNav} class:active={hasActiveViews}>
 	<div class="nav-container">
-		<div id="home" class="nav-item" class:active={$navStore.activeViews.home}>
-			<button on:click={() => toggleView('home')}>
+		<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
+			<button onclick={() => toggleView('home')}>
 				<p><i>draught</i></p>
 			</button>
 		</div>
 		<div
 			id="issue"
 			class="nav-item"
-			class:active={$navStore.activeViews.issue}
-			hidden={!$navStore.showIssue}
+			class:active={navState?.activeViews.issue}
+			hidden={!navState?.showIssue}
 		>
-			<button on:click={() => toggleView('issue')}>
-				<p>{$navStore.issueText}</p>
+			<button onclick={() => toggleView('issue')}>
+				<p>{navState?.issueText}</p>
 			</button>
 		</div>
-		<div id="index" class="nav-item" class:active={$navStore.activeViews.index}>
-			<button on:click={() => toggleView('index')}>
+		<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
+			<button onclick={() => toggleView('index')}>
 				<p>(index)</p>
 			</button>
 		</div>
 	</div>
 
 	<div class="nav-view">
-		{#if $navStore.activeViews.home}
+		{#if navState?.activeViews.home}
 			<div class="home-content">
 				<p>About</p>
 				<p>
@@ -68,7 +86,7 @@
 				</p>
 			</div>
 		{/if}
-		{#if $navStore.activeViews.issue}
+		{#if navState?.activeViews.issue}
 			<div class="issue-content">
 				<ul>
 					<li>
@@ -94,7 +112,7 @@
 				</ul>
 			</div>
 		{/if}
-		{#if $navStore.activeViews.index}
+		{#if navState?.activeViews.index}
 			<div class="index-content">
 				<p>(issues)</p>
 				<p>(feature)</p>
