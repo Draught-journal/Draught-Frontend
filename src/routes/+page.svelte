@@ -27,5 +27,5 @@
 <SplashScreen />
 
 {#each issues as issue (issue.id)}
-	<IssueSection issueColor={issue.color} />
+	<IssueSection issueColor={issue.color} articles={issue.articles} />
 {/each}

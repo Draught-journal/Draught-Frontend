@@ -2,27 +2,18 @@
 	import { onMount, onDestroy } from 'svelte';
 	import IssueCard from './IssueCard.svelte';
 	import { navStore } from '../stores/navStore.js';
-
-	type IssueData = {
-		id?: string;
-		title?: string;
-		author?: string;
-		tag?: string;
-		number?: string;
-		blurb?: string;
-		[key: string]: any;
-	};
+	import type { Article } from '$lib/api';
 
 	let {
 		issueColor = '#000000',
-		issues = []
+		articles = []
 	}: {
 		issueColor?: string;
-		issues?: IssueData[];
+		articles?: Article[];
 	} = $props();
 
 	// For demo purposes, create 8 issues if none provided
-	const displayIssues = $derived(issues.length > 0 ? issues : (Array(8).fill({}) as IssueData[]));
+	const displayIssues = $derived(articles.length > 0 ? articles : (Array(8).fill({}) as Article[]));
 
 	let issueNumElement: HTMLDivElement;
 	let observer: IntersectionObserver;
