@@ -9,12 +9,16 @@ import type { FallbackFactory } from '../core/types';
 
 // GICA-specific fallback data
 const draughtFallbacks: Record<string, FallbackFactory> = {
-	home: () => ({
+	'': () => ({
 		title: 'Draught',
-		headline: '',
 		about: [],
-		carousel: [],
-		pages: []
+		sentences: [],
+		colophon: [],
+		issues: {
+			title: 'Issues',
+			children: [],
+			pages: []
+		}
 	}),
 	issues: () => ({
 		title: 'Issues',
@@ -46,8 +50,8 @@ export const draughtDataManager = createDraughtDataManager();
 export type DraughtDataManager = ReturnType<typeof createDraughtDataManager>;
 
 // Helper functions for common Draught operations
-export async function getHome() {
-	return draughtDataManager.getPage('home');
+export async function getSite() {
+	return draughtDataManager.getSite();
 }
 
 export async function getIssues() {

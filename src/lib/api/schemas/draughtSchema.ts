@@ -2,6 +2,7 @@ import type {
 	SchemaConfig,
 	ProjectSchema,
 	GenericCollection,
+	GenericEntity,
 	MediaAsset,
 	GenericDateStructure
 } from '../core/types';
@@ -42,29 +43,23 @@ export interface ImageContentBlock {
 
 export type ContentBlock = TextContentBlock | ImageContentBlock;
 
-export interface Home {
+export interface Site {
 	title: string;
 	about: ContentBlock[];
 	sentences: string[];
 	colophon: ContentBlock[];
-	issues: GenericCollection<Issue>;
+	issues: Issue[];
 }
 
-export interface Issue {
-	id: string;
-	title: string;
-	slug: string;
+export interface Issue extends GenericEntity {
 	url: string;
 	published: GenericDateStructure;
 	color: string;
 	tags: string[];
-	articles: GenericCollection<Article>;
+	articles: Article[];
 }
 
-export interface Article {
-	id: string;
-	title: string;
-	slug: string;
+export interface Article extends GenericEntity {
 	url: string;
 	author: string;
 	cover: MediaAsset;
@@ -74,11 +69,11 @@ export interface Article {
 }
 
 export interface Issues extends GenericCollection<Issue> {
-	text: ContentBlock[];
+	content: ContentBlock[];
 }
 
 export interface Articles extends GenericCollection<Article> {
-	text: ContentBlock[];
+	content: ContentBlock[];
 }
 
 export interface DraughtSchema extends ProjectSchema {
@@ -87,7 +82,7 @@ export interface DraughtSchema extends ProjectSchema {
 		articles: Articles;
 	};
 	pages: {
-		home: Home;
+		site: Site;
 	};
 	details: {
 		issues: Issue;
@@ -107,7 +102,7 @@ export function isImageContentBlock(block: ContentBlock): block is ImageContentB
 export const draughtSchemaConfig: SchemaConfig<DraughtSchema> = {
 	schema: {} as DraughtSchema,
 	collectionTypes: ['issues', 'articles'],
-	pageTypes: ['home'],
+	pageTypes: ['site'],
 	detailTypes: ['issues', 'articles']
 };
 
@@ -124,7 +119,7 @@ export interface CollectionMap {
 }
 
 export interface PageMap {
-	home: Home;
+	site: Site;
 }
 
 export interface DetailMap {

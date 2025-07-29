@@ -90,10 +90,12 @@ export type WithOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>
 export interface ProjectSchema<
 	TCollections extends Record<string, unknown> = Record<string, unknown>,
 	TPages extends Record<string, unknown> = Record<string, unknown>,
+	TSite extends Record<string, unknown> = Record<string, unknown>,
 	TDetails extends Record<string, unknown> = Record<string, unknown>
 > {
 	collections: TCollections;
 	pages: TPages;
+	site: TSite;
 	details: TDetails;
 }
 
@@ -124,6 +126,7 @@ export interface PreloadResult {
 export interface DataManager<T extends ProjectSchema = ProjectSchema> {
 	getCollection<K extends keyof T['collections']>(type: K): Promise<T['collections'][K]>;
 	getPage<K extends keyof T['pages']>(type: K): Promise<T['pages'][K]>;
+	getSite(): Promise<T['pages']['site']>;
 	getDetail<K extends keyof T['details']>(type: K, id: string): Promise<T['details'][K]>;
 	preloadAll(options?: PreloadOptions): Promise<PreloadResult>;
 	clearCache(): void;

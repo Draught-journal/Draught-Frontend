@@ -44,7 +44,6 @@ export class ApiClient {
 	constructor() {
 		const config = configManager.getConfig();
 		this.baseUrl = config.baseUrl;
-		console.log('API Client initialized with base URL:', this.baseUrl);
 		this.defaultHeaders = {
 			'Content-Type': 'application/json',
 			...(config.apiToken && { Authorization: `Bearer ${config.apiToken}` })

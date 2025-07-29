@@ -53,6 +53,13 @@ export class GenericDataManager<T extends ProjectSchema = ProjectSchema> impleme
 	}
 
 	/**
+	 * Get site data (fetches from root API endpoint)
+	 */
+	async getSite(): Promise<T['pages']['site']> {
+		return this.getData('') as Promise<T['pages']['site']>;
+	}
+
+	/**
 	 * Get detail data
 	 */
 	async getDetail<K extends keyof T['details']>(type: K, id: string): Promise<T['details'][K]> {
@@ -196,6 +203,17 @@ export class GenericDataManager<T extends ProjectSchema = ProjectSchema> impleme
 	 */
 	private async preloadPages(result: PreloadResult, options: PreloadOptions): Promise<void> {
 		const pages = this.config.pageTypes;
+
+		// Also preload the site data (empty key)
+		try {
+			await this.getSite();
+			options.onProgress?.('site', 1, pages.length + 1);
+		} catch (error) {
+			result.errors.push({
+				stage: 'site',
+				error: error instanceof Error ? error.message : String(error)
+			});
+		}
 
 		await batchProcess(
 			pages,

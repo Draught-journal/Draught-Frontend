@@ -1,13 +1,14 @@
 export const prerender = true;
 
-import { getHome } from '$lib/api/adapters/draughtAdapter';
+import { getSite } from '$lib/api/adapters/draughtAdapter';
 
 export const load = async () => {
 	try {
-		const home = await getHome();
-		return { props: { home } };
+		// Fetch home articles
+		const site = await getSite();
+		return { props: { site } };
 	} catch (error) {
 		console.error('Error loading home data:', error);
-		return { props: { home: null } };
+		return { props: { site: null } };
 	}
 };
