@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import IssueCard from './IssueCard.svelte';
+	import ArticleCard from './ArticleCard.svelte';
 	import { navStore } from '../stores/navStore.js';
 	import type { Article } from '$lib/api';
 
@@ -55,8 +55,8 @@
 	<div class="issue__num" bind:this={issueNumElement}>
 		<p>issue one</p>
 	</div>
-	<section class="issues">
-		{#each displayIssues as issue, index}
+	<section class="articles">
+		{#each displayIssues as article, index}
 			{@const totalItems = displayIssues.length}
 			{@const remainder = totalItems % 3}
 			{@const isInLastRow = remainder > 0 && index >= totalItems - remainder}
@@ -65,14 +65,14 @@
 			{#if remainder === 2 && isInLastRow && positionInLastRow === 0}
 				<!-- Create a 2-column subgrid for the last 2 items -->
 				<div class="issue-wrapper double-row">
-					<IssueCard />
-					<IssueCard />
+					<ArticleCard {article} />
+					<ArticleCard {article} />
 				</div>
 			{:else if remainder === 2 && isInLastRow && positionInLastRow === 1}
 				<!-- Skip the second item as it's already included in the double-row above -->
 			{:else}
 				<div class="issue-wrapper" class:single-last={remainder === 1 && isInLastRow}>
-					<IssueCard />
+					<ArticleCard {article} />
 				</div>
 			{/if}
 		{/each}
@@ -91,7 +91,7 @@
 		text-align: center;
 	}
 
-	.issues {
+	.articles {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(20rem, 1fr));
 		gap: 16px;

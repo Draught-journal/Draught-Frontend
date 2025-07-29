@@ -1,5 +1,8 @@
 <script lang="ts">
-	let showImage = false;
+	import type { Article } from '$lib/api';
+	const { article }: { article: Article } = $props();
+
+	let showImage = $state(false);
 	let ready = false;
 	let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
@@ -35,12 +38,12 @@
 	}
 </script>
 
-<article class="issue" on:mouseenter={transitionToImage}>
+<article class="issue" onmouseenter={transitionToImage}>
 	<div class="content" class:hidden={showImage}>
 		<div class="heading">
-			<div class="tag"><p>(feature)</p></div>
-			<div class="title"><p>Title of piece here</p></div>
-			<div class="author"><p>Author Name</p></div>
+			<div class="tag"><p>({article.tags})</p></div>
+			<div class="title"><p>{article.title}</p></div>
+			<div class="author"><p>{article.author}</p></div>
 		</div>
 		<br />
 		<div class="issue__number"><p>2.1.1</p></div>
@@ -56,7 +59,7 @@
 	<div
 		class="thumbnail"
 		class:visible={showImage}
-		on:mouseenter={toggleImageVisibility}
+		onmouseenter={toggleImageVisibility}
 		role="button"
 		tabindex="0"
 	>
