@@ -19,8 +19,8 @@ import { setupApiConfig as _setupApiConfig } from './core/config';
 
 // NEW: Modern modular exports (recommended for new projects)
 export * from './core';
-export * from './schemas/gicaSchema';
-export * from './adapters/gicaAdapter';
+export * from './schemas/draughtSchema';
+export * from './adapters/draughtAdapter';
 
 // Legacy exports for backward compatibility
 export {

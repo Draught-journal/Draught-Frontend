@@ -114,7 +114,6 @@
 		max-width: 200px;
 		max-height: 200px;
 		object-fit: cover;
-		border-radius: 4px;
 	}
 
 	.issue p {
