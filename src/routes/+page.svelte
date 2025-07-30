@@ -24,7 +24,7 @@
 </script>
 
 <Header {...seoData} />
-<SplashScreen />
+<SplashScreen sentences={data.props?.site?.sentences} />
 
 {#each issues as issue (issue.id)}
 	<IssueSection issueColor={issue.color} articles={issue.articles} />

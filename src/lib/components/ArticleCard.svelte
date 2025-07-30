@@ -1,6 +1,10 @@
 <script lang="ts">
 	import type { Article } from '$lib/api';
+	import ContentBlurb from './ContentBlurb.svelte';
 	const { article }: { article: Article } = $props();
+
+	// Check if there's a valid cover image
+	const hasCoverImage = article.cover && article.cover.url;
 
 	let showImage = $state(false);
 	let ready = false;
@@ -10,6 +14,7 @@
 	const hoverDelay = 200;
 
 	function transitionToImage() {
+		if (!hasCoverImage) return;
 		clearTimers();
 		showImage = true;
 		ready = false;
@@ -17,7 +22,7 @@
 	}
 
 	function toggleImageVisibility() {
-		if (!ready) return;
+		if (!hasCoverImage || !ready) return;
 
 		clearTimers();
 		showImage = !showImage;
@@ -38,7 +43,7 @@
 	}
 </script>
 
-<article class="issue" onmouseenter={transitionToImage}>
+<article class="issue" onmouseenter={hasCoverImage ? transitionToImage : undefined}>
 	<div class="content" class:hidden={showImage}>
 		<div class="heading">
 			<div class="tag"><p>({article.tags})</p></div>
@@ -49,22 +54,21 @@
 		<div class="issue__number"><p>2.1.1</p></div>
 		<br /><br />
 		<div class="blurb">
-			<p>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-				labore et dolore magna aliqua.
-			</p>
+			<ContentBlurb content={article.content} />
 		</div>
 	</div>
 
-	<div
-		class="thumbnail"
-		class:visible={showImage}
-		onmouseenter={toggleImageVisibility}
-		role="button"
-		tabindex="0"
-	>
-		<img src={`https://picsum.photos/seed/${Math.random()}/200/200`} alt="Random thumbnail" />
-	</div>
+	{#if hasCoverImage}
+		<div
+			class="thumbnail"
+			class:visible={showImage}
+			onmouseenter={toggleImageVisibility}
+			role="button"
+			tabindex="0"
+		>
+			<img src={article.cover.url} alt="Random thumbnail" />
+		</div>
+	{/if}
 </article>
 
 <style>
