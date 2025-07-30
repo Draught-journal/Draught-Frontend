@@ -5,7 +5,11 @@
 	let { children, data }: { children: any; data: LayoutData } = $props();
 </script>
 
-<Nav about={data.props?.site?.about} sentences={data.props?.site?.sentences} />
+<Nav
+	about={data.props?.site?.about}
+	sentences={data.props?.site?.sentences}
+	issues={data.props?.site?.issues}
+/>
 <main>
 	{@render children()}
 </main>

@@ -2,9 +2,13 @@
 	import { navStore } from '../stores/navStore.js';
 	import { onMount } from 'svelte';
 	import ContentBlock from './ContentBlock.svelte';
-	import type { ContentBlock as ContentBlockType } from '$lib/api';
+	import type { ContentBlock as ContentBlockType, Issue } from '$lib/api';
 
-	const { about, sentences }: { about?: ContentBlockType[]; sentences?: string[] } = $props();
+	const {
+		about,
+		sentences,
+		issues
+	}: { about?: ContentBlockType[]; sentences?: string[]; issues?: Issue[] } = $props();
 
 	let navState = $state<{
 		issueText: string;
@@ -99,28 +103,23 @@
 		{/if}
 		{#if navState?.activeViews.issue}
 			<div class="issue-content">
-				<ul>
-					<li>
-						<p>(feature)</p>
-						<p>Title of piece here</p>
-						<p>Author Name</p>
-					</li>
-					<li>
-						<p>(conversations)</p>
-						<p>Another title here</p>
-						<p>Another Author</p>
-					</li>
-					<li>
-						<p>(adjacencies)</p>
-						<p>Yet another title</p>
-						<p>Last Author</p>
-					</li>
-					<li>
-						<p>(detail)</p>
-						<p>Title of piece here</p>
-						<p>Author Name</p>
-					</li>
-				</ul>
+				{#if issues && issues.length > 0}
+					{#each issues as issue}
+						{#if issue.articles && issue.articles.length > 0}
+							<div class="issue-section" style="--issue-color: {issue.color}">
+								<ul>
+									{#each issue.articles as article}
+										<li>
+											<p>({article.tags})</p>
+											<p>{article.title}</p>
+											<p>{article.author}</p>
+										</li>
+									{/each}
+								</ul>
+							</div>
+						{/if}
+					{/each}
+				{/if}
 			</div>
 		{/if}
 		{#if navState?.activeViews.index}
@@ -244,7 +243,7 @@
 	.issue-content {
 		grid-column: 2;
 		padding: 0 1rem;
-		max-height: calc(100dvh - 8rem);
+		max-height: calc(100dvh - 5rem);
 		overflow-y: auto;
 		scrollbar-width: none; /* Firefox */
 		-ms-overflow-style: none; /* IE and Edge */
@@ -254,10 +253,19 @@
 		display: none; /* Chrome, Safari, Opera */
 	}
 
+	.issue-section {
+		color: var(--issue-color, #000000);
+		margin-bottom: 2rem;
+	}
+
+	.issue-section:last-child {
+		margin-bottom: 0;
+	}
+
 	.index-content {
 		grid-column: 3;
 		padding: 0 1rem;
-		max-height: calc(100dvh - 8rem);
+		max-height: calc(100dvh - 5rem);
 		overflow-y: auto;
 		scrollbar-width: none; /* Firefox */
 		-ms-overflow-style: none; /* IE and Edge */
