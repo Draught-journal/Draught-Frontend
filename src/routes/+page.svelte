@@ -15,6 +15,17 @@
 			? [data.props.site.issues]
 			: [];
 
+	const articleCoverImages = data.props.site?.issues
+		? data.props.site.issues.flatMap((issue) =>
+				issue.articles
+					.filter((article) => article.cover && article.cover.url)
+					.map((article) => ({
+						url: article.cover.url,
+						alt: article.cover.alt || `Cover image for ${article.title}`
+					}))
+			)
+		: [];
+
 	const seoData = createSEOData({
 		title: 'Draught',
 		description: 'A digital platform for the Ghanaian creative community.',
@@ -24,7 +35,7 @@
 </script>
 
 <Header {...seoData} />
-<SplashScreen sentences={data.props?.site?.sentences} />
+<SplashScreen sentences={data.props?.site?.sentences} images={articleCoverImages} />
 
 {#each issues as issue (issue.id)}
 	<IssueSection issueColor={issue.color} articles={issue.articles} />
