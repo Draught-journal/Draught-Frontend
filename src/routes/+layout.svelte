@@ -1,9 +1,11 @@
 <script lang="ts">
 	import Nav from '../lib/components/Nav.svelte';
-	let { children } = $props();
+	import type { LayoutData } from './$types';
+
+	let { children, data }: { children: any; data: LayoutData } = $props();
 </script>
 
-<Nav />
+<Nav about={data.props?.site?.about} sentences={data.props?.site?.sentences} />
 <main>
 	{@render children()}
 </main>

@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { navStore } from '../stores/navStore.js';
 	import { onMount } from 'svelte';
+	import ContentBlock from './ContentBlock.svelte';
+	import type { ContentBlock as ContentBlockType } from '$lib/api';
+
+	const { about, sentences }: { about?: ContentBlockType[]; sentences?: string[] } = $props();
 
 	let navState = $state<{
 		issueText: string;
@@ -78,12 +82,19 @@
 	<div class="nav-view">
 		{#if navState?.activeViews.home}
 			<div class="home-content">
-				<p>About</p>
-				<p>
-					Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deleniti vitae natus magni
-					architecto labore repellat. Unde voluptates, eos mollitia necessitatibus corrupti
-					repellendus quaerat fugit tempore autem blanditiis dolor perferendis atque!
-				</p>
+				<div class="sentences">
+					{#if sentences && sentences.length > 0}
+						{#each sentences as sentence}
+							<p>({sentence})</p>
+						{/each}
+					{/if}
+				</div>
+				<br />
+				{#if about && about.length > 0}
+					{#each about as block}
+						<ContentBlock content={block} />
+					{/each}
+				{/if}
 			</div>
 		{/if}
 		{#if navState?.activeViews.issue}
@@ -129,7 +140,8 @@
 
 <style>
 	nav {
-		padding: 1rem;
+		padding-inline: 1rem;
+		padding-block-start: 1rem;
 		width: 100%;
 		/* max-width: calc(var(--content-width) * 80 / 100); */
 		margin: 0 auto;
@@ -146,7 +158,7 @@
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		grid-template-rows: min-content 1fr;
-		gap: 1rem;
+		row-gap: 1rem;
 	}
 
 	nav.hidden {
@@ -159,7 +171,7 @@
 		background-color: white;
 		max-height: 100dvh;
 		height: 100dvh;
-		overflow-y: auto;
+		overflow: hidden;
 	}
 
 	nav p {
@@ -206,10 +218,10 @@
 
 	.nav-view {
 		display: grid;
+		height: 100%;
 		grid-template-columns: subgrid;
 		grid-column: 1 / -1;
-		margin-top: 1rem;
-		padding: 1rem 0;
+		/* padding: 1rem 0; */
 		background-color: var(--color-bg);
 		border-top: 1px solid var(--color-border);
 		animation: slideDown 0.3s ease-in-out;
@@ -219,16 +231,40 @@
 	.home-content {
 		grid-column: 1;
 		padding: 0 1rem;
+		max-height: calc(100dvh - 5rem);
+		overflow-y: auto;
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE and Edge */
+	}
+
+	.home-content::-webkit-scrollbar {
+		display: none; /* Chrome, Safari, Opera */
 	}
 
 	.issue-content {
 		grid-column: 2;
 		padding: 0 1rem;
+		max-height: calc(100dvh - 8rem);
+		overflow-y: auto;
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE and Edge */
+	}
+
+	.issue-content::-webkit-scrollbar {
+		display: none; /* Chrome, Safari, Opera */
 	}
 
 	.index-content {
 		grid-column: 3;
 		padding: 0 1rem;
+		max-height: calc(100dvh - 8rem);
+		overflow-y: auto;
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE and Edge */
+	}
+
+	.index-content::-webkit-scrollbar {
+		display: none; /* Chrome, Safari, Opera */
 	}
 
 	@keyframes slideDown {
