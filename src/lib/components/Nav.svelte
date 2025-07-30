@@ -85,7 +85,7 @@
 
 	<div class="nav-view">
 		{#if navState?.activeViews.home}
-			<div class="home-content">
+			<div class="home-content nav-content-base">
 				<div class="sentences">
 					{#if sentences && sentences.length > 0}
 						{#each sentences as sentence}
@@ -102,7 +102,7 @@
 			</div>
 		{/if}
 		{#if navState?.activeViews.issue}
-			<div class="issue-content">
+			<div class="issue-content nav-content-base">
 				{#if issues && issues.length > 0}
 					{#each issues as issue}
 						{#if issue.articles && issue.articles.length > 0}
@@ -123,7 +123,7 @@
 			</div>
 		{/if}
 		{#if navState?.activeViews.index}
-			<div class="index-content">
+			<div class="index-content nav-content-base">
 				<p>(issues)</p>
 				<p>(feature)</p>
 				<p>(conversations)</p>
@@ -227,8 +227,8 @@
 		text-align: center;
 	}
 
-	.home-content {
-		grid-column: 1;
+	/* Shared styles for all nav content sections */
+	.nav-content-base {
 		padding: 0 1rem;
 		max-height: calc(100dvh - 5rem);
 		overflow-y: auto;
@@ -236,21 +236,20 @@
 		-ms-overflow-style: none; /* IE and Edge */
 	}
 
-	.home-content::-webkit-scrollbar {
+	.nav-content-base::-webkit-scrollbar {
 		display: none; /* Chrome, Safari, Opera */
+	}
+
+	.home-content {
+		grid-column: 1;
 	}
 
 	.issue-content {
 		grid-column: 2;
-		padding: 0 1rem;
-		max-height: calc(100dvh - 5rem);
-		overflow-y: auto;
-		scrollbar-width: none; /* Firefox */
-		-ms-overflow-style: none; /* IE and Edge */
 	}
 
-	.issue-content::-webkit-scrollbar {
-		display: none; /* Chrome, Safari, Opera */
+	.index-content {
+		grid-column: 3;
 	}
 
 	.issue-section {
@@ -260,19 +259,6 @@
 
 	.issue-section:last-child {
 		margin-bottom: 0;
-	}
-
-	.index-content {
-		grid-column: 3;
-		padding: 0 1rem;
-		max-height: calc(100dvh - 5rem);
-		overflow-y: auto;
-		scrollbar-width: none; /* Firefox */
-		-ms-overflow-style: none; /* IE and Edge */
-	}
-
-	.index-content::-webkit-scrollbar {
-		display: none; /* Chrome, Safari, Opera */
 	}
 
 	@keyframes slideDown {
