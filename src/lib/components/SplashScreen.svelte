@@ -123,6 +123,11 @@
 		position: sticky;
 		top: 50%;
 		transform: translateY(-50%);
-		max-width: 20rem;
+		max-width: 25rem;
+	}
+	.splash .thumbnails .image img {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
 	}
 </style>
