@@ -10,5 +10,9 @@ export async function load({ params }) {
 	}
 	console.log('Article data:', article);
 
-	return { article };
+	return {
+		article,
+		// Signal that nav should be visible on article pages
+		showNav: true
+	};
 }

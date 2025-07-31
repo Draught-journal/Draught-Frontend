@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Header from '$lib/components/Header.svelte';
+	import Header from '$lib/components/layout/Header.svelte';
 	import SplashScreen from '$lib/components/SplashScreen.svelte';
 	import IssueSection from '$lib/components/IssueSection.svelte';
 

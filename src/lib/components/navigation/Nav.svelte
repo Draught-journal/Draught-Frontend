@@ -1,14 +1,20 @@
 <script lang="ts">
-	import { navStore } from '../stores/navStore.js';
+	import { navStore } from '$lib/stores/navStore.js';
 	import { onMount } from 'svelte';
-	import ContentBlock from './ContentBlock.svelte';
+	import ContentBlock from '$lib/components/ContentBlock.svelte';
 	import type { ContentBlock as ContentBlockType, Issue } from '$lib/api';
 
 	const {
 		about,
 		sentences,
-		issues
-	}: { about?: ContentBlockType[]; sentences?: string[]; issues?: Issue[] } = $props();
+		issues,
+		isArticlePage = false
+	}: {
+		about?: ContentBlockType[];
+		sentences?: string[];
+		issues?: Issue[];
+		isArticlePage?: boolean;
+	} = $props();
 
 	let navState = $state<{
 		issueText: string;
@@ -80,26 +86,34 @@
 
 <nav class:hidden={!navState?.showNav} class:active={hasActiveViews} bind:this={navElement}>
 	<div class="nav-container" bind:this={navContainer}>
-		<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
-			<button onclick={() => toggleView('home')}>
-				<p><i>draught</i></p>
-			</button>
-		</div>
-		<div
-			id="issue"
-			class="nav-item"
-			class:active={navState?.activeViews.issue}
-			hidden={!navState?.showIssue}
-		>
-			<button onclick={() => toggleView('issue')}>
-				<p>{navState?.issueText}</p>
-			</button>
-		</div>
-		<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
-			<button onclick={() => toggleView('index')}>
-				<p>(index)</p>
-			</button>
-		</div>
+		{#if isArticlePage}
+			<!-- Article page layout: only show return in third column -->
+			<div id="return" class="nav-item">
+				<a href="/">(return)</a>
+			</div>
+		{:else}
+			<!-- Default layout: show home, issue, and index -->
+			<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
+				<button onclick={() => toggleView('home')}>
+					<p><i>draught</i></p>
+				</button>
+			</div>
+			<div
+				id="issue"
+				class="nav-item"
+				class:active={navState?.activeViews.issue}
+				hidden={!navState?.showIssue}
+			>
+				<button onclick={() => toggleView('issue')}>
+					<p>{navState?.issueText}</p>
+				</button>
+			</div>
+			<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
+				<button onclick={() => toggleView('index')}>
+					<p>(index)</p>
+				</button>
+			</div>
+		{/if}
 	</div>
 
 	<div class="nav-view">
@@ -217,6 +231,10 @@
 		grid-column: 3;
 	}
 
+	.nav-container #return {
+		grid-column: 3;
+	}
+
 	.nav-item button {
 		background: none;
 		border: none;
@@ -231,6 +249,22 @@
 	}
 
 	.nav-item.active button {
+		background-color: var(--color-border);
+	}
+
+	.nav-item a {
+		display: block;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.5rem;
+		width: 100%;
+		transition: background-color 0.2s ease;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.nav-item a:hover {
 		background-color: var(--color-border);
 	}
 

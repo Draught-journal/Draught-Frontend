@@ -41,7 +41,17 @@ export interface ImageContentBlock {
 	content: ImageContent;
 }
 
-export type ContentBlock = TextContentBlock | ImageContentBlock;
+export interface QuoteContentBlock {
+	id: string;
+	type: 'quote';
+	isHidden?: boolean;
+	content: {
+		text: string;
+		citation: string;
+	};
+}
+
+export type ContentBlock = TextContentBlock | ImageContentBlock | QuoteContentBlock;
 
 export interface Site {
 	title: string;
@@ -97,6 +107,10 @@ export function isTextContentBlock(block: ContentBlock): block is TextContentBlo
 
 export function isImageContentBlock(block: ContentBlock): block is ImageContentBlock {
 	return block.type === 'image';
+}
+
+export function isQuoteContentBlock(block: ContentBlock): block is QuoteContentBlock {
+	return block.type === 'quote';
 }
 
 export const draughtSchemaConfig: SchemaConfig<DraughtSchema> = {
