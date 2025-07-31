@@ -44,6 +44,7 @@
 </script>
 
 <article class="issue" onmouseenter={hasCoverImage ? transitionToImage : undefined}>
+	<a href={`article/${article.slug}`}>test</a>
 	<div class="content" class:hidden={showImage}>
 		<div class="heading">
 			<div class="tag"><p>({article.tags})</p></div>

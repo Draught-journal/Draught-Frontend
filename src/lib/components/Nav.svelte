@@ -21,6 +21,9 @@
 		};
 	}>();
 
+	let navContainer: HTMLDivElement;
+	let navElement: HTMLElement;
+
 	navStore.subscribe((value) => {
 		navState = value;
 	});
@@ -50,17 +53,33 @@
 	}
 
 	onMount(() => {
+		// Function to set the nav height CSS variable
+		const setNavHeight = () => {
+			if (navElement) {
+				const height = navElement.clientHeight;
+				document.documentElement.style.setProperty('--nav-height', `${height}px`);
+				console.log('Nav height set to:', height + 'px');
+			}
+		};
+
+		// Set height immediately
+		setNavHeight();
+
+		// Also set height after a short delay to ensure nav is fully rendered
+		const timeoutId = setTimeout(setNavHeight, 100);
+
 		return () => {
 			// Cleanup: restore body scroll on component unmount
 			if (typeof document !== 'undefined') {
 				document.body.style.overflow = '';
 			}
+			clearTimeout(timeoutId);
 		};
 	});
 </script>
 
-<nav class:hidden={!navState?.showNav} class:active={hasActiveViews}>
-	<div class="nav-container">
+<nav class:hidden={!navState?.showNav} class:active={hasActiveViews} bind:this={navElement}>
+	<div class="nav-container" bind:this={navContainer}>
 		<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
 			<button onclick={() => toggleView('home')}>
 				<p><i>draught</i></p>
