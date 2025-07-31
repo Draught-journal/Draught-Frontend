@@ -10,14 +10,12 @@
 
 <style>
 	.text-block {
-		margin-bottom: 1.5rem;
 		line-height: 1.6;
 	}
 
-	/* Responsive adjustments */
-	@media (max-width: 768px) {
-		.text-block {
-			margin-bottom: 1rem;
-		}
+	.text-block:not(:first-child) {
+		text-indent: 2em;
 	}
+
+	/* Responsive adjustments */
 </style>

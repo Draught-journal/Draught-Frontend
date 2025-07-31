@@ -154,7 +154,6 @@ h6,
 p,
 span,
 small {
-	margin-bottom: var(--margin-paragraph);
 	font-family: var(--font-primary);
 }
 
@@ -233,6 +232,9 @@ small {
 	margin-bottom: 0;
 }
 
-article p + p {
-	margin-top: var(--space-8);
+/* Article Setup */
+
+article p {
+	margin: 0;
+	padding: 0;
 }
