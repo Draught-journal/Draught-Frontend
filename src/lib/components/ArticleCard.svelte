@@ -44,32 +44,33 @@
 </script>
 
 <article class="issue" onmouseenter={hasCoverImage ? transitionToImage : undefined}>
-	<a href={`article/${article.slug}`}>test</a>
-	<div class="content" class:hidden={showImage}>
-		<div class="heading">
-			<div class="tag"><p>({article.tags})</p></div>
-			<div class="title"><p>{article.title}</p></div>
-			<div class="author"><p>{article.author}</p></div>
+	<a href={`article/${article.slug}`}>
+		<div class="content" class:hidden={showImage}>
+			<div class="heading">
+				<div class="tag"><p>({article.tags})</p></div>
+				<div class="title"><p>{article.title}</p></div>
+				<div class="author"><p>{article.author}</p></div>
+			</div>
+			<br />
+			<div class="issue__number"><p>2.1.1</p></div>
+			<br /><br />
+			<div class="blurb">
+				<ContentBlurb content={article.content} />
+			</div>
 		</div>
-		<br />
-		<div class="issue__number"><p>2.1.1</p></div>
-		<br /><br />
-		<div class="blurb">
-			<ContentBlurb content={article.content} />
-		</div>
-	</div>
 
-	{#if hasCoverImage}
-		<div
-			class="thumbnail"
-			class:visible={showImage}
-			onmouseenter={toggleImageVisibility}
-			role="button"
-			tabindex="0"
-		>
-			<img src={article.cover.url} alt="Random thumbnail" />
-		</div>
-	{/if}
+		{#if hasCoverImage}
+			<div
+				class="thumbnail"
+				class:visible={showImage}
+				onmouseenter={toggleImageVisibility}
+				role="button"
+				tabindex="0"
+			>
+				<img src={article.cover.url} alt="Random thumbnail" />
+			</div>
+		{/if}
+	</a>
 </article>
 
 <style>
