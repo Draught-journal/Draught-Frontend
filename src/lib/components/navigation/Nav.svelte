@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import ContentBlock from '$lib/components/ContentBlock.svelte';
 	import type { ContentBlock as ContentBlockType, Issue } from '$lib/api';
+	import { scrollStore } from '$lib/stores/scrollStore';
 
 	const {
 		about,
@@ -89,7 +90,15 @@
 		{#if isArticlePage}
 			<!-- Article page layout: only show return in third column -->
 			<div id="return" class="nav-item">
-				<a href="/">(return)</a>
+				<a
+					href="/"
+					onclick={() => {
+						// Mark that we should restore scroll when we land on home
+						scrollStore.update((s) => ({ ...s, shouldRestore: true }));
+					}}
+				>
+					(return)
+				</a>
 			</div>
 		{:else}
 			<!-- Default layout: show home, issue, and index -->
