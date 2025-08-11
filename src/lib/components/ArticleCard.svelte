@@ -135,6 +135,7 @@
 
 	.issue .issue__number {
 		font-size: var(--font-size-xs);
+		font-variant-numeric: oldstyle-nums;
 	}
 
 	.blurb {

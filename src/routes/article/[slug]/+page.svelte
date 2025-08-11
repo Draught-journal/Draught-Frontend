@@ -25,8 +25,10 @@
 		<p>{article?.title || 'Article not found'}</p>
 		<p>{article?.author}</p>
 		<br />
+		<p class="version">1.1.1</p>
 		<br />
-		<p>1.1.1</p>
+		<br />
+		<br />
 		<br />
 	</div>
 
@@ -45,11 +47,22 @@
 	article {
 		width: calc(var(--content-width, 1200px) * 0.6);
 		margin-inline: auto;
-		padding-block-start: var(--nav-height, 5rem);
+		padding-block: var(--nav-height, 5rem);
 	}
 	article .title p {
 		text-align: center;
 		margin: 0;
 		padding: 0;
+		font-size: var(--font-size-lg);
+		line-height: 29px;
+	}
+
+	article .title .version {
+		font-variant-numeric: oldstyle-nums;
+	}
+	article .content p {
+		font-size: var(--font-size-base);
+		line-height: 23px;
+		color: var(--text-color, #333);
 	}
 </style>
