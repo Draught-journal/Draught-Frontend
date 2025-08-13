@@ -3,13 +3,15 @@
 	import {
 		isTextContentBlock,
 		isImageContentBlock,
-		isQuoteContentBlock
+		isQuoteContentBlock,
+		isLineContentBlock
 	} from '$lib/api/schemas/draughtSchema';
 
 	import TextBlock from './blocks/TextBlock.svelte';
 	import ImageBlock from './blocks/ImageBlock.svelte';
 	import QuoteBlock from './blocks/QuoteBlock.svelte';
 	import UnknownBlock from './blocks/UnknownBlock.svelte';
+	import LineBlock from './blocks/LineBlock.svelte';
 
 	const { content }: { content: ContentBlock } = $props();
 </script>
@@ -21,6 +23,8 @@
 		<ImageBlock {content} />
 	{:else if isQuoteContentBlock(content)}
 		<QuoteBlock {content} />
+	{:else if isLineContentBlock(content)}
+		<LineBlock />
 	{:else}
 		<UnknownBlock {content} />
 	{/if}
