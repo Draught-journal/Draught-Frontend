@@ -25,35 +25,26 @@
 
 <style>
 	.image-block {
-		margin-bottom: 2rem;
+		margin-block: 2rem;
 	}
 
 	.image-container {
 		position: relative;
 		overflow: hidden;
-		border-radius: 8px;
-		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	}
 
 	.block-image {
-		width: 100%;
+		width: 80%;
 		height: 100%;
 		display: block;
+		margin: 0 auto;
 		transition: transform 0.3s ease;
 	}
 
-	.block-image:hover {
-		transform: scale(1.02);
-	}
-
 	.image-caption {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-		color: white;
-		padding: 1rem;
+		width: 80%;
+		margin: 0 auto;
+		padding-block: 0.5rem;
 		font-size: 0.9rem;
 		font-style: italic;
 	}
@@ -65,10 +56,6 @@
 		text-decoration: none;
 		font-size: 0.9rem;
 		transition: color 0.3s ease;
-	}
-
-	.image-link:hover {
-		text-decoration: underline;
 	}
 
 	/* Responsive adjustments */
