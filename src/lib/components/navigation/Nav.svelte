@@ -17,6 +17,42 @@
 		isArticlePage?: boolean;
 	} = $props();
 
+	// Function to extract unique tags from all articles
+	function getUniqueTags(): string[] {
+		if (!issues || issues.length === 0) return [];
+
+		const allTags = new Set<string>();
+
+		// Go through all issues and their articles to collect tags
+		issues.forEach((issue) => {
+			if (issue.articles && issue.articles.length > 0) {
+				issue.articles.forEach((article) => {
+					if (article.tags && article.tags.length > 0) {
+						article.tags.forEach((tag) => {
+							if (tag && tag.trim()) {
+								allTags.add(tag.trim());
+							}
+						});
+					}
+				});
+			}
+		});
+
+		// Convert to array and sort alphabetically
+		return Array.from(allTags).sort();
+	}
+
+	// Get unique tags (reactive to issues changes)
+	const uniqueTags = $derived(getUniqueTags());
+
+	// State for hover functionality
+	let hoveredArticle = $state<{
+		title: string;
+		author: string;
+		cover?: { url: string; alt?: string | null };
+		tags: string[];
+	} | null>(null);
+
 	let navState = $state<{
 		issueText: string;
 		showIssue: boolean;
@@ -98,6 +134,20 @@
 		prevShowIssue = null;
 	}
 
+	// Functions to handle article hover
+	function handleArticleHover(article: {
+		title: string;
+		author: string;
+		cover?: { url: string; alt?: string | null };
+		tags: string[];
+	}) {
+		hoveredArticle = article;
+	}
+
+	function handleArticleLeave() {
+		hoveredArticle = null;
+	}
+
 	onMount(() => {
 		// Function to set the nav height CSS variable
 		const setNavHeight = () => {
@@ -132,6 +182,7 @@
 				<a
 					href="/"
 					onclick={() => {
+						closeAllViews();
 						// Mark that we should restore scroll when we land on home
 						scrollStore.update((s) => ({ ...s, shouldRestore: true }));
 					}}
@@ -142,7 +193,14 @@
 		{:else}
 			<!-- Default layout: show home, issue, and index -->
 			<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
-				<a href="/">
+				<a
+					href="/"
+					onclick={() => {
+						closeAllViews();
+						// Mark that we should restore scroll when we land on home
+						scrollStore.update((s) => ({ ...s, shouldRestore: true }));
+					}}
+				>
 					<p>draught</p>
 				</a>
 			</div>
@@ -167,20 +225,34 @@
 	<div class="nav-view">
 		{#if navState?.activeViews.home}
 			<div class="home-content">
-				<div class="sentences">
-					{#if sentences && sentences.length > 0}
-						{#each sentences as sentence}
-							<p>({sentence})</p>
-						{/each}
-					{/if}
-				</div>
-				<br />
-				{#if about && about.length > 0}
-					<div class="about">
-						{#each about as block}
-							<ContentBlock content={block} />
-						{/each}
+				{#if hoveredArticle}
+					<!-- Show hovered article preview -->
+					<div class="article-preview">
+						{#if hoveredArticle.cover?.url}
+							<img
+								src={hoveredArticle.cover.url}
+								alt={hoveredArticle.cover.alt || hoveredArticle.title}
+								class="preview-image"
+							/>
+						{/if}
 					</div>
+				{:else}
+					<!-- Show default home content -->
+					<div class="sentences">
+						{#if sentences && sentences.length > 0}
+							{#each sentences as sentence}
+								<p>({sentence})</p>
+							{/each}
+						{/if}
+					</div>
+					<br />
+					{#if about && about.length > 0}
+						<div class="about">
+							{#each about as block}
+								<ContentBlock content={block} />
+							{/each}
+						</div>
+					{/if}
 				{/if}
 			</div>
 		{/if}
@@ -194,7 +266,12 @@
 								<br />
 								<ul>
 									{#each issue.articles as article}
-										<a href={`article/${article.slug}`} onclick={closeAllViews}>
+										<a
+											href={`article/${article.slug}`}
+											onclick={closeAllViews}
+											onmouseenter={() => handleArticleHover(article)}
+											onmouseleave={handleArticleLeave}
+										>
 											<li data-cover={article.cover.url} data-alt-text={article.cover.alt}>
 												<p>({article.tags})</p>
 												<p>{article.title}</p>
@@ -212,13 +289,15 @@
 		{#if navState?.activeViews.index}
 			<div class="index-content">
 				<button onclick={() => toggleView('issue')}>(issues)</button>
-				<p>(feature)</p>
-				<p>(conversations)</p>
-				<p>(studio visits)</p>
-				<p>(portfolio)</p>
-				<p>(detail)</p>
-				<p>(wish I'd made)</p>
-				<p>(adjacencies)</p>
+
+				<!-- Display unique tags from all articles -->
+				{#if uniqueTags && uniqueTags.length > 0}
+					<div class="tags-section">
+						{#each uniqueTags as tag}
+							<p>({tag})</p>
+						{/each}
+					</div>
+				{/if}
 
 				<br />
 				<button onclick={() => toggleView('home')} id="about-btn">(about)</button>
@@ -363,7 +442,7 @@
 		grid-column: 2;
 		grid-row: 1 / -1; /* Span from top to bottom */
 		padding: 1rem;
-		max-height: calc(100dvh - 2rem);
+		/* max-height: calc(100dvh - 2rem); */
 		overflow-y: auto;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
@@ -409,6 +488,11 @@
 		cursor: pointer;
 	}
 
+	.tags-section p {
+		line-height: 23px;
+		text-transform: lowercase;
+	}
+
 	.issue-section {
 		color: var(--issue-color, #000000);
 		margin-bottom: 2rem;
@@ -442,5 +526,22 @@
 
 	.nav-view li:last-child {
 		border-bottom: none;
+	}
+
+	/* Article preview styles */
+	.article-preview {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		height: 100%;
+		justify-content: center;
+	}
+
+	.preview-image {
+		width: 100%;
+		max-width: 200px;
+		height: auto;
+		object-fit: cover;
 	}
 </style>

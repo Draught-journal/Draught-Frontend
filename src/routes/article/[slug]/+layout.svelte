@@ -22,9 +22,7 @@
 	});
 </script>
 
-<main>
-	{@render children()}
-</main>
+{@render children()}
 
 <style>
 	main {

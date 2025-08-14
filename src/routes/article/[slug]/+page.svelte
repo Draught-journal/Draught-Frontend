@@ -47,7 +47,7 @@
 	article {
 		width: calc(var(--content-width, 1200px) * 0.5);
 		margin-inline: auto;
-		padding-block: var(--nav-height, 5rem);
+		padding-block: 5rem;
 	}
 	article .title p {
 		text-align: center;
