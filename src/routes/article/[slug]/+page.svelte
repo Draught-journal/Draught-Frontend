@@ -45,7 +45,7 @@
 
 <style>
 	article {
-		width: calc(var(--content-width, 1200px) * 0.6);
+		width: calc(var(--content-width, 1200px) * 0.5);
 		margin-inline: auto;
 		padding-block: var(--nav-height, 5rem);
 	}

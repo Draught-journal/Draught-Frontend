@@ -10,7 +10,7 @@
 
 <style>
 	.text-block {
-		line-height: 1.6;
+		line-height: 23px;
 	}
 
 	.text-block:not(:first-child) {

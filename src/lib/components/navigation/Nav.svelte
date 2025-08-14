@@ -340,7 +340,7 @@
 		border-top: 1px solid var(--color-border);
 		animation: slideDown 0.3s ease-in-out;
 		text-align: center;
-		line-height: 29px;
+		line-height: 23px;
 	}
 
 	/* Shared styles for all nav content sections */
