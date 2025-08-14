@@ -70,7 +70,7 @@
 			if (nextIndex) {
 				// Opening index: remember previous state and ensure Issue button is visible
 				prevShowIssue = store.showIssue;
-				newShowIssue = true;
+				newShowIssue = false;
 			} else {
 				// Closing index: restore previous showIssue if we captured it
 				if (prevShowIssue !== null) {
@@ -152,7 +152,7 @@
 				class:active={navState?.activeViews.issue}
 				hidden={!navState?.showIssue}
 			>
-				<button onclick={() => toggleView('issue')}>
+				<button>
 					<p>{navState?.issueText}</p>
 				</button>
 			</div>
@@ -166,7 +166,7 @@
 
 	<div class="nav-view">
 		{#if navState?.activeViews.home}
-			<div class="home-content nav-content-base">
+			<div class="home-content">
 				<div class="sentences">
 					{#if sentences && sentences.length > 0}
 						{#each sentences as sentence}
@@ -185,11 +185,12 @@
 			</div>
 		{/if}
 		{#if navState?.activeViews.issue}
-			<div class="issue-content nav-content-base">
+			<div class="issue-content">
 				{#if issues && issues.length > 0}
 					{#each issues as issue}
 						{#if issue.articles && issue.articles.length > 0}
 							<div class="issue-section" style="--issue-color: {issue.color}">
+								<p>{issue.title}</p>
 								<ul>
 									{#each issue.articles as article}
 										<a href={`article/${article.slug}`} onclick={closeAllViews}>
@@ -208,8 +209,8 @@
 			</div>
 		{/if}
 		{#if navState?.activeViews.index}
-			<div class="index-content nav-content-base">
-				<p>(issues)</p>
+			<div class="index-content">
+				<button onclick={() => toggleView('issue')}>(issues)</button>
 				<p>(feature)</p>
 				<p>(conversations)</p>
 				<p>(studio visits)</p>
@@ -245,7 +246,7 @@
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		grid-template-rows: min-content 1fr;
-		row-gap: 1rem;
+		gap: 1rem;
 	}
 
 	nav.hidden {
@@ -331,33 +332,26 @@
 	}
 
 	.nav-view {
-		display: grid;
-		height: 100%;
-		grid-template-columns: subgrid;
-		grid-column: 1 / -1;
-		/* padding: 1rem 0; */
-		background-color: var(--color-bg);
+		display: contents;
+	}
+
+	.home-content {
+		grid-column: 1;
+		grid-row: 2;
+		padding: 1rem;
+		max-height: calc(100dvh - 5rem);
+		overflow-y: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
 		border-top: 1px solid var(--color-border);
+		background-color: var(--color-bg);
 		animation: slideDown 0.3s ease-in-out;
 		text-align: center;
 		line-height: 23px;
 	}
 
-	/* Shared styles for all nav content sections */
-	.nav-content-base {
-		padding: 0 1rem;
-		max-height: calc(100dvh - 5rem);
-		overflow-y: auto;
-		scrollbar-width: none; /* Firefox */
-		-ms-overflow-style: none; /* IE and Edge */
-	}
-
-	.nav-content-base::-webkit-scrollbar {
-		display: none; /* Chrome, Safari, Opera */
-	}
-
-	.home-content {
-		grid-column: 1;
+	.home-content::-webkit-scrollbar {
+		display: none;
 	}
 
 	.home-content .about {
@@ -366,13 +360,47 @@
 
 	.issue-content {
 		grid-column: 2;
+		grid-row: 1 / -1; /* Span from top to bottom */
+		padding: 1rem;
+		max-height: calc(100dvh - 2rem);
+		overflow-y: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		border-top: 1px solid var(--color-border);
+		border-left: 1px solid var(--color-border);
+		border-right: 1px solid var(--color-border);
+		background-color: var(--color-bg);
+		animation: slideDown 0.3s ease-in-out;
+		text-align: center;
+		line-height: 23px;
+		margin-top: -1rem; /* Counteract the nav padding-top */
+		padding-top: 2rem; /* Add back some padding at the top */
+	}
+
+	.issue-content::-webkit-scrollbar {
+		display: none;
 	}
 
 	.index-content {
 		grid-column: 3;
+		grid-row: 2;
+		padding: 1rem;
+		max-height: calc(100dvh - 5rem);
+		overflow-y: auto;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		border-top: 1px solid var(--color-border);
+		background-color: var(--color-bg);
+		animation: slideDown 0.3s ease-in-out;
+		text-align: center;
+		line-height: 23px;
 	}
 
-	.index-content #about-btn {
+	.index-content::-webkit-scrollbar {
+		display: none;
+	}
+
+	.index-content button {
 		border: none;
 		background: none;
 		color: inherit;
