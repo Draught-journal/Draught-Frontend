@@ -18,16 +18,19 @@
 
 	let selectedTag = $state<string | null>(initialSelectedTag || null);
 
-	// Get all articles that match the selected tag
-	function getFilteredArticles(): Article[] {
+	// Get all articles that match the selected tag with their issue colors
+	function getFilteredArticles(): Array<Article & { issueColor: string }> {
 		if (!selectedTag || !issues) return [];
 
-		const filteredArticles: Article[] = [];
+		const filteredArticles: Array<Article & { issueColor: string }> = [];
 		issues.forEach((issue) => {
 			if (issue.articles && issue.articles.length > 0) {
 				issue.articles.forEach((article) => {
 					if (article.tags && article.tags.includes(selectedTag!)) {
-						filteredArticles.push(article);
+						filteredArticles.push({
+							...article,
+							issueColor: issue.color
+						});
 					}
 				});
 			}
@@ -57,7 +60,12 @@
 							onmouseenter={() => onArticleHover(article)}
 							onmouseleave={onArticleLeave}
 						>
-							<li data-cover={article.cover.url} data-alt-text={article.cover.alt}>
+							<li
+								class="filtered-article-item"
+								style="--issue-color: {article.issueColor}"
+								data-cover={article.cover.url}
+								data-alt-text={article.cover.alt}
+							>
 								<p>({article.tags.join(', ')})</p>
 								<p>{article.title}</p>
 								<p>{article.author}</p>
@@ -127,6 +135,10 @@
 		list-style: none;
 		padding: 0;
 		margin: 0;
+	}
+
+	.filtered-article-item {
+		color: var(--issue-color, #000000);
 	}
 
 	.no-articles {

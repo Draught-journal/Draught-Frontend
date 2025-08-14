@@ -39,29 +39,35 @@ export function useNavigation() {
 
 	function toggleIndex() {
 		navStore.update((store) => {
-			const nextIndex = !store.activeViews.index;
-			let newShowIssue = store.showIssue;
-
-			if (nextIndex) {
+			const currentIndex = store.activeViews.index;
+			
+			if (!currentIndex) {
 				// Opening index: remember previous state and ensure Issue button is visible
 				prevShowIssue = store.showIssue;
-				newShowIssue = false;
+				return {
+					...store,
+					showIssue: false,
+					activeViews: {
+						home: false,
+						issue: false,
+						index: true
+					}
+				};
 			} else {
-				// Closing index: restore previous showIssue if we captured it
-				if (prevShowIssue !== null) {
-					newShowIssue = prevShowIssue;
-					prevShowIssue = null;
-				}
+				// Closing index: close all views and restore previous showIssue
+				const newShowIssue = prevShowIssue !== null ? prevShowIssue : store.showIssue;
+				prevShowIssue = null;
+				return {
+					...store,
+					showIssue: newShowIssue,
+					selectedTag: null,
+					activeViews: {
+						home: false,
+						issue: false,
+						index: false
+					}
+				};
 			}
-
-			return {
-				...store,
-				showIssue: newShowIssue,
-				activeViews: {
-					...store.activeViews,
-					index: nextIndex
-				}
-			};
 		});
 	}
 

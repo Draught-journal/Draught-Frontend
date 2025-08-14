@@ -93,27 +93,29 @@
 	/>
 
 	<div class="nav-view">
-		{#if navState?.activeViews.home}
-			<HomeView {about} {sentences} {hoveredArticle} />
-		{/if}
+		{#if hasActiveViews}
+			{#if navState?.activeViews.home}
+				<HomeView {about} {sentences} {hoveredArticle} />
+			{/if}
 
-		{#if navState?.activeViews.issue}
-			<IssueView
-				{issues}
-				selectedTag={navState?.selectedTag}
-				onCloseAllViews={navigation.closeAllViews}
-				onArticleHover={handleArticleHover}
-				onArticleLeave={handleArticleLeave}
-			/>
-		{/if}
+			{#if navState?.activeViews.issue}
+				<IssueView
+					{issues}
+					selectedTag={navState?.selectedTag}
+					onCloseAllViews={navigation.closeAllViews}
+					onArticleHover={handleArticleHover}
+					onArticleLeave={handleArticleLeave}
+				/>
+			{/if}
 
-		{#if navState?.activeViews.index}
-			<IndexView
-				{uniqueTags}
-				onShowView={navigation.showView}
-				onShowIssuesWithoutFilter={navigation.showIssuesWithoutFilter}
-				onTagFilter={navigation.setSelectedTag}
-			/>
+			{#if navState?.activeViews.index}
+				<IndexView
+					{uniqueTags}
+					onShowView={navigation.showView}
+					onShowIssuesWithoutFilter={navigation.showIssuesWithoutFilter}
+					onTagFilter={navigation.setSelectedTag}
+				/>
+			{/if}
 		{/if}
 	</div>
 </nav>
