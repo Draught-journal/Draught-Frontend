@@ -4,6 +4,7 @@
 	import type { LayoutData } from './$types';
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import { scrollStore } from '$lib/stores/scrollStore';
+	import { navStore } from '$lib/stores/navStore';
 
 	let { children, data }: { children: any; data: LayoutData } = $props();
 
@@ -16,6 +17,14 @@
 		// We only care about client-side link/goto navigations
 		if (nav.to && nav.to.url.pathname.startsWith('/article/') && window.location.pathname === '/') {
 			scrollStore.update((s) => ({ ...s, homeScrollY: window.scrollY }));
+		}
+
+		// Close any open nav views when navigating to an article
+		if (nav.to && nav.to.url.pathname.startsWith('/article/')) {
+			navStore.update((store) => ({
+				...store,
+				activeViews: { home: false, issue: false, index: false }
+			}));
 		}
 	});
 

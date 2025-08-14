@@ -31,6 +31,9 @@
 	let navContainer: HTMLDivElement;
 	let navElement: HTMLElement;
 
+	// Track previous showIssue so we can restore it when Index is toggled off
+	let prevShowIssue: boolean | null = null;
+
 	navStore.subscribe((value) => {
 		navState = value;
 	});
@@ -57,6 +60,42 @@
 				[view]: !store.activeViews[view]
 			}
 		}));
+	}
+
+	// Ensure Issue button is visible while Index is open and restore on close
+	function toggleIndex() {
+		navStore.update((store) => {
+			const nextIndex = !store.activeViews.index;
+			let newShowIssue = store.showIssue;
+			if (nextIndex) {
+				// Opening index: remember previous state and ensure Issue button is visible
+				prevShowIssue = store.showIssue;
+				newShowIssue = true;
+			} else {
+				// Closing index: restore previous showIssue if we captured it
+				if (prevShowIssue !== null) {
+					newShowIssue = prevShowIssue;
+					prevShowIssue = null;
+				}
+			}
+			return {
+				...store,
+				showIssue: newShowIssue,
+				activeViews: {
+					...store.activeViews,
+					index: nextIndex
+				}
+			};
+		});
+	}
+
+	function closeAllViews() {
+		navStore.update((store) => ({
+			...store,
+			showIssue: prevShowIssue ?? store.showIssue,
+			activeViews: { home: false, issue: false, index: false }
+		}));
+		prevShowIssue = null;
 	}
 
 	onMount(() => {
@@ -103,9 +142,9 @@
 		{:else}
 			<!-- Default layout: show home, issue, and index -->
 			<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
-				<button onclick={() => toggleView('home')}>
+				<a href="/">
 					<p>draught</p>
-				</button>
+				</a>
 			</div>
 			<div
 				id="issue"
@@ -118,7 +157,7 @@
 				</button>
 			</div>
 			<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
-				<button onclick={() => toggleView('index')}>
+				<button onclick={toggleIndex}>
 					<p>(index)</p>
 				</button>
 			</div>
@@ -137,9 +176,11 @@
 				</div>
 				<br />
 				{#if about && about.length > 0}
-					{#each about as block}
-						<ContentBlock content={block} />
-					{/each}
+					<div class="about">
+						{#each about as block}
+							<ContentBlock content={block} />
+						{/each}
+					</div>
 				{/if}
 			</div>
 		{/if}
@@ -151,11 +192,13 @@
 							<div class="issue-section" style="--issue-color: {issue.color}">
 								<ul>
 									{#each issue.articles as article}
-										<li>
-											<p>({article.tags})</p>
-											<p>{article.title}</p>
-											<p>{article.author}</p>
-										</li>
+										<a href={`article/${article.slug}`} onclick={closeAllViews}>
+											<li data-cover={article.cover.url} data-alt-text={article.cover.alt}>
+												<p>({article.tags})</p>
+												<p>{article.title}</p>
+												<p>{article.author}</p>
+											</li>
+										</a>
 									{/each}
 								</ul>
 							</div>
@@ -174,6 +217,9 @@
 				<p>(detail)</p>
 				<p>(wish I'd made)</p>
 				<p>(adjacencies)</p>
+
+				<br />
+				<button onclick={() => toggleView('home')} id="about-btn">(about)</button>
 			</div>
 		{/if}
 	</div>
@@ -219,7 +265,7 @@
 		margin: 0;
 	}
 
-	#home button p {
+	#home a p {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
 		font-weight: 400;
@@ -294,6 +340,7 @@
 		border-top: 1px solid var(--color-border);
 		animation: slideDown 0.3s ease-in-out;
 		text-align: center;
+		line-height: 29px;
 	}
 
 	/* Shared styles for all nav content sections */
@@ -313,12 +360,24 @@
 		grid-column: 1;
 	}
 
+	.home-content .about {
+		text-align: left;
+	}
+
 	.issue-content {
 		grid-column: 2;
 	}
 
 	.index-content {
 		grid-column: 3;
+	}
+
+	.index-content #about-btn {
+		border: none;
+		background: none;
+		color: inherit;
+		padding: 0;
+		cursor: pointer;
 	}
 
 	.issue-section {
