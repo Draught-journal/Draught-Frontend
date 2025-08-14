@@ -104,7 +104,7 @@
 			<!-- Default layout: show home, issue, and index -->
 			<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
 				<button onclick={() => toggleView('home')}>
-					<p><i>draught</i></p>
+					<p>draught</p>
 				</button>
 			</div>
 			<div
@@ -217,6 +217,13 @@
 
 	nav p {
 		margin: 0;
+	}
+
+	#home button p {
+		font-family: 'OTParellel-cursive', 'OTParellel', serif;
+		font-style: italic;
+		font-weight: 400;
+		font-synthesis: none; /* don't fake italic/bold */
 	}
 
 	.nav-container {

@@ -85,7 +85,7 @@
 
 <div class="splash" bind:this={splashElement}>
 	<div class="head">
-		<i>draught</i>
+		<p class="title">draught</p>
 		<p>({selectedSentence})</p>
 	</div>
 	<div class="thumbnails">
@@ -109,6 +109,15 @@
 		height: 100vh;
 		text-align: center;
 		margin-bottom: 20vh;
+		font-size: var(--font-size-lg);
+		line-height: 29px;
+	}
+
+	.head .title {
+		font-family: 'OTParellel-cursive', 'OTParellel', serif;
+		font-style: italic;
+		font-weight: 400;
+		font-synthesis: none; /* don't fake italic/bold */
 	}
 
 	.splash .thumbnails {
