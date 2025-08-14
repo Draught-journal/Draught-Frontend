@@ -191,6 +191,7 @@
 						{#if issue.articles && issue.articles.length > 0}
 							<div class="issue-section" style="--issue-color: {issue.color}">
 								<p>{issue.title}</p>
+								<br />
 								<ul>
 									{#each issue.articles as article}
 										<a href={`article/${article.slug}`} onclick={closeAllViews}>
