@@ -30,28 +30,7 @@ export function useArticles() {
 		return Array.from(allTags).sort();
 	}
 
-	function createArticleHoverState() {
-		let hoveredArticle = $state<ArticlePreview | null>(null);
-
-		function handleArticleHover(article: ArticlePreview) {
-			hoveredArticle = article;
-		}
-
-		function handleArticleLeave() {
-			hoveredArticle = null;
-		}
-
-		return {
-			get hoveredArticle() {
-				return hoveredArticle;
-			},
-			handleArticleHover,
-			handleArticleLeave
-		};
-	}
-
 	return {
-		getUniqueTags,
-		createArticleHoverState
+		getUniqueTags
 	};
 }

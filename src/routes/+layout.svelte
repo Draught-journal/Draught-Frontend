@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Nav from '../lib/components/navigation/Nav-old.svelte';
+	import Nav from '$lib/components/navigation/Nav.svelte';
 	import type { LayoutData } from './$types';
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import { scrollStore } from '$lib/stores/scrollStore';

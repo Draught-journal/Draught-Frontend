@@ -1,46 +1,102 @@
 <script lang="ts">
-	import type { Issue } from '$lib/api';
+	import type { Issue, Article } from '$lib/api';
 	import type { ArticlePreview } from '../composables/useArticles.js';
 
 	const {
 		issues,
+		selectedTag: initialSelectedTag,
 		onCloseAllViews,
 		onArticleHover,
 		onArticleLeave
 	}: {
 		issues?: Issue[];
+		selectedTag?: string | null;
 		onCloseAllViews: () => void;
 		onArticleHover: (article: ArticlePreview) => void;
 		onArticleLeave: () => void;
 	} = $props();
+
+	let selectedTag = $state<string | null>(initialSelectedTag || null);
+
+	// Get all articles that match the selected tag
+	function getFilteredArticles(): Article[] {
+		if (!selectedTag || !issues) return [];
+
+		const filteredArticles: Article[] = [];
+		issues.forEach((issue) => {
+			if (issue.articles && issue.articles.length > 0) {
+				issue.articles.forEach((article) => {
+					if (article.tags && article.tags.includes(selectedTag!)) {
+						filteredArticles.push(article);
+					}
+				});
+			}
+		});
+
+		return filteredArticles;
+	}
+
+	const filteredArticles = $derived(getFilteredArticles());
+
+	// Update local selectedTag when prop changes
+	$effect(() => {
+		selectedTag = initialSelectedTag || null;
+	});
 </script>
 
 <div class="issue-content">
-	{#if issues && issues.length > 0}
-		{#each issues as issue}
-			{#if issue.articles && issue.articles.length > 0}
-				<div class="issue-section" style="--issue-color: {issue.color}">
-					<p>{issue.title}</p>
-					<br />
-					<ul>
-						{#each issue.articles as article}
-							<a
-								href={`article/${article.slug}`}
-								onclick={onCloseAllViews}
-								onmouseenter={() => onArticleHover(article)}
-								onmouseleave={onArticleLeave}
-							>
-								<li data-cover={article.cover.url} data-alt-text={article.cover.alt}>
-									<p>({article.tags})</p>
-									<p>{article.title}</p>
-									<p>{article.author}</p>
-								</li>
-							</a>
-						{/each}
-					</ul>
-				</div>
+	{#if selectedTag}
+		<!-- Filtered articles view -->
+		<div class="filtered-content">
+			{#if filteredArticles.length > 0}
+				<ul class="filtered-articles">
+					{#each filteredArticles as article}
+						<a
+							href={`article/${article.slug}`}
+							onclick={onCloseAllViews}
+							onmouseenter={() => onArticleHover(article)}
+							onmouseleave={onArticleLeave}
+						>
+							<li data-cover={article.cover.url} data-alt-text={article.cover.alt}>
+								<p>({article.tags.join(', ')})</p>
+								<p>{article.title}</p>
+								<p>{article.author}</p>
+							</li>
+						</a>
+					{/each}
+				</ul>
+			{:else}
+				<p class="no-articles">No articles found for this tag.</p>
 			{/if}
-		{/each}
+		</div>
+	{:else}
+		<!-- Default issues view -->
+		{#if issues && issues.length > 0}
+			{#each issues as issue}
+				{#if issue.articles && issue.articles.length > 0}
+					<div class="issue-section" style="--issue-color: {issue.color}">
+						<p>{issue.title}</p>
+						<br />
+						<ul>
+							{#each issue.articles as article}
+								<a
+									href={`article/${article.slug}`}
+									onclick={onCloseAllViews}
+									onmouseenter={() => onArticleHover(article)}
+									onmouseleave={onArticleLeave}
+								>
+									<li data-cover={article.cover.url} data-alt-text={article.cover.alt}>
+										<p>({article.tags.join(', ')})</p>
+										<p>{article.title}</p>
+										<p>{article.author}</p>
+									</li>
+								</a>
+							{/each}
+						</ul>
+					</div>
+				{/if}
+			{/each}
+		{/if}
 	{/if}
 </div>
 
@@ -67,6 +123,17 @@
 		display: none;
 	}
 
+	.filtered-articles {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.no-articles {
+		color: var(--color-border);
+		font-style: italic;
+	}
+
 	.issue-section {
 		color: var(--issue-color, #000000);
 		margin-bottom: 2rem;
@@ -89,6 +156,15 @@
 
 	li:last-child {
 		border-bottom: none;
+	}
+
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
+
+	a:hover {
+		opacity: 0.7;
 	}
 
 	@keyframes slideDown {

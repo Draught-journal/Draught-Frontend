@@ -2,6 +2,7 @@
 	import { navStore } from '$lib/stores/navStore.js';
 	import { onMount } from 'svelte';
 	import type { ContentBlock as ContentBlockType, Issue } from '$lib/api';
+	import type { ArticlePreview } from './composables/useArticles.js';
 
 	// Import our new modular components
 	import NavHeader from './NavHeader.svelte';
@@ -28,7 +29,17 @@
 	// Initialize composables
 	const navigation = useNavigation();
 	const articles = useArticles();
-	const articleHover = articles.createArticleHoverState();
+
+	// Article hover state (reactive)
+	let hoveredArticle = $state<ArticlePreview | null>(null);
+
+	function handleArticleHover(article: ArticlePreview) {
+		hoveredArticle = article;
+	}
+
+	function handleArticleLeave() {
+		hoveredArticle = null;
+	}
 
 	// Reactive state
 	let navState = $state<any>();
@@ -83,20 +94,26 @@
 
 	<div class="nav-view">
 		{#if navState?.activeViews.home}
-			<HomeView {about} {sentences} hoveredArticle={articleHover.hoveredArticle} />
+			<HomeView {about} {sentences} {hoveredArticle} />
 		{/if}
 
 		{#if navState?.activeViews.issue}
 			<IssueView
 				{issues}
+				selectedTag={navState?.selectedTag}
 				onCloseAllViews={navigation.closeAllViews}
-				onArticleHover={articleHover.handleArticleHover}
-				onArticleLeave={articleHover.handleArticleLeave}
+				onArticleHover={handleArticleHover}
+				onArticleLeave={handleArticleLeave}
 			/>
 		{/if}
 
 		{#if navState?.activeViews.index}
-			<IndexView {uniqueTags} onToggleView={navigation.toggleView} />
+			<IndexView
+				{uniqueTags}
+				onShowView={navigation.showView}
+				onShowIssuesWithoutFilter={navigation.showIssuesWithoutFilter}
+				onTagFilter={navigation.setSelectedTag}
+			/>
 		{/if}
 	</div>
 </nav>

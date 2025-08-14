@@ -16,6 +16,27 @@ export function useNavigation() {
 		}));
 	}
 
+	function showView(view: ViewType) {
+		navStore.update((store) => ({
+			...store,
+			activeViews: {
+				...store.activeViews,
+				[view]: true
+			}
+		}));
+	}
+
+	function showIssuesWithoutFilter() {
+		navStore.update((store) => ({
+			...store,
+			selectedTag: null,
+			activeViews: {
+				...store.activeViews,
+				issue: true
+			}
+		}));
+	}
+
 	function toggleIndex() {
 		navStore.update((store) => {
 			const nextIndex = !store.activeViews.index;
@@ -48,6 +69,7 @@ export function useNavigation() {
 		navStore.update((store) => ({
 			...store,
 			showIssue: prevShowIssue ?? store.showIssue,
+			selectedTag: null,
 			activeViews: { home: false, issue: false, index: false }
 		}));
 		prevShowIssue = null;
@@ -58,10 +80,28 @@ export function useNavigation() {
 		scrollStore.update((s) => ({ ...s, shouldRestore: true }));
 	}
 
+	function setSelectedTag(tag: string) {
+		navStore.update((store) => ({
+			...store,
+			selectedTag: tag
+		}));
+	}
+
+	function clearSelectedTag() {
+		navStore.update((store) => ({
+			...store,
+			selectedTag: null
+		}));
+	}
+
 	return {
 		toggleView,
+		showView,
+		showIssuesWithoutFilter,
 		toggleIndex,
 		closeAllViews,
-		navigateHome
+		navigateHome,
+		setSelectedTag,
+		clearSelectedTag
 	};
 }
