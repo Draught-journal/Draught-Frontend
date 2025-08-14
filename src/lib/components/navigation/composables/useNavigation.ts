@@ -40,7 +40,7 @@ export function useNavigation() {
 	function toggleIndex() {
 		navStore.update((store) => {
 			const currentIndex = store.activeViews.index;
-			
+
 			if (!currentIndex) {
 				// Opening index: remember previous state and ensure Issue button is visible
 				prevShowIssue = store.showIssue;
