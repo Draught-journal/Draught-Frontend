@@ -78,14 +78,6 @@
 		transition: background-color 0.2s ease;
 	}
 
-	.nav-item button:hover {
-		background-color: var(--color-border);
-	}
-
-	.nav-item.active button {
-		background-color: var(--color-border);
-	}
-
 	.nav-item a {
 		display: block;
 		background: none;
@@ -96,10 +88,6 @@
 		transition: background-color 0.2s ease;
 		text-decoration: none;
 		color: inherit;
-	}
-
-	.nav-item a:hover {
-		background-color: var(--color-border);
 	}
 
 	#home a p {
