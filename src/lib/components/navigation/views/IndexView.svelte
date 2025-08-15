@@ -70,6 +70,7 @@
 		color: inherit;
 		padding: 0;
 		cursor: pointer;
+		font-size: var(--font-size-base);
 	}
 
 	.tag-button {
