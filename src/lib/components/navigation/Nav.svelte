@@ -185,6 +185,9 @@
 	}
 
 	@media (max-width: 768px) {
+		nav {
+			padding-inline: 0.25rem;
+		}
 		nav.active {
 			max-height: 100dvh;
 			height: 100dvh;
