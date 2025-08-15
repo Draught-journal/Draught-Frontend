@@ -85,8 +85,6 @@
 		max-width: 200px;
 		height: auto;
 		object-fit: cover;
-		border-radius: 4px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 	}
 
 	@keyframes slideDown {
