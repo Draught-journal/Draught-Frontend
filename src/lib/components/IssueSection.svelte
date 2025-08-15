@@ -117,4 +117,26 @@
 		gap: 16px;
 		justify-items: center;
 	}
+
+	@media (max-width: 768px) {
+		.issues__wrapper .issue__num {
+			font-size: var(--font-size-sm);
+		}
+
+		.articles {
+			grid-template-columns: 1fr;
+		}
+
+		/* Override double-row to single column on mobile */
+		.issue-wrapper.double-row {
+			grid-column: 1;
+			display: block;
+		}
+
+		/* Reset single-last to normal width on mobile */
+		.issue-wrapper.single-last {
+			grid-column: 1;
+			max-width: none;
+		}
+	}
 </style>

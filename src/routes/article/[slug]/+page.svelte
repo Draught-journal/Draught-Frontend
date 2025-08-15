@@ -65,4 +65,12 @@
 		line-height: 23px;
 		color: var(--text-color, #333);
 	}
+
+	/* media query mobile */
+
+	@media (max-width: 768px) {
+		article {
+			width: 90%;
+		}
+	}
 </style>
