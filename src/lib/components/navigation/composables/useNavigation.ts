@@ -17,13 +17,28 @@ export function useNavigation() {
 	}
 
 	function showView(view: ViewType) {
-		navStore.update((store) => ({
-			...store,
-			activeViews: {
-				...store.activeViews,
-				[view]: true
+		navStore.update((store) => {
+			// On mobile, ensure only one main view is active at a time
+			// (home and issue views share the same space on mobile)
+			if (view === 'home' || view === 'issue') {
+				return {
+					...store,
+					activeViews: {
+						...store.activeViews,
+						home: view === 'home',
+						issue: view === 'issue'
+					}
+				};
 			}
-		}));
+
+			return {
+				...store,
+				activeViews: {
+					...store.activeViews,
+					[view]: true
+				}
+			};
+		});
 	}
 
 	function showIssuesWithoutFilter() {
@@ -32,6 +47,7 @@ export function useNavigation() {
 			selectedTag: null,
 			activeViews: {
 				...store.activeViews,
+				home: false, // Hide home view when showing issues
 				issue: true
 			}
 		}));

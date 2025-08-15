@@ -18,12 +18,12 @@
 		if (onTagFilter) {
 			onTagFilter(tag);
 		}
-		// Then open the issue view
+		// Then open the issue view (this will hide home view on mobile)
 		onShowView('issue');
 	}
 
 	function handleIssuesClick() {
-		// Show issues view and clear any filters
+		// Show issues view and clear any filters (this will hide home view on mobile)
 		onShowIssuesWithoutFilter();
 	}
 </script>
@@ -98,6 +98,14 @@
 		to {
 			opacity: 1;
 			transform: translateY(0);
+		}
+	}
+
+	@media (max-width: 768px) {
+		.index-content {
+			grid-column: 3;
+			border-left: 1px solid var(--color-border);
+			border-right: none;
 		}
 	}
 </style>

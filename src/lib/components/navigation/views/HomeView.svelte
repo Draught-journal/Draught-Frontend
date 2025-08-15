@@ -60,6 +60,7 @@
 		animation: slideDown 0.3s ease-in-out;
 		text-align: center;
 		line-height: 23px;
+		z-index: 1;
 	}
 
 	.home-content::-webkit-scrollbar {
@@ -96,6 +97,13 @@
 		to {
 			opacity: 1;
 			transform: translateY(0);
+		}
+	}
+
+	@media (max-width: 768px) {
+		.home-content {
+			grid-column: 1 / 3;
+			z-index: 1;
 		}
 	}
 </style>

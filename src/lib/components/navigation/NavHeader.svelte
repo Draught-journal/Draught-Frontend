@@ -113,4 +113,15 @@
 	p {
 		margin: 0;
 	}
+
+	@media (max-width: 768px) {
+		.nav-container #home {
+			grid-column: 1;
+		}
+
+		.nav-container #issue {
+			/* grid-column: 1 / -1; */
+			text-align: center;
+		}
+	}
 </style>

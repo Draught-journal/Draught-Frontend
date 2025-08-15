@@ -189,4 +189,14 @@
 			transform: translateY(0);
 		}
 	}
+
+	@media (max-width: 768px) {
+		.issue-content {
+			grid-column: 1 / 3;
+			grid-row: auto;
+			border-left: none;
+			border-right: 1px solid var(--color-border);
+			z-index: 1;
+		}
+	}
 </style>
