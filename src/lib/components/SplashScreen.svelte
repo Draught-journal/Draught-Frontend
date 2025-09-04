@@ -1,11 +1,8 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { navStore } from '$lib/stores/navStore.js';
+	import { onMount } from 'svelte';
 
 	const { sentences }: { sentences?: string[] } = $props();
 
-	let splashElement: HTMLDivElement;
-	let observer: IntersectionObserver;
 	let selectedSentence = $state('');
 
 	// Function to get a random sentence and cycle through them
@@ -50,39 +47,10 @@
 		if (sentences && sentences.length > 0) {
 			selectedSentence = getRandomSentence(sentences);
 		}
-
-		if (splashElement) {
-			observer = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((entry) => {
-						if (entry.target === splashElement) {
-							// Show nav when splash is almost out of view
-							navStore.update((store) => ({
-								...store,
-								showNav: !entry.isIntersecting
-							}));
-						}
-					});
-				},
-				{
-					// Trigger when only 10% of the splash is visible
-					threshold: 0.1,
-					rootMargin: '0px'
-				}
-			);
-
-			observer.observe(splashElement);
-		}
-	});
-
-	onDestroy(() => {
-		if (observer) {
-			observer.disconnect();
-		}
 	});
 </script>
 
-<div class="splash" bind:this={splashElement}>
+<div class="splash">
 	<div class="head">
 		<p class="title">draught</p>
 		<p>({selectedSentence})</p>
