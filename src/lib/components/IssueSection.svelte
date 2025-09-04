@@ -37,6 +37,7 @@
 							navStore.update((store) => ({
 								...store,
 								issueText,
+								showNav: !entry.isIntersecting,
 								showIssue: !entry.isIntersecting
 							}));
 						}
@@ -45,7 +46,7 @@
 				{
 					// Trigger when the element is completely out of view
 					threshold: 0,
-					rootMargin: '-250px 0px 0px 0px' // Account for nav height
+					rootMargin: '-310px 0px 0px 0px' // Account for nav height
 				}
 			);
 
