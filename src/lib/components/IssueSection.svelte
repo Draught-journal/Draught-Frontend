@@ -94,7 +94,8 @@
 	.articles {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(20rem, 1fr));
-		gap: 16px;
+		gap: 1rem;
+		row-gap: 2.5rem;
 		place-items: center;
 	}
 

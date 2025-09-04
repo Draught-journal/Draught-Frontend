@@ -51,9 +51,9 @@
 				<div class="title"><p>{article.title}</p></div>
 				<div class="author"><p>{article.author}</p></div>
 			</div>
-			<br />
+
 			<div class="issue__number"><p>2.1.1</p></div>
-			<br /><br />
+
 			<div class="blurb">
 				<ContentBlurb content={article.content} />
 			</div>
@@ -137,6 +137,7 @@
 	.issue .issue__number {
 		font-size: var(--font-size-xs);
 		font-variant-numeric: oldstyle-nums;
+		margin-block: 1.5rem 2.5rem;
 	}
 
 	.blurb {
