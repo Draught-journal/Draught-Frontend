@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import ArticleCard from './ArticleCard.svelte';
-	import { navStore } from '../stores/navStore.js';
+	import { navStore } from '$lib/stores/navStore.js';
 	import type { Article } from '$lib/api';
 
 	let {

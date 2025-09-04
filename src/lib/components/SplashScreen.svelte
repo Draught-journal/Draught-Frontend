@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { navStore } from '../stores/navStore.js';
+	import { navStore } from '$lib/stores/navStore.js';
 
 	const { sentences }: { sentences?: string[] } = $props();
 
