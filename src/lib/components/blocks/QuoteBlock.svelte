@@ -18,8 +18,7 @@
 
 	.quote-content {
 		margin: 0;
-		padding: 1.5rem;
-		background-color: var(--color-bg, #f9f9f9);
+		text-indent: 1rem;
 	}
 
 	.quote-text {
@@ -31,10 +30,7 @@
 	.quote-citation {
 		display: block;
 		margin: 0;
-		font-size: 0.9em;
 		font-style: normal;
-		font-weight: 500;
-		text-align: right;
 	}
 
 	/* Responsive adjustments */

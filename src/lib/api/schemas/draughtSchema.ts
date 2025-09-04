@@ -86,6 +86,7 @@ export interface Article extends GenericEntity {
 	cover: MediaAsset;
 	published: GenericDateStructure;
 	content: ContentBlock[];
+	footnotes: string;
 	tags: string[];
 }
 

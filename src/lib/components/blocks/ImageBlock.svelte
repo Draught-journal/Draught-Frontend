@@ -46,7 +46,7 @@
 		width: 80%;
 		margin: 0 auto;
 		padding-block: 0.5rem;
-		font-size: 0.9rem;
+		font-size: var(--font-size-sm);
 		text-align: center;
 	}
 

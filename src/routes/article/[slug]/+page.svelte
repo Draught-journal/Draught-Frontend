@@ -46,6 +46,9 @@
 			<p>No content available for this article.</p>
 		{/if}
 	</div>
+	<div class="footnotes__container">
+		{@html article?.footnotes || ''}
+	</div>
 </article>
 
 <style>
@@ -76,6 +79,14 @@
 		text-align: center;
 		font-size: var(--font-size-lg);
 		margin-top: 2rem;
+	}
+
+	.footnotes__container {
+		margin-top: 3rem;
+		padding-block-start: 1rem;
+		font-size: var(--font-size-sm);
+		line-height: 1.5;
+		border-top: 1px solid var(--color-border, #bebebe);
 	}
 
 	/* media query mobile */
