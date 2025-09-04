@@ -65,6 +65,10 @@
 		grid-column: 3;
 	}
 
+	.nav-container #index p {
+		font-size: var(--font-size-base);
+	}
+
 	.nav-container #return {
 		grid-column: 3;
 	}

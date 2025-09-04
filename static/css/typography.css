@@ -37,15 +37,15 @@
 	--font-secondary: 'OTParellel', 'Times New Roman', Times, Georgia, serif;
 
 	/* Fluid font sizes using clamp() for better responsive scaling */
-	--font-size-xs: clamp(0.75rem, 0.65rem + 0.5vw, 0.875rem); /* 12-14px */
-	--font-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem); /* 14-16px */
-	--font-size-base: clamp(1rem, 0.9rem + 0.5vw, 1.1875rem); /* 16-19px */
-	--font-size-lg: clamp(1.1875rem, 1.05rem + 0.6875vw, 1.5rem); /* 19-24px */
-	--font-size-xl: clamp(1.4375rem, 1.25rem + 0.9375vw, 2rem); /* 23-32px */
-	--font-size-2xl: clamp(1.75rem, 1.5rem + 1.25vw, 2.5rem); /* 28-40px */
-	--font-size-3xl: clamp(2.1875rem, 1.85rem + 1.6875vw, 3.125rem); /* 35-50px */
-	--font-size-4xl: clamp(2.625rem, 2.2rem + 2.125vw, 3.75rem); /* 42-60px */
-	--font-size-5xl: clamp(3.125rem, 2.6rem + 2.625vw, 4.6875rem); /* 50-75px */
+	--font-size-xs: clamp(0.625rem, 0.525rem + 0.5vw, 0.75rem); /* 10-12px */
+	--font-size-sm: clamp(0.75rem, 0.675rem + 0.375vw, 0.875rem); /* 12-14px */
+	--font-size-base: clamp(0.875rem, 0.775rem + 0.5vw, 1.0625rem); /* 14-17px */
+	--font-size-lg: clamp(1.0625rem, 0.925rem + 0.6875vw, 1.375rem); /* 17-22px */
+	--font-size-xl: clamp(1.3125rem, 1.125rem + 0.9375vw, 1.875rem); /* 21-30px */
+	--font-size-2xl: clamp(1.625rem, 1.375rem + 1.25vw, 2.375rem); /* 26-38px */
+	--font-size-3xl: clamp(2.0625rem, 1.725rem + 1.6875vw, 3rem); /* 33-48px */
+	--font-size-4xl: clamp(2.5rem, 2.075rem + 2.125vw, 3.625rem); /* 40-58px */
+	--font-size-5xl: clamp(3rem, 2.475rem + 2.625vw, 4.5625rem); /* 48-73px */
 
 	/* Legacy variables for backwards compatibility and fallback */
 	--font-scale-ratio: 1.25; /* More conservative scaling for mobile */
