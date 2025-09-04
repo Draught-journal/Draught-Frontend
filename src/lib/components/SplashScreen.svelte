@@ -2,7 +2,10 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { navStore } from '../stores/navStore.js';
 
-	const { sentences, images }: { sentences?: string[]; images?: { url: string; alt: string }[] } =
+	const {
+		sentences,
+		images
+	}: { sentences?: string[]; images?: { url: string; alt: string; articleUrl: string }[] } =
 		$props();
 
 	let splashElement: HTMLDivElement;
@@ -93,7 +96,9 @@
 		{#if images && images.length > 0}
 			{#each images as image}
 				<div class="image">
-					<img src={image.url} alt={image.alt} />
+					<a href={image.articleUrl}>
+						<img src={image.url} alt={image.alt} />
+					</a>
 				</div>
 			{/each}
 		{/if}

@@ -48,6 +48,7 @@
 		<div class="content" class:hidden={showImage}>
 			<div class="heading">
 				<div class="tag"><p>({article.tags})</p></div>
+				<div class="slug"><p>{article.slug}</p></div>
 				<div class="title"><p>{article.title}</p></div>
 				<div class="author"><p>{article.author}</p></div>
 			</div>

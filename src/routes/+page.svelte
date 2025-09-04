@@ -21,7 +21,8 @@
 					.filter((article) => article.cover && article.cover.url)
 					.map((article) => ({
 						url: article.cover.url,
-						alt: article.cover.alt || `Cover image for ${article.title}`
+						alt: article.cover.alt || `Cover image for ${article.title}`,
+						articleUrl: article.slug ? `/article/${article.slug}` : '#'
 					}))
 			)
 		: [];

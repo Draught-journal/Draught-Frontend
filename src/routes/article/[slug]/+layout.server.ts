@@ -6,7 +6,13 @@ export async function load({ params }) {
 	const article = articles.children.find((article) => article.slug === params.slug);
 
 	if (!article) {
-		return { status: 404, error: new Error('Article not found') };
+		// Use a serializable error format instead of Error object
+		return {
+			status: 404,
+			errorMessage: 'Article not found',
+			article: null,
+			showNav: true
+		};
 	}
 
 	return {

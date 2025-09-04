@@ -13,7 +13,7 @@ export interface TextContent {
 
 export interface ImageContent {
 	location: string;
-	image: MediaAsset[];
+	image: MediaAsset;
 	src: string;
 	alt: string;
 	caption: string;

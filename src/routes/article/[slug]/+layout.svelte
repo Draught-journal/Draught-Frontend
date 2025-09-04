@@ -22,11 +22,14 @@
 	});
 </script>
 
-{@render children()}
+<div class="article-layout">
+	{@render children()}
+</div>
 
 <style>
-	main {
-		max-width: var(--content-width, 1200px);
-		margin-inline: auto;
+	.article-layout {
+		width: 100%;
 	}
+
+	/* The global styles for main have been moved to an external file */
 </style>

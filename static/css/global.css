@@ -75,6 +75,12 @@ body {
 	padding-right: var(--space-4);
 }
 
+/* Article layout styles - moved from component */
+main {
+	max-width: var(--content-width, 1200px);
+	margin-inline: auto;
+}
+
 /* Custom Scroll bar */
 ::-webkit-scrollbar {
 	width: var(--scroll-bar-width);

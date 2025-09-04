@@ -6,14 +6,17 @@
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
-	let article: Article | undefined = data.article;
+	let article: Article | null = data.article;
+	const errorMessage = data.errorMessage;
 
 	// Create SEO metadata
 	const seoData = createSEOData({
 		title: article?.title || 'Article not found',
-		description: 'No description available',
-		image: article?.cover.url || '',
-		url: `https://draught.com/article/${article?.slug}`
+		description:
+			article?.content?.find((block) => block.type === 'text')?.content?.text?.substring(0, 150) ||
+			'No description available',
+		image: article?.cover?.url || '',
+		url: `https://draught.com/article/${article?.slug || ''}`
 	});
 </script>
 
@@ -21,9 +24,9 @@
 <article>
 	<div class="title">
 		<!-- tag -->
-		<p>({article?.tags})</p>
+		<p>{article?.tags ? `(${article.tags})` : ''}</p>
 		<p>{article?.title || 'Article not found'}</p>
-		<p>{article?.author}</p>
+		<p>{article?.author || ''}</p>
 		<br />
 		<p class="version">1.1.1</p>
 		<br />
@@ -33,7 +36,9 @@
 	</div>
 
 	<div class="content">
-		{#if article?.content && article.content.length > 0}
+		{#if errorMessage}
+			<p class="error">{errorMessage}</p>
+		{:else if article && article.content && article.content.length > 0}
 			{#each article.content as block}
 				<ContentBlock content={block} />
 			{/each}
@@ -64,6 +69,13 @@
 		font-size: var(--font-size-base);
 		line-height: 23px;
 		color: var(--text-color, #333);
+	}
+
+	article .content .error {
+		color: var(--color-primary, #bc9200);
+		text-align: center;
+		font-size: var(--font-size-lg);
+		margin-top: 2rem;
 	}
 
 	/* media query mobile */
