@@ -59,13 +59,6 @@
 					showIssue: hasScrolledPastThreshold,
 					issueColor
 				}));
-
-				console.log('Scroll check:', {
-					bottom: rect.bottom,
-					threshold: NAV_THRESHOLD,
-					hasScrolledPastThreshold,
-					showNav: hasScrolledPastThreshold
-				});
 			};
 
 			// Initial check on mount

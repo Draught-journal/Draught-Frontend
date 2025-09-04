@@ -15,8 +15,6 @@ export interface ImageContent {
 	location: string;
 	image: MediaAsset;
 	src: string;
-	alt: string;
-	caption: string;
 	link: string;
 	ratio: string;
 	crop: string;

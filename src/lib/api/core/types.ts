@@ -26,6 +26,8 @@ export interface GenericPage {
 export interface MediaAsset {
 	url: string;
 	alt?: string | null;
+	size?: string | null;
+	scale?: 'small' | 'medium' | 'large' | null;
 	caption?: string;
 	photographer?: string;
 	width?: number;

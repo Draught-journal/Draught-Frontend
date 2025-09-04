@@ -68,9 +68,6 @@
 		navState = value;
 	});
 
-	// For debugging
-	$inspect(navState);
-
 	// Handle body overflow when nav is active
 	$effect(() => {
 		if (typeof document !== 'undefined') {
