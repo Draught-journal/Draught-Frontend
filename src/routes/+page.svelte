@@ -15,28 +15,16 @@
 			? [data.props.site.issues]
 			: [];
 
-	const articleCoverImages = data.props.site?.issues
-		? data.props.site.issues.flatMap((issue) =>
-				issue.articles
-					.filter((article) => article.cover && article.cover.url)
-					.map((article) => ({
-						url: article.cover.url,
-						alt: article.cover.alt || `Cover image for ${article.title}`,
-						articleUrl: article.slug ? `/article/${article.slug}` : '#'
-					}))
-			)
-		: [];
-
 	const seoData = createSEOData({
 		title: 'Draught',
-		description: 'A digital platform for the Ghanaian creative community.',
+		description: 'A digital platform for a creative community.',
 		image: '',
 		url: 'https://draught.com'
 	});
 </script>
 
 <Header {...seoData} />
-<SplashScreen sentences={data.props?.site?.sentences} images={articleCoverImages} />
+<SplashScreen sentences={data.props?.site?.sentences} />
 
 {#each issues as issue (issue.id)}
 	<IssueSection issueColor={issue.color} articles={issue.articles} />

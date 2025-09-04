@@ -2,11 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { navStore } from '../stores/navStore.js';
 
-	const {
-		sentences,
-		images
-	}: { sentences?: string[]; images?: { url: string; alt: string; articleUrl: string }[] } =
-		$props();
+	const { sentences }: { sentences?: string[] } = $props();
 
 	let splashElement: HTMLDivElement;
 	let observer: IntersectionObserver;
@@ -91,18 +87,6 @@
 		<p class="title">draught</p>
 		<p>({selectedSentence})</p>
 	</div>
-	<div class="thumbnails">
-		<!-- 5 random image -->
-		{#if images && images.length > 0}
-			{#each images as image}
-				<div class="image">
-					<a href={image.articleUrl}>
-						<img src={image.url} alt={image.alt} />
-					</a>
-				</div>
-			{/each}
-		{/if}
-	</div>
 </div>
 
 <style>
@@ -123,25 +107,5 @@
 		font-style: italic;
 		font-weight: 400;
 		font-synthesis: none; /* don't fake italic/bold */
-	}
-
-	.splash .thumbnails {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 10rem;
-	}
-
-	.splash .thumbnails .image {
-		position: -webkit-sticky;
-		position: sticky;
-		top: 50%;
-		transform: translateY(-50%);
-		max-width: 25rem;
-	}
-	.splash .thumbnails .image img {
-		max-width: 100%;
-		max-height: 100%;
-		object-fit: contain;
 	}
 </style>

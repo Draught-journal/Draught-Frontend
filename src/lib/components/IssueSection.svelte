@@ -17,6 +17,15 @@
 
 	let issueNumElement: HTMLDivElement;
 	let observer: IntersectionObserver;
+	const images = $derived(
+		articles
+			.filter((article) => article.cover && article.cover.url)
+			.map((article) => ({
+				url: article.cover.url,
+				alt: article.cover.alt || `Cover image for ${article.title}`,
+				articleUrl: article.slug ? `/article/${article.slug}` : '#'
+			}))
+	);
 
 	onMount(() => {
 		if (issueNumElement) {
@@ -51,6 +60,19 @@
 	});
 </script>
 
+<div class="thumbnails">
+	<!-- 5 random image -->
+	{#if images && images.length > 0}
+		{#each images as image}
+			<div class="image">
+				<a href={image.articleUrl}>
+					<img src={image.url} alt={image.alt} />
+				</a>
+			</div>
+		{/each}
+	{/if}
+</div>
+
 <div class="issues__wrapper" style="--issue-color: {issueColor};">
 	<div class="issue__num" bind:this={issueNumElement}>
 		<p>issue one</p>
@@ -80,6 +102,25 @@
 </div>
 
 <style>
+	.thumbnails {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10rem;
+	}
+
+	.thumbnails .image {
+		position: -webkit-sticky;
+		position: sticky;
+		top: 50%;
+		transform: translateY(-50%);
+		max-width: 25rem;
+	}
+	.thumbnails .image img {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+	}
 	.issues__wrapper {
 		width: 100%;
 		color: var(--issue-color);
