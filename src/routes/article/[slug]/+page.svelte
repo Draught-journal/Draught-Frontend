@@ -86,7 +86,6 @@
 		padding-block-start: 1rem;
 		font-size: var(--font-size-sm);
 		line-height: 1.5;
-		border-top: 1px solid var(--color-border, #bebebe);
 	}
 
 	/* media query mobile */
