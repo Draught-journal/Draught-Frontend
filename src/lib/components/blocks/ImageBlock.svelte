@@ -46,7 +46,7 @@
 		margin: 0 auto;
 		padding-block: 0.5rem;
 		font-size: 0.9rem;
-		font-style: italic;
+		text-align: center;
 	}
 
 	.image-link {

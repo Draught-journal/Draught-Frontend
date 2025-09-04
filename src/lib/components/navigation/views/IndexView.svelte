@@ -73,12 +73,17 @@
 		font-size: var(--font-size-base);
 	}
 
+	.index-content button:hover {
+		font-family: 'OTParellel-cursive', 'OTParellel', serif;
+		font-style: italic;
+		font-synthesis: none;
+	}
+
 	.tag-button {
 		display: block;
 		width: 100%;
 		text-align: center;
 		line-height: 23px;
-		text-transform: lowercase;
 		border: none;
 		background: none;
 		color: inherit;

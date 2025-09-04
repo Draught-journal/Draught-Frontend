@@ -155,7 +155,6 @@
 		left: 50%;
 		transform: translateX(-50%);
 		background-color: var(--color-bg);
-
 		border-bottom: 1px solid var(--color-border);
 		z-index: 1000;
 		transition:
