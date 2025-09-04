@@ -147,7 +147,6 @@
 
 <style>
 	nav {
-		padding-inline: 1rem;
 		padding-block-start: 1rem;
 		width: 100%;
 		margin: 0 auto;
@@ -176,6 +175,7 @@
 
 	nav.active {
 		background-color: white;
+		padding-inline-end: var(--scroll-bar-width);
 		max-height: 100dvh;
 		height: 100dvh;
 		overflow: hidden;

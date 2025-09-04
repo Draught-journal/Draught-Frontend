@@ -82,6 +82,7 @@
 		text-align: center;
 		position: relative;
 		min-height: 300px; /* Ensure consistent height */
+		max-width: 30vw;
 	}
 
 	.content {
