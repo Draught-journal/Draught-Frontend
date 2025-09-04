@@ -22,6 +22,8 @@
 	let observer: IntersectionObserver;
 	// Track if nav is visible (to conditionally hide the issue number)
 	let isNavVisible = $state(false);
+	// Track if user has scrolled past the element at least once
+	let hasScrolledPast = $state(false);
 	const images = $derived(
 		articles
 			.filter((article) => article.cover && article.cover.url)
@@ -40,72 +42,56 @@
 				showNav: false,
 				showIssue: false
 			}));
+			isNavVisible = false;
 
-			// Function to check if element has scrolled past the threshold
-			const checkScrollPosition = () => {
-				if (!issueNumElement) return;
-
-				const rect = issueNumElement.getBoundingClientRect();
-				const hasScrolledPastThreshold = rect.bottom <= NAV_THRESHOLD;
-				const issueText = issueNumElement.textContent?.trim() || '';
-
-				// Update our local state
-				isNavVisible = hasScrolledPastThreshold;
-
-				navStore.update((store) => ({
-					...store,
-					issueText,
-					showNav: hasScrolledPastThreshold,
-					showIssue: hasScrolledPastThreshold,
-					issueColor
-				}));
-			};
-
-			// Initial check on mount
-			// Slight delay to ensure accurate positioning after render
-			setTimeout(checkScrollPosition, 100);
-
-			// Set up scroll event listener
-			window.addEventListener('scroll', checkScrollPosition, { passive: true });
-
-			// Also keep the observer for backup
+			// Simple IntersectionObserver - when element goes out of view, show nav
 			observer = new IntersectionObserver(
 				(entries) => {
 					entries.forEach((entry) => {
 						if (entry.target === issueNumElement) {
-							// Only trust the observer if the element is fully out of view
-							// based on our threshold
-							if (!entry.isIntersecting) {
-								const rect = entry.target.getBoundingClientRect();
-								if (rect.bottom <= NAV_THRESHOLD) {
-									const issueText = entry.target.textContent?.trim() || '';
-									// Update our local state
-									isNavVisible = true;
+							const issueText = entry.target.textContent?.trim() || '';
 
-									navStore.update((store) => ({
-										...store,
-										issueText,
-										showNav: true,
-										showIssue: true,
-										issueColor
-									}));
+							// If element is intersecting (visible), mark that we've seen it
+							if (entry.isIntersecting) {
+								hasScrolledPast = false;
+							} else {
+								// Element is not intersecting (out of view)
+								// Only show nav if we've scrolled past it (not on initial load)
+								if (hasScrolledPast || entry.boundingClientRect.top < 0) {
+									hasScrolledPast = true;
 								}
 							}
+
+							// Only show nav if we've confirmed the user scrolled past
+							const shouldShowNav = !entry.isIntersecting && hasScrolledPast;
+
+							// Update both our local state and the store
+							isNavVisible = shouldShowNav;
+
+							navStore.update((store) => ({
+								...store,
+								issueText,
+								showNav: shouldShowNav,
+								showIssue: shouldShowNav,
+								issueColor
+							}));
+
+							console.log('Intersection update:', {
+								isIntersecting: entry.isIntersecting,
+								hasScrolledPast,
+								shouldShowNav,
+								boundingRect: entry.boundingClientRect
+							});
 						}
 					});
 				},
 				{
 					threshold: 0,
-					rootMargin: `${NAV_THRESHOLD}px 0px 0px 0px`
+					rootMargin: `-${NAV_THRESHOLD}px 0px 0px 0px`
 				}
 			);
 
 			observer.observe(issueNumElement);
-
-			// Return cleanup function
-			return () => {
-				window.removeEventListener('scroll', checkScrollPosition);
-			};
 		}
 	});
 
@@ -113,7 +99,6 @@
 		if (observer) {
 			observer.disconnect();
 		}
-		// Event listener is cleaned up in the onMount return function
 	});
 </script>
 
