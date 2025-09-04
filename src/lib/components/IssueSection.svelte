@@ -4,6 +4,9 @@
 	import { navStore } from '$lib/stores/navStore.js';
 	import type { Article } from '$lib/api';
 
+	// Threshold in pixels for when the nav should appear (distance from top of viewport)
+	const NAV_THRESHOLD = 310;
+
 	let {
 		issueColor = '#000000',
 		articles = []
@@ -17,6 +20,8 @@
 
 	let issueNumElement: HTMLDivElement;
 	let observer: IntersectionObserver;
+	// Track if nav is visible (to conditionally hide the issue number)
+	let isNavVisible = $state(false);
 	const images = $derived(
 		articles
 			.filter((article) => article.cover && article.cover.url)
@@ -29,28 +34,85 @@
 
 	onMount(() => {
 		if (issueNumElement) {
+			// Ensure nav is hidden initially
+			navStore.update((store) => ({
+				...store,
+				showNav: false,
+				showIssue: false
+			}));
+
+			// Function to check if element has scrolled past the threshold
+			const checkScrollPosition = () => {
+				if (!issueNumElement) return;
+
+				const rect = issueNumElement.getBoundingClientRect();
+				const hasScrolledPastThreshold = rect.bottom <= NAV_THRESHOLD;
+				const issueText = issueNumElement.textContent?.trim() || '';
+
+				// Update our local state
+				isNavVisible = hasScrolledPastThreshold;
+
+				navStore.update((store) => ({
+					...store,
+					issueText,
+					showNav: hasScrolledPastThreshold,
+					showIssue: hasScrolledPastThreshold,
+					issueColor
+				}));
+
+				console.log('Scroll check:', {
+					bottom: rect.bottom,
+					threshold: NAV_THRESHOLD,
+					hasScrolledPastThreshold,
+					showNav: hasScrolledPastThreshold
+				});
+			};
+
+			// Initial check on mount
+			// Slight delay to ensure accurate positioning after render
+			setTimeout(checkScrollPosition, 100);
+
+			// Set up scroll event listener
+			window.addEventListener('scroll', checkScrollPosition, { passive: true });
+
+			// Also keep the observer for backup
 			observer = new IntersectionObserver(
 				(entries) => {
 					entries.forEach((entry) => {
 						if (entry.target === issueNumElement) {
-							const issueText = entry.target.textContent?.trim() || '';
-							navStore.update((store) => ({
-								...store,
-								issueText,
-								showNav: !entry.isIntersecting,
-								showIssue: !entry.isIntersecting
-							}));
+							// Only trust the observer if the element is fully out of view
+							// based on our threshold
+							if (!entry.isIntersecting) {
+								const rect = entry.target.getBoundingClientRect();
+								if (rect.bottom <= NAV_THRESHOLD) {
+									const issueText = entry.target.textContent?.trim() || '';
+									// Update our local state
+									isNavVisible = true;
+
+									navStore.update((store) => ({
+										...store,
+										issueText,
+										showNav: true,
+										showIssue: true,
+										issueColor
+									}));
+								}
+							}
 						}
 					});
 				},
 				{
-					// Trigger when the element is completely out of view
 					threshold: 0,
-					rootMargin: '-310px 0px 0px 0px' // Account for nav height
+					rootMargin: `${NAV_THRESHOLD}px 0px 0px 0px`
 				}
 			);
 
 			observer.observe(issueNumElement);
+
+			// Return cleanup function
+			return () => {
+				window.removeEventListener('scroll', checkScrollPosition);
+			};
 		}
 	});
 
@@ -58,6 +120,7 @@
 		if (observer) {
 			observer.disconnect();
 		}
+		// Event listener is cleaned up in the onMount return function
 	});
 </script>
 
@@ -75,7 +138,7 @@
 </div>
 
 <div class="issues__wrapper" style="--issue-color: {issueColor};">
-	<div class="issue__num" bind:this={issueNumElement}>
+	<div class="issue__num" class:hidden={isNavVisible} bind:this={issueNumElement}>
 		<p>issue one</p>
 	</div>
 	<section class="articles">
@@ -131,6 +194,14 @@
 		width: 100%;
 		padding-block: calc(var(--space-16) * 4);
 		text-align: center;
+		transition:
+			opacity 0.3s ease,
+			visibility 0.3s ease;
+	}
+
+	.issues__wrapper .issue__num.hidden {
+		opacity: 0;
+		visibility: hidden;
 	}
 
 	.articles {

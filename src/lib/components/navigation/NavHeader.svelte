@@ -10,18 +10,21 @@
 		onNavigateHome: () => void;
 		onToggleIndex: () => void;
 	} = $props();
+
+	// Calculate the dynamic text color style
+	const textColorStyle = $derived(navState?.issueColor ? `color: ${navState.issueColor};` : '');
 </script>
 
 <div class="nav-container">
 	{#if isArticlePage}
 		<!-- Article page layout: only show return in third column -->
 		<div id="return" class="nav-item">
-			<a href="/" onclick={onNavigateHome}> (return) </a>
+			<a href="/" onclick={onNavigateHome} style={textColorStyle}> (return) </a>
 		</div>
 	{:else}
 		<!-- Default layout: show home, issue, and index -->
 		<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
-			<a href="/" onclick={onNavigateHome}>
+			<a href="/" onclick={onNavigateHome} style={textColorStyle}>
 				<p>draught</p>
 			</a>
 		</div>
@@ -31,12 +34,12 @@
 			class:active={navState?.activeViews.issue}
 			hidden={!navState?.showIssue}
 		>
-			<button>
+			<button style={textColorStyle}>
 				<p>{navState?.issueText}</p>
 			</button>
 		</div>
 		<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
-			<button onclick={onToggleIndex}>
+			<button onclick={onToggleIndex} style={textColorStyle}>
 				<p>(index)</p>
 			</button>
 		</div>

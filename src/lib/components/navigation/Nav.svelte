@@ -68,6 +68,7 @@
 		navState = value;
 	});
 
+	// For debugging
 	$inspect(navState);
 
 	// Handle body overflow when nav is active
@@ -159,9 +160,6 @@
 		background-color: var(--color-bg);
 		border-bottom: 1px solid var(--color-border);
 		z-index: 1000;
-		transition:
-			transform 0.3s ease-in-out,
-			opacity 0.3s ease-in-out;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		grid-template-rows: min-content 1fr;
