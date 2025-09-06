@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { SEOData } from '$lib/types/seo';
 
 	let {
@@ -23,7 +23,7 @@
 	}: SEOData = $props();
 
 	// Derive the current URL if not provided
-	const currentUrl = $derived(url || $page.url.href);
+	const currentUrl = $derived(url || page.url.href);
 
 	// Create the full page title
 	const pageTitle = $derived(title === 'Draught' ? title : `${title} | Draught`);
@@ -31,7 +31,7 @@
 	// Ensure image has full URL if it's a relative path
 	const fullImageUrl = $derived(
 		image && !image.startsWith('http')
-			? `${$page.url.origin}${image.startsWith('/') ? image : '/' + image}`
+			? `${page.url.origin}${image.startsWith('/') ? image : '/' + image}`
 			: image
 	);
 

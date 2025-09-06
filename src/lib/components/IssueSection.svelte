@@ -75,13 +75,6 @@
 								showIssue: shouldShowNav,
 								issueColor
 							}));
-
-							console.log('Intersection update:', {
-								isIntersecting: entry.isIntersecting,
-								hasScrolledPast,
-								shouldShowNav,
-								boundingRect: entry.boundingClientRect
-							});
 						}
 					});
 				},

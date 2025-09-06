@@ -10,10 +10,10 @@
 		if (data.showNav) {
 			navStore.update((store) => ({
 				...store,
-				showNav: true
+				showNav: true,
+				issueColor: '#181818'
 			}));
 		}
-
 		// Optional: Clean up when leaving the article route
 		return () => {
 			// You can choose to hide nav when leaving or keep it visible

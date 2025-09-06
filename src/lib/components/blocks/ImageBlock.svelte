@@ -32,7 +32,7 @@
 </div>
 
 <style>
-	:global(html, body) {
+	:global(html) {
 		overflow-x: hidden; /* Prevent horizontal scrolling at the root level */
 		max-width: 100%;
 	}
