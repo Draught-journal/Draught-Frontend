@@ -13,6 +13,14 @@
 		label: string;
 	};
 
+	type ArticleInfo = {
+		article: Article;
+		gridItem: GridItem;
+		index: number;
+	};
+
+	type ArticlesByRow = Record<string, ArticleInfo[]>;
+
 	let {
 		issueColor = '#000000',
 		grid = '[]',
@@ -125,24 +133,48 @@
 	</div>
 	<section class="articles">
 		{#if gridConfig && gridConfig.length > 0}
-			<!-- Use grid configuration when available -->
-			{#each displayIssues as article, index}
-				{#if index < gridConfig.length}
-					{@const gridItem = gridConfig[index]}
-					{@const maxRow = Math.max(...gridConfig.map((item) => item.row))}
-					{@const isLastRow = gridItem.row === maxRow}
-					{@const rowItems = gridConfig.filter((item) => item.row === gridItem.row)}
-					{@const isLastRowSingle = rowItems.length === 1}
-					{@const isLastRowDouble = rowItems.length === 2}
+			{@const maxRow = Math.max(...gridConfig.map((item) => item.row))}
 
-					<div
-						class="issue-wrapper"
-						class:single-last={isLastRow && isLastRowSingle}
-						class:double-row-item={isLastRow && isLastRowDouble}
-						style="grid-row: {gridItem.row}; grid-column: {gridItem.col};"
-					>
-						<ArticleCard {article} />
+			<!-- Process the grid data in template -->
+			{@const groupedRows = (() => {
+				// Pre-process articles by row
+				const result: Record<number, { article: Article; gridItem: GridItem }[]> = {};
+
+				for (let index = 0; index < Math.min(gridConfig.length, displayIssues.length); index++) {
+					const gridItem = gridConfig[index];
+					const article = displayIssues[index];
+					const row = gridItem.row;
+
+					if (!result[row]) result[row] = [];
+					result[row].push({ article, gridItem });
+				}
+
+				return result;
+			})()}
+
+			<!-- Render each row -->
+			{#each Object.entries(groupedRows) as [rowNumStr, rowArticles]}
+				{@const rowNum = parseInt(rowNumStr)}
+				{@const isLastRow = rowNum === maxRow}
+
+				{#if rowArticles.length === 1}
+					<!-- Handle single article in a row -->
+					<div class="issue-wrapper single-last" style="grid-row: {rowNum}; grid-column: 1 / -1;">
+						<ArticleCard article={rowArticles[0].article} />
 					</div>
+				{:else if rowArticles.length === 2}
+					<!-- Handle two articles in a row -->
+					<div class="issue-wrapper double-row" style="grid-row: {rowNum}; grid-column: 1 / -1;">
+						<ArticleCard article={rowArticles[0].article} />
+						<ArticleCard article={rowArticles[1].article} />
+					</div>
+				{:else}
+					<!-- Standard grid layout for 3+ articles in a row -->
+					{#each rowArticles as { article, gridItem }}
+						<div class="issue-wrapper" style="grid-row: {rowNum}; grid-column: {gridItem.col};">
+							<ArticleCard {article} />
+						</div>
+					{/each}
 				{/if}
 			{/each}
 		{:else}
@@ -239,10 +271,7 @@
 		justify-items: center;
 	}
 
-	/* For the new grid-based layout */
-	.issue-wrapper.double-row-item {
-		width: 100%;
-	}
+	/* CSS for grid-based layout is handled by existing styles */
 
 	@media (max-width: 768px) {
 		.issues__wrapper .issue__num {
