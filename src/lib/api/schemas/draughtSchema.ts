@@ -75,6 +75,7 @@ export interface Issue extends GenericEntity {
 	published: GenericDateStructure;
 	color: string;
 	tags: string[];
+	grid: string;
 	articles: Article[];
 }
 

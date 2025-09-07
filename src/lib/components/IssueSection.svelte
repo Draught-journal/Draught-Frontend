@@ -7,13 +7,24 @@
 	// Threshold in pixels for when the nav should appear (distance from top of viewport)
 	const NAV_THRESHOLD = 310;
 
+	type GridItem = {
+		row: number;
+		col: number;
+		label: string;
+	};
+
 	let {
 		issueColor = '#000000',
+		grid = '[]',
 		articles = []
 	}: {
 		issueColor?: string;
+		grid?: string;
 		articles?: Article[];
 	} = $props();
+
+	// Parse grid JSON if it's a string
+	const gridConfig = $derived(typeof grid === 'string' ? JSON.parse(grid) : grid) as GridItem[];
 
 	// For demo purposes, create 8 issues if none provided
 	const displayIssues = $derived(articles.length > 0 ? articles : (Array(8).fill({}) as Article[]));
@@ -113,26 +124,50 @@
 		<p>issue one</p>
 	</div>
 	<section class="articles">
-		{#each displayIssues as article, index}
-			{@const totalItems = displayIssues.length}
-			{@const remainder = totalItems % 3}
-			{@const isInLastRow = remainder > 0 && index >= totalItems - remainder}
-			{@const positionInLastRow = index - (totalItems - remainder)}
+		{#if gridConfig && gridConfig.length > 0}
+			<!-- Use grid configuration when available -->
+			{#each displayIssues as article, index}
+				{#if index < gridConfig.length}
+					{@const gridItem = gridConfig[index]}
+					{@const maxRow = Math.max(...gridConfig.map((item) => item.row))}
+					{@const isLastRow = gridItem.row === maxRow}
+					{@const rowItems = gridConfig.filter((item) => item.row === gridItem.row)}
+					{@const isLastRowSingle = rowItems.length === 1}
+					{@const isLastRowDouble = rowItems.length === 2}
 
-			{#if remainder === 2 && isInLastRow && positionInLastRow === 0}
-				<!-- Create a 2-column subgrid for the last 2 items -->
-				<div class="issue-wrapper double-row">
-					<ArticleCard {article} />
-					<ArticleCard {article} />
-				</div>
-			{:else if remainder === 2 && isInLastRow && positionInLastRow === 1}
-				<!-- Skip the second item as it's already included in the double-row above -->
-			{:else}
-				<div class="issue-wrapper" class:single-last={remainder === 1 && isInLastRow}>
-					<ArticleCard {article} />
-				</div>
-			{/if}
-		{/each}
+					<div
+						class="issue-wrapper"
+						class:single-last={isLastRow && isLastRowSingle}
+						class:double-row-item={isLastRow && isLastRowDouble}
+						style="grid-row: {gridItem.row}; grid-column: {gridItem.col};"
+					>
+						<ArticleCard {article} />
+					</div>
+				{/if}
+			{/each}
+		{:else}
+			<!-- Fallback to original layout logic when grid is not provided -->
+			{#each displayIssues as article, index}
+				{@const totalItems = displayIssues.length}
+				{@const remainder = totalItems % 3}
+				{@const isInLastRow = remainder > 0 && index >= totalItems - remainder}
+				{@const positionInLastRow = index - (totalItems - remainder)}
+
+				{#if remainder === 2 && isInLastRow && positionInLastRow === 0}
+					<!-- Create a 2-column subgrid for the last 2 items -->
+					<div class="issue-wrapper double-row">
+						<ArticleCard {article} />
+						<ArticleCard {article} />
+					</div>
+				{:else if remainder === 2 && isInLastRow && positionInLastRow === 1}
+					<!-- Skip the second item as it's already included in the double-row above -->
+				{:else}
+					<div class="issue-wrapper" class:single-last={remainder === 1 && isInLastRow}>
+						<ArticleCard {article} />
+					</div>
+				{/if}
+			{/each}
+		{/if}
 	</section>
 </div>
 
@@ -178,6 +213,7 @@
 	.articles {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(20rem, 1fr));
+		grid-auto-rows: auto;
 		gap: 1rem;
 		row-gap: 2.5rem;
 		place-items: center;
@@ -203,6 +239,11 @@
 		justify-items: center;
 	}
 
+	/* For the new grid-based layout */
+	.issue-wrapper.double-row-item {
+		width: 100%;
+	}
+
 	@media (max-width: 768px) {
 		.issues__wrapper .issue__num {
 			font-size: var(--font-size-sm);
@@ -216,6 +257,12 @@
 		.issue-wrapper.double-row {
 			grid-column: 1;
 			display: block;
+		}
+
+		/* Override grid positioning on mobile */
+		.issue-wrapper {
+			grid-column: 1 !important;
+			grid-row: auto !important;
 		}
 
 		/* Reset single-last to normal width on mobile */
