@@ -80,9 +80,26 @@ main {
 	max-width: var(--content-width, 1200px);
 	margin-inline: auto;
 }
+
 #footnotes ol {
-	padding-left: var(--space-4);
-	list-style: decimal;
+	padding-left: 0;
+	list-style: none;
+	counter-reset: footnote-counter;
+}
+
+#footnotes li {
+	position: relative;
+	padding-left: 2em; /* Space for the number and tab */
+	text-indent: -0.5em; /* Pull the text back to create tab effect after number */
+}
+
+#footnotes li::before {
+	counter-increment: footnote-counter;
+	content: counter(footnote-counter);
+	position: absolute;
+	left: 0;
+	width: 1.5em; /* Width for the number */
+	display: inline-block;
 }
 
 /* #footnotes li {
