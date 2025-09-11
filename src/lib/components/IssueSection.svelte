@@ -19,14 +19,14 @@
 		index: number;
 	};
 
-	type ArticlesByRow = Record<string, ArticleInfo[]>;
-
 	let {
 		issueColor = '#000000',
+		issueTitle = 'issue one',
 		grid = '[]',
 		articles = []
 	}: {
 		issueColor?: string;
+		issueTitle?: string;
 		grid?: string;
 		articles?: Article[];
 	} = $props();
@@ -129,7 +129,7 @@
 
 <div class="issues__wrapper" style="--issue-color: {issueColor};">
 	<div class="issue__num" class:hidden={isNavVisible} bind:this={issueNumElement}>
-		<p>issue one</p>
+		<p>{issueTitle}</p>
 	</div>
 	<section class="articles">
 		{#if gridConfig && gridConfig.length > 0}
@@ -209,6 +209,7 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 10rem;
+		padding-block: 20rem;
 	}
 
 	.thumbnails .image {
