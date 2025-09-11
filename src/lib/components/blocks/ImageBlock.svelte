@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import type { ImageContentBlock } from '$lib/api/schemas/draughtSchema';
 
 	// Use the proper Svelte runes syntax
@@ -7,19 +8,99 @@
 	// Handle scale property (small, medium, large, or null which defaults to medium)
 	const scale = $derived(content.content.image.scale || 'medium');
 	const imageClass = $derived(`block-image scale-${scale}`);
+
+	// State for lazy loading
+	let imageVisible = $state(false);
+	let imageLoaded = $state(false);
+	let containerElement = $state<HTMLDivElement | null>(null);
+
+	// Get appropriate sizes based on scale
+	const getSizes = () => {
+		switch (scale) {
+			case 'small':
+				return '(max-width: 768px) 80vw, 60vw';
+			case 'medium':
+				return '(max-width: 768px) 100vw, 80vw';
+			case 'large':
+				return '100vw';
+			default:
+				return '(max-width: 768px) 100vw, 80vw';
+		}
+	};
+
+	// Generate srcset if URL contains width and height parameters
+	const generateSrcset = (url: string) => {
+		// Check if we can parse the URL and if it seems to be from an image service
+		// that supports width parameters (e.g., /images/image.jpg?w=800&h=600)
+		if (!url || !url.includes('?')) return '';
+
+		try {
+			const baseUrl = url.split('?')[0];
+			const widths = [480, 768, 1024, 1440, 1920];
+
+			return widths.map((w) => `${baseUrl}?w=${w} ${w}w`).join(', ');
+		} catch (e) {
+			return '';
+		}
+	};
+
+	// Set up Intersection Observer for lazy loading
+	onMount(() => {
+		if (!containerElement) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				const [entry] = entries;
+				if (entry.isIntersecting) {
+					imageVisible = true;
+					observer.disconnect();
+				}
+			},
+			{
+				root: null,
+				rootMargin: '200px 0px', // Start loading 200px before image enters viewport
+				threshold: 0.01
+			}
+		);
+
+		observer.observe(containerElement);
+
+		return () => {
+			if (observer) observer.disconnect();
+		};
+	});
+
+	// Generate proper srcset if possible
+	const srcset = $derived(generateSrcset(content.content.image.url));
+	const sizes = $derived(getSizes());
 </script>
 
 <div
 	class={`image-block ${scale === 'large' ? 'full-width-container' : ''}`}
 	data-block-id={content.id}
+	bind:this={containerElement}
 >
 	<figure class="image-container" style="aspect-ratio: {content.content.ratio || 'auto'}">
-		<img
-			src={content.content.image.url}
-			alt={content.content.image.alt}
-			class={imageClass}
-			style="object-fit: {content.content.crop || 'cover'}"
-		/>
+		<!-- Only load the actual image when it's about to be visible -->
+		{#if imageVisible || typeof window === 'undefined'}
+			<img
+				src={content.content.image.url}
+				{srcset}
+				{sizes}
+				alt={content.content.image.alt}
+				loading="lazy"
+				decoding="async"
+				class={imageClass}
+				style="object-fit: {content.content.crop || 'cover'}"
+				onload={() => {
+					imageLoaded = true;
+				}}
+			/>
+		{:else}
+			<!-- Empty image tag to reserve space -->
+			<img class={imageClass} alt="" aria-hidden="true" />
+		{/if}
+
 		{#if content.content.image.caption}
 			<figcaption class={`image-caption scale-${scale}`}>
 				{content.content.image.caption}
@@ -57,11 +138,15 @@
 		overflow: hidden;
 	}
 
+	/* Removed placeholder styling since we don't need it without background */
+
 	.block-image {
 		height: 100%;
 		display: block;
 		margin: 0 auto;
 		transition: transform 0.3s ease;
+		z-index: 2;
+		position: relative;
 	}
 
 	/* Scale variations */
