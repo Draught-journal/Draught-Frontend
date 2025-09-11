@@ -82,6 +82,8 @@
 	}
 
 	.footnotes__container {
+		width: 90%;
+		margin: 0 auto;
 		margin-top: 3rem;
 		padding-block-start: 1rem;
 		font-size: var(--font-size-sm);
