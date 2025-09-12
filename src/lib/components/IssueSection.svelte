@@ -218,6 +218,9 @@
 		top: 50%;
 		transform: translateY(-50%);
 		max-width: 25rem;
+		height: 100vh;
+		display: grid;
+		place-content: center;
 	}
 	.thumbnails .image img {
 		max-width: 100%;
