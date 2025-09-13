@@ -2,7 +2,7 @@
 	import type { Article } from '$lib/api';
 	import ContentBlurb from './ContentBlurb.svelte';
 	import LazyImage from './ui/LazyImage.svelte';
-	
+
 	const { article }: { article: Article } = $props();
 
 	// Check if there's a valid cover image
@@ -20,7 +20,7 @@
 	function transitionToImage() {
 		// Only allow transition if image has been loaded
 		if (!hasCoverImage || !imageLoaded) return;
-		
+
 		clearTimers();
 		showImage = true;
 		ready = false;
@@ -48,17 +48,14 @@
 			timeoutId = null;
 		}
 	}
-	
+
 	// Handler for when the image is loaded
 	function handleImageLoad() {
 		imageLoaded = true;
 	}
 </script>
 
-<article 
-	class="issue" 
-	onmouseenter={hasCoverImage && imageLoaded ? transitionToImage : undefined}
->
+<article class="issue" onmouseenter={hasCoverImage && imageLoaded ? transitionToImage : undefined}>
 	<a href={`article/${article.slug}`}>
 		<div class="content" class:hidden={showImage}>
 			<div class="heading">
@@ -83,7 +80,7 @@
 				role="button"
 				tabindex="0"
 			>
-				<LazyImage 
+				<LazyImage
 					src={article.cover.url}
 					alt={article.cover.alt || `Cover for ${article.title}`}
 					objectFit="cover"
@@ -142,11 +139,11 @@
 		transform: translate(-50%, -50%) scale(1);
 		pointer-events: auto;
 	}
-	
+
 	.thumbnail:not(.loaded) {
 		background-color: transparent; /* No background for unloaded thumbnails */
 	}
-	
+
 	/* Style for the LazyImage component inside thumbnail */
 	.thumbnail :global(.lazy-image-container) {
 		max-width: 200px;

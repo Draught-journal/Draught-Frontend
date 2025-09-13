@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	
+
 	/**
 	 * A reusable component for lazy loading images
 	 */
-	
+
 	// Props
 	const {
 		src = '',
@@ -20,7 +20,7 @@
 		useSrcset = false, // Whether to use srcset for responsive images
 		sizes = '',
 		srcset = '',
-		onLoad = () => {}  // Callback function when image loads
+		onLoad = () => {} // Callback function when image loads
 	} = $props<{
 		src: string;
 		alt: string;
@@ -37,17 +37,17 @@
 		srcset?: string;
 		onLoad?: () => void;
 	}>();
-	
+
 	// State
 	let containerElement = $state<HTMLDivElement | null>(null);
 	let imageLoaded = $state(false);
 	let shouldLoad = $state(typeof window === 'undefined'); // Load immediately on SSR
 	let observer: IntersectionObserver | null = null;
-	
+
 	// Initialize Intersection Observer on mount
 	onMount(() => {
 		if (!containerElement || typeof window === 'undefined' || shouldLoad) return;
-		
+
 		observer = new IntersectionObserver(
 			(entries) => {
 				const [entry] = entries;
@@ -58,33 +58,31 @@
 			},
 			{ rootMargin, threshold }
 		);
-		
+
 		observer.observe(containerElement);
-		
+
 		return () => {
 			observer?.disconnect();
 		};
 	});
-	
+
 	// Clean up observer on destroy
 	onDestroy(() => {
 		observer?.disconnect();
 	});
-	
+
 	// Handle image load event
 	const handleImageLoad = () => {
 		imageLoaded = true;
 		onLoad();
 	};
-	
+
 	// Combine class names
-	const imageClasses = $derived(
-		`lazy-image ${imageLoaded ? 'loaded' : ''} ${className}`.trim()
-	);
+	const imageClasses = $derived(`lazy-image ${imageLoaded ? 'loaded' : ''} ${className}`.trim());
 </script>
 
-<div 
-	class="lazy-image-container" 
+<div
+	class="lazy-image-container"
 	bind:this={containerElement}
 	style="--placeholder-color: {placeholderColor}; {style}"
 >
@@ -97,18 +95,14 @@
 			loading="lazy"
 			decoding="async"
 			onload={handleImageLoad}
-			width={width}
-			height={height}
+			{width}
+			{height}
 			srcset={useSrcset ? srcset : undefined}
 			sizes={useSrcset ? sizes : undefined}
 		/>
 	{:else}
 		<!-- Empty placeholder to maintain space -->
-		<div 
-			class="placeholder" 
-			style="width: {width}; height: {height};"
-			aria-hidden="true"
-		></div>
+		<div class="placeholder" style="width: {width}; height: {height};" aria-hidden="true"></div>
 	{/if}
 </div>
 
@@ -120,7 +114,7 @@
 		width: 100%;
 		height: 100%;
 	}
-	
+
 	.lazy-image {
 		width: 100%;
 		height: 100%;
@@ -129,11 +123,11 @@
 		position: relative;
 		z-index: 2;
 	}
-	
+
 	.lazy-image.loaded {
 		opacity: 1;
 	}
-	
+
 	.placeholder {
 		position: absolute;
 		top: 0;

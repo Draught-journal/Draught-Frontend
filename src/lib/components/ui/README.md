@@ -10,29 +10,29 @@ The `LazyImage` component is a reusable component for lazy loading images. It us
 
 ```svelte
 <script>
-  import LazyImage from '$lib/components/ui/LazyImage.svelte';
+	import LazyImage from '$lib/components/ui/LazyImage.svelte';
 </script>
 
 <LazyImage
-  src="path/to/image.jpg"
-  alt="Description of the image"
-  objectFit="cover"
-  className="my-custom-class"
-  srcset="image-480w.jpg 480w, image-800w.jpg 800w"
-  sizes="(max-width: 600px) 480px, 800px"
+	src="path/to/image.jpg"
+	alt="Description of the image"
+	objectFit="cover"
+	className="my-custom-class"
+	srcset="image-480w.jpg 480w, image-800w.jpg 800w"
+	sizes="(max-width: 600px) 480px, 800px"
 />
 ```
 
 ### Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `src` | string | required | The source URL of the image |
-| `alt` | string | required | Alternative text for the image |
-| `objectFit` | string | 'cover' | CSS object-fit property ('cover', 'contain', etc.) |
-| `className` | string | '' | Additional CSS class(es) to apply to the image |
-| `srcset` | string | '' | Optional srcset attribute for responsive images |
-| `sizes` | string | '' | Optional sizes attribute for responsive images |
+| Prop        | Type   | Default  | Description                                        |
+| ----------- | ------ | -------- | -------------------------------------------------- |
+| `src`       | string | required | The source URL of the image                        |
+| `alt`       | string | required | Alternative text for the image                     |
+| `objectFit` | string | 'cover'  | CSS object-fit property ('cover', 'contain', etc.) |
+| `className` | string | ''       | Additional CSS class(es) to apply to the image     |
+| `srcset`    | string | ''       | Optional srcset attribute for responsive images    |
+| `sizes`     | string | ''       | Optional sizes attribute for responsive images     |
 
 ### Features
 
@@ -45,6 +45,7 @@ The `LazyImage` component is a reusable component for lazy loading images. It us
 ### Implementation
 
 The component handles three states:
+
 1. Before entering viewport: Shows placeholder or nothing
 2. In viewport but loading: Shows a placeholder or loading indicator
 3. Loaded: Shows the actual image with a fade-in transition

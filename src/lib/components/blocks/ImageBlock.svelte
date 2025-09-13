@@ -52,8 +52,8 @@
 		<LazyImage
 			src={content.content.image.url}
 			alt={content.content.image.alt}
-			srcset={srcset}
-			sizes={sizes}
+			{srcset}
+			{sizes}
 			objectFit={content.content.crop || 'cover'}
 			className={imageClass}
 		/>
