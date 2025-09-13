@@ -1,20 +1,26 @@
 <script lang="ts">
 	import type { Article } from '$lib/api';
 	import ContentBlurb from './ContentBlurb.svelte';
+	import LazyImage from './ui/LazyImage.svelte';
+	
 	const { article }: { article: Article } = $props();
 
 	// Check if there's a valid cover image
 	const hasCoverImage = article.cover && article.cover.url;
 
+	// Image visibility and interaction states
 	let showImage = $state(false);
-	let ready = false;
+	let ready = $state(false);
+	let imageLoaded = $state(false);
 	let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
 	const debounceDelay = 500;
 	const hoverDelay = 200;
 
 	function transitionToImage() {
-		if (!hasCoverImage) return;
+		// Only allow transition if image has been loaded
+		if (!hasCoverImage || !imageLoaded) return;
+		
 		clearTimers();
 		showImage = true;
 		ready = false;
@@ -22,7 +28,8 @@
 	}
 
 	function toggleImageVisibility() {
-		if (!hasCoverImage || !ready) return;
+		// Only allow toggling if image has been loaded
+		if (!hasCoverImage || !ready || !imageLoaded) return;
 
 		clearTimers();
 		showImage = !showImage;
@@ -41,15 +48,23 @@
 			timeoutId = null;
 		}
 	}
+	
+	// Handler for when the image is loaded
+	function handleImageLoad() {
+		imageLoaded = true;
+	}
 </script>
 
-<article class="issue" onmouseenter={hasCoverImage ? transitionToImage : undefined}>
+<article 
+	class="issue" 
+	onmouseenter={hasCoverImage && imageLoaded ? transitionToImage : undefined}
+>
 	<a href={`article/${article.slug}`}>
 		<div class="content" class:hidden={showImage}>
 			<div class="heading">
-				<div class="tag"><p>({article.tags})</p></div>
-				<div class="title"><p>{article.title}</p></div>
-				<div class="author"><p>{article.author}</p></div>
+				<div class="tag"><p>({article.tags || ''})</p></div>
+				<div class="title"><p>{article.title || 'Untitled'}</p></div>
+				<div class="author"><p>{article.author || 'Anonymous'}</p></div>
 			</div>
 
 			<div class="issue__number"><p>2.1.1</p></div>
@@ -63,11 +78,17 @@
 			<div
 				class="thumbnail"
 				class:visible={showImage}
-				onmouseenter={toggleImageVisibility}
+				class:loaded={imageLoaded}
+				onmouseenter={imageLoaded ? toggleImageVisibility : undefined}
 				role="button"
 				tabindex="0"
 			>
-				<img src={article.cover.url} alt="Random thumbnail" />
+				<LazyImage 
+					src={article.cover.url}
+					alt={article.cover.alt || `Cover for ${article.title}`}
+					objectFit="cover"
+					onLoad={handleImageLoad}
+				/>
 			</div>
 		{/if}
 	</a>
@@ -112,6 +133,8 @@
 			opacity 0.3s ease,
 			transform 0.3s ease;
 		cursor: pointer;
+		width: 200px;
+		height: 200px;
 	}
 
 	.thumbnail.visible {
@@ -119,11 +142,15 @@
 		transform: translate(-50%, -50%) scale(1);
 		pointer-events: auto;
 	}
-
-	.thumbnail img {
+	
+	.thumbnail:not(.loaded) {
+		background-color: transparent; /* No background for unloaded thumbnails */
+	}
+	
+	/* Style for the LazyImage component inside thumbnail */
+	.thumbnail :global(.lazy-image-container) {
 		max-width: 200px;
 		max-height: 200px;
-		object-fit: cover;
 	}
 
 	.issue p {

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import ArticleCard from './ArticleCard.svelte';
+	import LazyImage from './ui/LazyImage.svelte';
 	import { navStore } from '$lib/stores/navStore.js';
 	import type { Article } from '$lib/api';
 
@@ -115,12 +116,17 @@
 </script>
 
 <div class="thumbnails">
-	<!-- 5 random image -->
+	<!-- Lazy loaded thumbnails -->
 	{#if images && images.length > 0}
 		{#each images as image}
 			<div class="image">
 				<a href={image.articleUrl}>
-					<img src={image.url} alt={image.alt} />
+					<LazyImage
+						src={image.url}
+						alt={image.alt}
+						objectFit="contain"
+						className="thumbnail-image"
+					/>
 				</a>
 			</div>
 		{/each}
@@ -222,7 +228,7 @@
 		display: grid;
 		place-content: center;
 	}
-	.thumbnails .image img {
+	.thumbnails .image :global(.thumbnail-image) {
 		max-width: 100%;
 		max-height: 100%;
 		object-fit: contain;

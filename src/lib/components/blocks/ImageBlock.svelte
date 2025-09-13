@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { ImageContentBlock } from '$lib/api/schemas/draughtSchema';
+	import LazyImage from '../ui/LazyImage.svelte';
 
 	// Use the proper Svelte runes syntax
 	const { content } = $props<{ content: ImageContentBlock }>();
@@ -8,11 +8,6 @@
 	// Handle scale property (small, medium, large, or null which defaults to medium)
 	const scale = $derived(content.content.image.scale || 'medium');
 	const imageClass = $derived(`block-image scale-${scale}`);
-
-	// State for lazy loading
-	let imageVisible = $state(false);
-	let imageLoaded = $state(false);
-	let containerElement = $state<HTMLDivElement | null>(null);
 
 	// Get appropriate sizes based on scale
 	const getSizes = () => {
@@ -44,32 +39,6 @@
 		}
 	};
 
-	// Set up Intersection Observer for lazy loading
-	onMount(() => {
-		if (!containerElement) return;
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				const [entry] = entries;
-				if (entry.isIntersecting) {
-					imageVisible = true;
-					observer.disconnect();
-				}
-			},
-			{
-				root: null,
-				rootMargin: '200px 0px', // Start loading 200px before image enters viewport
-				threshold: 0.01
-			}
-		);
-
-		observer.observe(containerElement);
-
-		return () => {
-			if (observer) observer.disconnect();
-		};
-	});
-
 	// Generate proper srcset if possible
 	const srcset = $derived(generateSrcset(content.content.image.url));
 	const sizes = $derived(getSizes());
@@ -78,28 +47,16 @@
 <div
 	class={`image-block ${scale === 'large' ? 'full-width-container' : ''}`}
 	data-block-id={content.id}
-	bind:this={containerElement}
 >
 	<figure class="image-container" style="aspect-ratio: {content.content.ratio || 'auto'}">
-		<!-- Only load the actual image when it's about to be visible -->
-		{#if imageVisible || typeof window === 'undefined'}
-			<img
-				src={content.content.image.url}
-				{srcset}
-				{sizes}
-				alt={content.content.image.alt}
-				loading="lazy"
-				decoding="async"
-				class={imageClass}
-				style="object-fit: {content.content.crop || 'cover'}"
-				onload={() => {
-					imageLoaded = true;
-				}}
-			/>
-		{:else}
-			<!-- Empty image tag to reserve space -->
-			<img class={imageClass} alt="" aria-hidden="true" />
-		{/if}
+		<LazyImage
+			src={content.content.image.url}
+			alt={content.content.image.alt}
+			srcset={srcset}
+			sizes={sizes}
+			objectFit={content.content.crop || 'cover'}
+			className={imageClass}
+		/>
 
 		{#if content.content.image.caption}
 			<figcaption class={`image-caption scale-${scale}`}>
