@@ -14,12 +14,6 @@
 		label: string;
 	};
 
-	type ArticleInfo = {
-		article: Article;
-		gridItem: GridItem;
-		index: number;
-	};
-
 	let {
 		issueColor = '#000000',
 		issueTitle = 'issue one',
@@ -224,7 +218,7 @@
 		top: 50%;
 		transform: translateY(-50%);
 		max-width: 25rem;
-		height: 100vh;
+		height: 70vh;
 		display: grid;
 		place-content: center;
 	}
@@ -290,24 +284,44 @@
 
 		.articles {
 			grid-template-columns: 1fr;
+			width: 100%;
+			justify-items: center;
+			--article-width: 70%;
 		}
 
 		/* Override double-row to single column on mobile */
 		.issue-wrapper.double-row {
 			grid-column: 1;
-			display: block;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: var(--article-width, 90%);
 		}
 
 		/* Override grid positioning on mobile */
 		.issue-wrapper {
 			grid-column: 1 !important;
 			grid-row: auto !important;
+			width: var(--article-width, 90%);
+			margin: 0 auto;
 		}
 
 		/* Reset single-last to normal width on mobile */
 		.issue-wrapper.single-last {
 			grid-column: 1;
-			max-width: none;
+			max-width: var(--article-width, 90%);
+		}
+
+		/* Add more spacing between articles on mobile */
+		.articles {
+			gap: 2rem;
+			row-gap: 3.5rem;
+		}
+
+		/* Make thumbnails smaller on mobile */
+		.thumbnails .image {
+			/* max-width: 90%; */
+			height: 50vh;
 		}
 	}
 </style>

@@ -101,6 +101,7 @@
 		position: relative;
 		min-height: 300px; /* Ensure consistent height */
 		max-width: 30vw;
+		width: 100%;
 	}
 
 	.content {
@@ -170,5 +171,31 @@
 		font-size: var(--font-size-sm);
 		line-height: 19px;
 		hyphens: auto;
+	}
+
+	@media (max-width: 768px) {
+		.issue {
+			max-width: 100%;
+			width: 100%;
+			padding: 12px;
+		}
+
+		.thumbnail {
+			width: 180px;
+			height: 180px;
+		}
+
+		.thumbnail :global(.lazy-image-container) {
+			max-width: 180px;
+			max-height: 180px;
+		}
+
+		.issue .heading .title p {
+			font-size: var(--font-size-md, 1.2rem);
+		}
+
+		.blurb {
+			font-size: var(--font-size-xs, 0.8rem);
+		}
 	}
 </style>
