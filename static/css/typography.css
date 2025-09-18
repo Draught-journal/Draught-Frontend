@@ -40,7 +40,7 @@
 	--font-size-xs: clamp(0.625rem, 0.525rem + 0.5vw, 0.75rem); /* 10-12px */
 	--font-size-sm: clamp(0.75rem, 0.675rem + 0.375vw, 0.875rem); /* 12-14px */
 	--font-size-base: clamp(0.875rem, 0.775rem + 0.5vw, 1.0625rem); /* 14-17px */
-	--font-size-lg: clamp(1.0625rem, 0.925rem + 0.6875vw, 1.375rem); /* 17-22px */
+	--font-size-lg: clamp(1rem, 0.8625rem + 0.6875vw, 1.3125rem); /* 16-21px */
 	--font-size-xl: clamp(1.3125rem, 1.125rem + 0.9375vw, 1.875rem); /* 21-30px */
 	--font-size-2xl: clamp(1.625rem, 1.375rem + 1.25vw, 2.375rem); /* 26-38px */
 	--font-size-3xl: clamp(2.0625rem, 1.725rem + 1.6875vw, 3rem); /* 33-48px */
