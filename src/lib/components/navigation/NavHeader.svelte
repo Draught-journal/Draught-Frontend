@@ -11,8 +11,43 @@
 		onToggleIndex: () => void;
 	} = $props();
 
+	import { onMount } from 'svelte';
+
+	// Store the original color
+	let originalColor = '';
+
+	// Track whether index is toggled
+	let isIndexToggled = false;
+
+	// Update isIndexToggled based on navState and save original color
+	$effect(() => {
+		if (navState) {
+			// Only update original color when it first becomes available
+			if (originalColor === '' && navState.issueColor) {
+				originalColor = navState.issueColor;
+			}
+
+			// Sync toggle state with navState
+			isIndexToggled = navState.activeViews.index || false;
+		}
+	});
+
+	// Custom index toggle handler
+	function handleIndexToggle() {
+		// Toggle the index via the parent component function
+		onToggleIndex();
+
+		// isIndexToggled will be updated via the effect when navState changes
+	}
+
 	// Calculate the dynamic text color style
-	const textColorStyle = $derived(navState?.issueColor ? `color: ${navState.issueColor};` : '');
+	const textColorStyle = $derived(
+		navState?.activeViews.index
+			? 'color: #000000;' // Black when index is toggled on
+			: navState?.issueColor
+				? `color: ${navState.issueColor};`
+				: ''
+	);
 </script>
 
 <div class="nav-container">
@@ -39,7 +74,7 @@
 			</button>
 		</div>
 		<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
-			<button onclick={onToggleIndex} style={textColorStyle}>
+			<button onclick={handleIndexToggle} style={textColorStyle}>
 				<p>(index)</p>
 			</button>
 		</div>
