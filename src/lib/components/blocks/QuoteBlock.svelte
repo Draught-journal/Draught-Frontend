@@ -6,7 +6,7 @@
 
 <div class="quote-block" data-block-id={content.id}>
 	<blockquote class="quote-content">
-		<p class="quote-text">{content.content.text}</p>
+		<p class="quote-text">{@html content.content.text}</p>
 	</blockquote>
 </div>
 
