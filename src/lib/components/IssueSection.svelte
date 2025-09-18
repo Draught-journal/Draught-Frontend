@@ -44,7 +44,8 @@
 			.map((article) => ({
 				url: article.cover.url,
 				alt: article.cover.alt || `Cover image for ${article.title}`,
-				articleUrl: article.slug ? `/article/${article.slug}` : '#'
+				articleUrl: article.slug ? `/article/${article.slug}` : '#',
+				coverSize: article.coverSize || 'medium'
 			}))
 	);
 
@@ -113,7 +114,12 @@
 	<!-- Lazy loaded thumbnails -->
 	{#if images && images.length > 0}
 		{#each images as image}
-			<div class="image">
+			<div
+				class="image"
+				class:small={image.coverSize === 'small'}
+				class:medium={image.coverSize === 'medium'}
+				class:large={image.coverSize === 'large'}
+			>
 				<a href={image.articleUrl}>
 					<LazyImage
 						src={image.url}
@@ -217,10 +223,22 @@
 		position: sticky;
 		top: 50%;
 		transform: translateY(-50%);
-		max-width: 25rem;
+		max-width: 25rem; /* Default size (medium) */
 		height: 70vh;
 		display: grid;
 		place-content: center;
+	}
+
+	.thumbnails .image.small {
+		max-width: 15rem;
+	}
+
+	.thumbnails .image.medium {
+		max-width: 25rem;
+	}
+
+	.thumbnails .image.large {
+		max-width: 35rem;
 	}
 	.thumbnails .image :global(.thumbnail-image) {
 		max-width: 100%;
@@ -320,8 +338,19 @@
 
 		/* Make thumbnails smaller on mobile */
 		.thumbnails .image {
-			/* max-width: 90%; */
 			height: 50vh;
+		}
+
+		.thumbnails .image.small {
+			max-width: min(15rem, 70%);
+		}
+
+		.thumbnails .image.medium {
+			max-width: min(25rem, 85%);
+		}
+
+		.thumbnails .image.large {
+			max-width: min(35rem, 90%);
 		}
 	}
 </style>

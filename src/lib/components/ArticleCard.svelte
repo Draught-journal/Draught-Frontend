@@ -8,6 +8,9 @@
 	// Check if there's a valid cover image
 	const hasCoverImage = article.cover && article.cover.url;
 
+	// Get the cover size (default to medium)
+	const coverSize = article.coverSize || 'medium';
+
 	// Image visibility and interaction states
 	let showImage = $state(false);
 	let ready = $state(false);
@@ -76,6 +79,9 @@
 				class="thumbnail"
 				class:visible={showImage}
 				class:loaded={imageLoaded}
+				class:small={coverSize === 'small'}
+				class:medium={coverSize === 'medium'}
+				class:large={coverSize === 'large'}
 				onmouseenter={imageLoaded ? toggleImageVisibility : undefined}
 				role="button"
 				tabindex="0"
@@ -135,6 +141,21 @@
 		height: 200px;
 	}
 
+	.thumbnail.small {
+		width: 150px;
+		height: 150px;
+	}
+
+	.thumbnail.medium {
+		width: 200px;
+		height: 200px;
+	}
+
+	.thumbnail.large {
+		width: 250px;
+		height: 250px;
+	}
+
 	.thumbnail.visible {
 		opacity: 1;
 		transform: translate(-50%, -50%) scale(1);
@@ -149,6 +170,21 @@
 	.thumbnail :global(.lazy-image-container) {
 		max-width: 200px;
 		max-height: 200px;
+	}
+
+	.thumbnail.small :global(.lazy-image-container) {
+		max-width: 150px;
+		max-height: 150px;
+	}
+
+	.thumbnail.medium :global(.lazy-image-container) {
+		max-width: 200px;
+		max-height: 200px;
+	}
+
+	.thumbnail.large :global(.lazy-image-container) {
+		max-width: 250px;
+		max-height: 250px;
 	}
 
 	.issue p {
@@ -185,9 +221,39 @@
 			height: 180px;
 		}
 
+		.thumbnail.small {
+			width: 140px;
+			height: 140px;
+		}
+
+		.thumbnail.medium {
+			width: 180px;
+			height: 180px;
+		}
+
+		.thumbnail.large {
+			width: 220px;
+			height: 220px;
+		}
+
 		.thumbnail :global(.lazy-image-container) {
 			max-width: 180px;
 			max-height: 180px;
+		}
+
+		.thumbnail.small :global(.lazy-image-container) {
+			max-width: 140px;
+			max-height: 140px;
+		}
+
+		.thumbnail.medium :global(.lazy-image-container) {
+			max-width: 180px;
+			max-height: 180px;
+		}
+
+		.thumbnail.large :global(.lazy-image-container) {
+			max-width: 220px;
+			max-height: 220px;
 		}
 
 		.issue .heading .title p {
