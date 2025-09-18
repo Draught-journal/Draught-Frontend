@@ -55,7 +55,7 @@
 	}
 </script>
 
-<article class="issue" onmouseenter={hasCoverImage && imageLoaded ? transitionToImage : undefined}>
+<article class="issue">
 	<a href={`article/${article.slug}`}>
 		<div class="content" class:hidden={showImage}>
 			<div class="heading">
@@ -71,7 +71,7 @@
 			</div>
 		</div>
 
-		{#if hasCoverImage}
+		<!-- {#if hasCoverImage}
 			<div
 				class="thumbnail"
 				class:visible={showImage}
@@ -87,7 +87,7 @@
 					onLoad={handleImageLoad}
 				/>
 			</div>
-		{/if}
+		{/if} -->
 	</a>
 </article>
 
@@ -120,37 +120,6 @@
 			transform 0.3s ease;
 	}
 
-	.thumbnail {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%) scale(0.95);
-		opacity: 0;
-		pointer-events: none;
-		transition:
-			opacity 0.3s ease,
-			transform 0.3s ease;
-		cursor: pointer;
-		width: 200px;
-		height: 200px;
-	}
-
-	.thumbnail.visible {
-		opacity: 1;
-		transform: translate(-50%, -50%) scale(1);
-		pointer-events: auto;
-	}
-
-	.thumbnail:not(.loaded) {
-		background-color: transparent; /* No background for unloaded thumbnails */
-	}
-
-	/* Style for the LazyImage component inside thumbnail */
-	.thumbnail :global(.lazy-image-container) {
-		max-width: 200px;
-		max-height: 200px;
-	}
-
 	.issue p {
 		margin: 0;
 	}
@@ -160,9 +129,9 @@
 	}
 
 	.issue .issue__number {
-		font-size: var(--font-size-xs);
+		font-size: var(--font-size-base);
 		font-variant-numeric: oldstyle-nums;
-		margin-block: 1.5rem 2.5rem;
+		margin-block: 1.2rem 2rem;
 	}
 
 	.blurb {
@@ -178,16 +147,6 @@
 			max-width: 100%;
 			width: 100%;
 			padding: 12px;
-		}
-
-		.thumbnail {
-			width: 180px;
-			height: 180px;
-		}
-
-		.thumbnail :global(.lazy-image-container) {
-			max-width: 180px;
-			max-height: 180px;
 		}
 
 		.issue .heading .title p {
