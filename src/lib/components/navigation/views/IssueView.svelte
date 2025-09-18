@@ -176,7 +176,9 @@
 	}
 
 	a:hover {
-		opacity: 0.7;
+		font-family: 'OTParellel', serif;
+		font-style: oblique;
+		font-synthesis: none;
 	}
 
 	@keyframes slideDown {
