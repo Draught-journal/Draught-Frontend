@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { QuoteContentBlock } from '$lib/api/schemas/draughtSchema';
-
 	const { content }: { content: QuoteContentBlock } = $props();
 </script>
 
