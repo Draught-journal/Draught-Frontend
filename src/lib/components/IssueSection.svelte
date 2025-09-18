@@ -45,7 +45,7 @@
 				url: article.cover.url,
 				alt: article.cover.alt || `Cover image for ${article.title}`,
 				articleUrl: article.slug ? `/article/${article.slug}` : '#',
-				coverSize: article.coverSize || 'medium'
+				coverSize: article.scale || 'medium'
 			}))
 	);
 
@@ -121,12 +121,7 @@
 				class:large={image.coverSize === 'large'}
 			>
 				<a href={image.articleUrl}>
-					<LazyImage
-						src={image.url}
-						alt={image.alt}
-						objectFit="contain"
-						className="thumbnail-image"
-					/>
+					<img class="thumbnail-image" src={image.url} alt={image.alt} />
 				</a>
 			</div>
 		{/each}
