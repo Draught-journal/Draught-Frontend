@@ -48,7 +48,10 @@
 	class={`image-block ${scale === 'large' ? 'full-width-container' : ''}`}
 	data-block-id={content.id}
 >
-	<figure class="image-container" style="aspect-ratio: {content.content.ratio || 'auto'}">
+	<figure
+		class="image-container {imageClass}"
+		style="aspect-ratio: {content.content.ratio || 'auto'}"
+	>
 		<LazyImage
 			src={content.content.image.url}
 			alt={content.content.image.alt}

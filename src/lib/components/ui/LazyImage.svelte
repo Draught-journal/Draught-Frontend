@@ -116,8 +116,8 @@
 	}
 
 	.lazy-image {
-		width: 100%;
-		height: 100%;
+		width: inherit;
+		height: inherit;
 		opacity: 0;
 		transition: opacity 0.3s ease;
 		position: relative;
