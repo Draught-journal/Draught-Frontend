@@ -36,6 +36,12 @@
 		width: 100%;
 	}
 
+	.issue:hover {
+		font-family: 'OTParellel', serif;
+		font-style: oblique;
+		font-synthesis: none;
+	}
+
 	.content {
 		transition:
 			opacity 0.3s ease-in-out,

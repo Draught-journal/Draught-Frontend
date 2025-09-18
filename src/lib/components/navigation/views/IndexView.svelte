@@ -74,8 +74,8 @@
 	}
 
 	.index-content button:hover {
-		font-family: 'OTParellel-cursive', 'OTParellel', serif;
-		font-style: italic;
+		font-family: 'OTParellel', serif;
+		font-style: oblique;
 		font-synthesis: none;
 	}
 
@@ -90,10 +90,6 @@
 		padding: 0;
 		cursor: pointer;
 		transition: opacity 0.2s ease;
-	}
-
-	.tag-button:hover {
-		opacity: 0.7;
 	}
 
 	@keyframes slideDown {

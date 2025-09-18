@@ -11,6 +11,7 @@
 <style>
 	.text-block {
 		line-height: 23px;
+		font-variant-numeric: oldstyle-nums;
 	}
 
 	.text-block:not(:first-child) {
