@@ -58,7 +58,15 @@ export function useNavigation() {
 			const currentIndex = store.activeViews.index;
 
 			if (!currentIndex) {
-				// Opening index: remember previous state and ensure Issue button is visible
+				// Opening index: save scroll position and remember previous state
+				if (typeof window !== 'undefined') {
+					scrollStore.update((s) => ({
+						...s,
+						indexScrollY: window.scrollY,
+						shouldRestoreFromIndex: true
+					}));
+				}
+
 				prevShowIssue = store.showIssue;
 				return {
 					...store,
@@ -70,9 +78,32 @@ export function useNavigation() {
 					}
 				};
 			} else {
-				// Closing index: close all views and restore previous showIssue
+				// Closing index: close all views, restore previous showIssue
+				// and restore the scroll position
 				const newShowIssue = prevShowIssue !== null ? prevShowIssue : store.showIssue;
 				prevShowIssue = null;
+
+				// Restore scroll position after the view updates
+				if (typeof window !== 'undefined') {
+					requestAnimationFrame(() => {
+						scrollStore.update((s) => {
+							if (s.shouldRestoreFromIndex && s.indexScrollY !== null) {
+								window.scrollTo({
+									top: s.indexScrollY,
+									left: 0,
+									behavior: 'auto'
+								});
+								return {
+									...s,
+									shouldRestoreFromIndex: false,
+									indexScrollY: null
+								};
+							}
+							return s;
+						});
+					});
+				}
+
 				return {
 					...store,
 					showIssue: newShowIssue,

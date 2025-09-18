@@ -40,7 +40,11 @@
 					requestAnimationFrame(() => {
 						window.scrollTo({ top: y, left: 0, behavior: 'auto' });
 					});
-					return { homeScrollY: null, shouldRestore: false };
+					return {
+						...s,
+						homeScrollY: null,
+						shouldRestore: false
+					};
 				}
 				return s;
 			});
