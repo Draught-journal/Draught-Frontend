@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import ArticleCard from './ArticleCard.svelte';
-	import LazyImage from './ui/LazyImage.svelte';
 	import { navStore } from '$lib/stores/navStore.js';
 	import type { Article } from '$lib/api';
 
@@ -33,11 +32,17 @@
 	const displayIssues = $derived(articles.length > 0 ? articles : (Array(8).fill({}) as Article[]));
 
 	let issueNumElement: HTMLDivElement;
-	let observer: IntersectionObserver;
+	let thumbnailsElement: HTMLDivElement;
+	let issueObserver: IntersectionObserver;
+	let thumbnailsObserver: IntersectionObserver;
 	// Track if nav is visible (to conditionally hide the issue number)
 	let isNavVisible = $state(false);
+	// Track if issue number element is in view
+	let issueNumInView = $state(true);
 	// Track if user has scrolled past the element at least once
 	let hasScrolledPast = $state(false);
+	// Track if thumbnails are currently visible
+	let isThumbnailsVisible = $state(true);
 	const images = $derived(
 		articles
 			.filter((article) => article.cover && article.cover.url)
@@ -50,46 +55,60 @@
 	);
 
 	onMount(() => {
-		if (issueNumElement) {
-			// Ensure nav is hidden initially
+		// Ensure nav is hidden initially
+		navStore.update((store) => ({
+			...store,
+			showNav: false,
+			showIssue: false
+		}));
+		isNavVisible = false;
+		issueNumInView = true;
+		isThumbnailsVisible = true;
+
+		// Function to update nav visibility based on both conditions
+		const updateNavVisibility = () => {
+			// Only show nav if:
+			// 1. Issue number is NOT in view AND we've scrolled past it at least once
+			// 2. AND thumbnails are NOT in view
+			const shouldShowNav = !issueNumInView && hasScrolledPast && !isThumbnailsVisible;
+
+			// Get the issue text from the element
+			const issueText = issueNumElement?.textContent?.trim() || '';
+
+			// Update both our local state and the store
+			isNavVisible = shouldShowNav;
+
+			// Update the nav store
 			navStore.update((store) => ({
 				...store,
-				showNav: false,
-				showIssue: false
+				issueText,
+				showNav: shouldShowNav,
+				showIssue: shouldShowNav,
+				issueColor
 			}));
-			isNavVisible = false;
-
+		}; // Set up observer for issue__num element
+		if (issueNumElement) {
 			// Simple IntersectionObserver - when element goes out of view, show nav
-			observer = new IntersectionObserver(
+			issueObserver = new IntersectionObserver(
 				(entries) => {
 					entries.forEach((entry) => {
 						if (entry.target === issueNumElement) {
-							const issueText = entry.target.textContent?.trim() || '';
+							// Update whether issue number is in view
+							issueNumInView = entry.isIntersecting;
 
-							// If element is intersecting (visible), mark that we've seen it
+							// If element is intersecting (visible), reset the scrolled past flag
 							if (entry.isIntersecting) {
 								hasScrolledPast = false;
 							} else {
 								// Element is not intersecting (out of view)
-								// Only show nav if we've scrolled past it (not on initial load)
-								if (hasScrolledPast || entry.boundingClientRect.top < 0) {
+								// Check if we've scrolled past it (top is above viewport)
+								if (entry.boundingClientRect.top < 0) {
 									hasScrolledPast = true;
 								}
 							}
 
-							// Only show nav if we've confirmed the user scrolled past
-							const shouldShowNav = !entry.isIntersecting && hasScrolledPast;
-
-							// Update both our local state and the store
-							isNavVisible = shouldShowNav;
-
-							navStore.update((store) => ({
-								...store,
-								issueText,
-								showNav: shouldShowNav,
-								showIssue: shouldShowNav,
-								issueColor
-							}));
+							// Update nav visibility based on both conditions
+							updateNavVisibility();
 						}
 					});
 				},
@@ -99,18 +118,42 @@
 				}
 			);
 
-			observer.observe(issueNumElement);
+			issueObserver.observe(issueNumElement);
+		}
+
+		// Set up observer for thumbnails element
+		if (thumbnailsElement) {
+			thumbnailsObserver = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						// Update thumbnails visibility state
+						isThumbnailsVisible = entry.isIntersecting;
+
+						// Update nav visibility based on both conditions
+						updateNavVisibility();
+					});
+				},
+				{
+					threshold: 0.1, // Consider visible when at least 10% is in view
+					rootMargin: '0px'
+				}
+			);
+
+			thumbnailsObserver.observe(thumbnailsElement);
 		}
 	});
 
 	onDestroy(() => {
-		if (observer) {
-			observer.disconnect();
+		if (issueObserver) {
+			issueObserver.disconnect();
+		}
+		if (thumbnailsObserver) {
+			thumbnailsObserver.disconnect();
 		}
 	});
 </script>
 
-<div class="thumbnails">
+<div class="thumbnails" bind:this={thumbnailsElement}>
 	<!-- Lazy loaded thumbnails -->
 	{#if images && images.length > 0}
 		{#each images as image}
