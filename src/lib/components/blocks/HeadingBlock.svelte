@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { HeadingContentBlock as HeadingBlockType } from '$lib/api';
 	const { content }: { content: HeadingBlockType } = $props();
-
-	console.log('HeadingBlock content:', content);
 </script>
 
 <h3>{content.content.text}</h3>
