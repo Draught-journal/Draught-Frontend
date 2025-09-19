@@ -11,6 +11,11 @@ export interface TextContent {
 	text: string;
 }
 
+export interface HeadingContent {
+	level: string;
+	text: string;
+}
+
 export interface ImageContent {
 	location: string;
 	image: MediaAsset;
@@ -30,6 +35,13 @@ export interface TextContentBlock {
 	type: 'text';
 	isHidden?: boolean;
 	content: TextContent;
+}
+
+export interface HeadingContentBlock {
+	id: string;
+	type: 'heading';
+	isHidden?: boolean;
+	content: HeadingContent;
 }
 
 export interface ImageContentBlock {
@@ -58,6 +70,7 @@ export interface QuoteContentBlock {
 
 export type ContentBlock =
 	| TextContentBlock
+	| HeadingContentBlock
 	| ImageContentBlock
 	| QuoteContentBlock
 	| LineContentBlock;
@@ -127,6 +140,10 @@ export function isQuoteContentBlock(block: ContentBlock): block is QuoteContentB
 
 export function isLineContentBlock(block: ContentBlock): block is LineContentBlock {
 	return block.type === 'line';
+}
+
+export function isHeadingBlock(block: ContentBlock): block is HeadingContentBlock {
+	return block.type === 'heading';
 }
 
 export const draughtSchemaConfig: SchemaConfig<DraughtSchema> = {
