@@ -48,7 +48,6 @@
 				}
 				return s;
 			});
-			console.log('Returned to home, restored scroll if needed');
 		}
 	});
 </script>
