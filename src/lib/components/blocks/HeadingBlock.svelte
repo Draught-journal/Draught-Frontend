@@ -10,7 +10,7 @@
 <style>
 	h3 {
 		font-size: var(--font-size-base);
-		margin: 1.5rem 0 1rem 0;
+		margin-block: 2rem 1.2rem;
 		font-weight: normal;
 		text-align: center;
 	}
