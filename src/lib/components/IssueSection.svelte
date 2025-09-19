@@ -53,7 +53,6 @@
 				coverSize: article.scale || 'medium'
 			}))
 	);
-	let lastNavState = { showNav: false, issueText: '', issueColor };
 
 	onMount(() => {
 		// Ensure nav is hidden initially
@@ -76,27 +75,18 @@
 			// Get the issue text from the element
 			const issueText = issueNumElement?.textContent?.trim() || '';
 
-				const nextNavState = { showNav: shouldShowNav, issueText, issueColor };
-				if (
-					nextNavState.showNav === lastNavState.showNav &&
-					nextNavState.issueText === lastNavState.issueText &&
-					nextNavState.issueColor === lastNavState.issueColor
-				) {
-					return;
-				}
+			// Update both our local state and the store
+			isNavVisible = shouldShowNav;
 
-				// Update both our local state and the store only when something changed
-				isNavVisible = shouldShowNav;
-				lastNavState = nextNavState;
-
-				navStore.update((store) => ({
-					...store,
-					issueText: nextNavState.issueText,
-					showNav: nextNavState.showNav,
-					showIssue: nextNavState.showNav,
-					issueColor: nextNavState.issueColor
-				}));
-			}; // Set up observer for issue__num element
+			// Update the nav store
+			navStore.update((store) => ({
+				...store,
+				issueText,
+				showNav: shouldShowNav,
+				showIssue: shouldShowNav,
+				issueColor
+			}));
+		}; // Set up observer for issue__num element
 		if (issueNumElement) {
 			// Simple IntersectionObserver - when element goes out of view, show nav
 			issueObserver = new IntersectionObserver(
@@ -160,12 +150,6 @@
 		if (thumbnailsObserver) {
 			thumbnailsObserver.disconnect();
 		}
-		navStore.update((store) => ({
-			...store,
-			issueText: '',
-			showNav: false,
-			showIssue: false
-		}));
 	});
 </script>
 
