@@ -7,13 +7,13 @@
 	font-display: swap;
 }
 
-@font-face {
+/* @font-face {
 	font-family: 'OTParellel';
 	src: url('/fonts/OTParallel-Italic.woff2') format('woff2');
 	font-style: italic;
 	font-weight: 400;
 	font-display: swap;
-}
+} */
 
 @font-face {
 	font-family: 'OTParellel';
@@ -24,12 +24,13 @@
 }
 
 @font-face {
-	font-family: 'OTParellel-cursive';
-	src: url('/fonts/OTParallel-ItalicCursive.woff2') format('woff2');
-	font-style: italic;
-	font-weight: 400;
-	font-display: swap;
+  font-family: 'OTParellel';
+  src: url('/fonts/OTParallel-ItalicCursive.woff2') format('woff2');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
 }
+
 
 /* Typography variables */
 :root {

@@ -63,7 +63,7 @@
 
 		{#if content.content.image.caption}
 			<figcaption class={`image-caption scale-${scale}`}>
-				{content.content.image.caption}
+				{@html content.content.image.caption}
 			</figcaption>
 		{/if}
 	</figure>
@@ -129,6 +129,7 @@
 		padding-block: 0.5rem;
 		font-size: var(--font-size-sm);
 		text-align: center;
+		font-variant-numeric: oldstyle-nums;
 	}
 
 	.image-caption.scale-small {
@@ -153,7 +154,6 @@
 		margin-right: auto;
 		text-align: center;
 		width: 100%;
-		color: var(--accent-color, #0066cc);
 		text-decoration: none;
 		font-size: 0.9rem;
 		transition: color 0.3s ease;
