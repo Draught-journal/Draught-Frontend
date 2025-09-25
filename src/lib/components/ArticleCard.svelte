@@ -97,15 +97,6 @@
 		.issue {
 			max-width: 100%;
 			width: 100%;
-			padding: 12px;
-		}
-
-		.issue .heading .title p {
-			font-size: var(--font-size-md, 1.2rem);
-		}
-
-		.blurb {
-			font-size: var(--font-size-xs, 0.8rem);
 		}
 	}
 </style>

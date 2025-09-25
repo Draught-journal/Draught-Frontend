@@ -351,21 +351,21 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			width: var(--article-width, 90%);
+			width: 100%;
 		}
 
 		/* Override grid positioning on mobile */
 		.issue-wrapper {
 			grid-column: 1 !important;
 			grid-row: auto !important;
-			width: var(--article-width, 90%);
+			width: 100%;
 			margin: 0 auto;
 		}
 
 		/* Reset single-last to normal width on mobile */
 		.issue-wrapper.single-last {
 			grid-column: 1;
-			max-width: var(--article-width, 90%);
+			max-width: 100%;
 		}
 
 		/* Add more spacing between articles on mobile */
