@@ -52,8 +52,7 @@
 
 <div class="splash">
 	<div class="head">
-		<p class="title">draught</p>
-		<p>({selectedSentence})</p>
+		<p class="title">draught <br />({selectedSentence})</p>
 	</div>
 </div>
 
@@ -67,7 +66,7 @@
 		text-align: center;
 		margin-bottom: 20vh;
 		font-size: var(--font-size-lg);
-		line-height: 29px;
+		line-height: 26px;
 	}
 
 	.head .title {
