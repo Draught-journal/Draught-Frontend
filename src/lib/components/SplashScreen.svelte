@@ -50,7 +50,7 @@
 
 <div class="splash">
 	<div class="head">
-		<p class="title">draught <br />({selectedSentence})</p>
+		<p class="title">draught <br /><span class="sentence">({selectedSentence})</span></p>
 	</div>
 </div>
 
@@ -66,11 +66,14 @@
 		font-size: var(--font-size-lg);
 		line-height: 26px;
 	}
-
 	.head .title {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
 		font-weight: 400;
 		font-synthesis: none; /* don't fake italic/bold */
+	}
+	.splash .head .sentence {
+		font-family: 'OTParellel', serif;
+		font-style: normal;
 	}
 </style>
