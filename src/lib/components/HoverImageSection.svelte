@@ -22,11 +22,10 @@
 	.hover-image-container {
 		display: none;
 		position: fixed;
-		left: clamp(16px, 3vw, 48px);
-		bottom: clamp(16px, 5vh, 80px);
-		width: clamp(220px, 28vw, 420px);
-		max-height: min(75vh, 520px);
-		padding: clamp(12px, 2vw, 20px);
+		left: 0;
+		bottom: 0;
+		width: 30vw;
+		padding: 3rem;
 		pointer-events: none;
 		align-items: center;
 		justify-content: center;
@@ -40,8 +39,8 @@
 	.hover-image {
 		display: block;
 		width: 100%;
-		height: auto;
-		max-height: calc(100% - clamp(12px, 2vw, 20px));
+		/* height: auto; */
+		/* max-height: calc(100% - clamp(12px, 2vw, 20px)); */
 		object-fit: cover;
 	}
 
