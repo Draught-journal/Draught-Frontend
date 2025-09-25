@@ -40,7 +40,6 @@
 		/* grid-row: 2; */
 		padding: 1rem;
 		max-height: calc(100dvh - 5rem);
-		align-self: center;
 		overflow-y: auto;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
