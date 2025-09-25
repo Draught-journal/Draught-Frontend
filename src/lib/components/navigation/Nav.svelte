@@ -30,29 +30,6 @@
 	const navigation = useNavigation();
 	const articles = useArticles();
 
-	// Article hover state (reactive)
-	let hoveredArticle = $state<ArticlePreview | null>(null);
-	let isMobile = $state(false);
-
-	function handleArticleHover(article: ArticlePreview) {
-		// Only show hover preview on desktop
-		if (!isMobile) {
-			hoveredArticle = article;
-		}
-	}
-
-	function handleArticleLeave() {
-		if (!isMobile) {
-			hoveredArticle = null;
-		}
-	}
-
-	function checkMobileView() {
-		if (typeof window !== 'undefined') {
-			isMobile = window.innerWidth <= 768;
-		}
-	}
-
 	// Reactive state
 	let navState = $state<any>();
 	let navElement: HTMLElement;
@@ -84,18 +61,6 @@
 			}
 		};
 
-		// Check mobile view on mount and add resize listener
-		checkMobileView();
-		const handleResize = () => {
-			checkMobileView();
-			// Clear hover state when switching to mobile
-			if (isMobile && hoveredArticle) {
-				hoveredArticle = null;
-			}
-		};
-
-		window.addEventListener('resize', handleResize);
-
 		setNavHeight();
 		const timeoutId = setTimeout(setNavHeight, 100);
 
@@ -103,7 +68,6 @@
 			if (typeof document !== 'undefined') {
 				document.body.style.overflow = '';
 			}
-			window.removeEventListener('resize', handleResize);
 			clearTimeout(timeoutId);
 		};
 	});
@@ -119,11 +83,10 @@
 
 	<div class="nav-view">
 		{#if hasActiveViews}
-			{#if navState?.activeViews.home || (!isMobile && hoveredArticle)}
+			{#if navState?.activeViews.home}
 				<HomeView
 					{about}
 					{sentences}
-					{hoveredArticle}
 					fullWidth={navState?.activeViews.home &&
 						!navState?.activeViews.issue &&
 						!navState?.activeViews.index}
@@ -135,8 +98,6 @@
 					{issues}
 					selectedTag={navState?.selectedTag}
 					onCloseAllViews={navigation.closeAllViews}
-					onArticleHover={handleArticleHover}
-					onArticleLeave={handleArticleLeave}
 				/>
 			{/if}
 

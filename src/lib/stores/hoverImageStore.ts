@@ -1,49 +1,28 @@
 import { writable } from 'svelte/store';
 import type { Article } from '$lib/api';
 
-export type HoverImageScale = 'small' | 'medium' | 'large';
-
-export interface HoverImageDetails {
-	articleId: string;
-	slug?: string;
-	title: string;
-	author?: string;
+export interface HoverImagePayload {
 	src: string;
 	alt: string;
-	scale: HoverImageScale;
+	title: string;
 }
 
 interface HoverImageState {
-	active: HoverImageDetails | null;
+	active: HoverImagePayload | null;
 }
 
 type HoverSource = 'viewport' | 'pointer';
 
 interface InternalEntry {
-	details: HoverImageDetails;
+	articleId: string;
 	weight: number;
 	source: HoverSource;
+	payload: HoverImagePayload;
 }
 
 const INITIAL_STATE: HoverImageState = { active: null };
 
-function resolveScale(article: Article): HoverImageScale {
-	const { scale, cover } = article;
-
-	if (scale === 'small' || scale === 'large' || scale === 'medium') {
-		return scale;
-	}
-
-	const coverScale = cover?.scale;
-
-	if (coverScale === 'small' || coverScale === 'large' || coverScale === 'medium') {
-		return coverScale;
-	}
-
-	return 'medium';
-}
-
-function toDetails(article: Article): HoverImageDetails | null {
+function toEntry(article: Article, weight: number, source: HoverSource): InternalEntry | null {
 	const src = article?.cover?.url;
 
 	if (!article?.id || !src) {
@@ -52,12 +31,13 @@ function toDetails(article: Article): HoverImageDetails | null {
 
 	return {
 		articleId: article.id,
-		slug: article.slug,
-		title: article.title,
-		author: article.author,
-		src,
-		alt: article.cover?.alt || article.title || 'Article cover',
-		scale: resolveScale(article)
+		weight,
+		source,
+		payload: {
+			src,
+			alt: article.cover?.alt || article.title || 'Article cover',
+			title: article.title || 'Untitled'
+		}
 	};
 }
 
@@ -85,25 +65,25 @@ function createHoverImageStore() {
 			return;
 		}
 
-		let bestEntry: InternalEntry | null = null;
+		let best: InternalEntry | null = null;
 
 		for (const entry of entries.values()) {
-			if (!bestEntry || entry.weight > bestEntry.weight) {
-				bestEntry = entry;
+			if (!best || entry.weight > best.weight) {
+				best = entry;
 			}
 		}
 
-		set({ active: bestEntry ? bestEntry.details : null });
+		set({ active: best ? best.payload : null });
 	}
 
 	function upsert(article: Article, weight: number, source: HoverSource) {
-		const details = toDetails(article);
+		const entry = toEntry(article, weight, source);
 
-		if (!details) {
+		if (!entry) {
 			return;
 		}
 
-		entries.set(entryKey(details.articleId, source), { details, weight, source });
+		entries.set(entryKey(entry.articleId, source), entry);
 		emit();
 	}
 
@@ -114,23 +94,24 @@ function createHoverImageStore() {
 			upsert(article, weight, 'viewport');
 		},
 		setFromPointer(article: Article) {
-			// Give pointer interactions precedence over scroll-based entries
 			upsert(article, Number.POSITIVE_INFINITY, 'pointer');
 		},
 		clear(articleId: string, options?: { source?: HoverSource }) {
 			if (options?.source) {
 				const key = entryKey(articleId, options.source);
+
 				if (!entries.delete(key)) {
 					return;
 				}
 
 				if (options.source === 'pointer') {
 					entries.delete(entryKey(articleId, 'viewport'));
-				}
 
-				if (options.source === 'pointer' && !hasPointerEntries()) {
-					set(INITIAL_STATE);
-					return;
+					if (!hasPointerEntries()) {
+						entries.clear();
+						set(INITIAL_STATE);
+						return;
+					}
 				}
 
 				emit();
@@ -141,6 +122,12 @@ function createHoverImageStore() {
 			const removedViewport = entries.delete(entryKey(articleId, 'viewport'));
 
 			if (removedPointer || removedViewport) {
+				if (!hasPointerEntries() && removedPointer) {
+					entries.clear();
+					set(INITIAL_STATE);
+					return;
+				}
+
 				emit();
 			}
 		},

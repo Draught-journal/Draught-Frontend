@@ -56,10 +56,10 @@
 <article class="issue" bind:this={cardElement}>
 	<a
 		href={`article/${article.slug}`}
-		on:focusin={handlePointerEnter}
-		on:focusout={handlePointerLeave}
-		on:mouseenter={handlePointerEnter}
-		on:mouseleave={handlePointerLeave}
+		onfocusin={handlePointerEnter}
+		onfocusout={handlePointerLeave}
+		onmouseenter={handlePointerEnter}
+		onmouseleave={handlePointerLeave}
 	>
 		<div class="content">
 			<div class="heading">

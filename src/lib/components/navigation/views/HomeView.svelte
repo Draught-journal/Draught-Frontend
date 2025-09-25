@@ -1,51 +1,35 @@
 <script lang="ts">
 	import ContentBlock from '$lib/components/ContentBlock.svelte';
 	import type { ContentBlock as ContentBlockType } from '$lib/api';
-	import type { ArticlePreview } from '../composables/useArticles.js';
 
 	const {
 		about,
 		sentences,
-		hoveredArticle,
 		fullWidth = false
 	}: {
 		about?: ContentBlockType[];
 		sentences?: string[];
-		hoveredArticle: ArticlePreview | null;
 		fullWidth?: boolean;
 	} = $props();
 </script>
 
 <div class="home-content" class:full-width={fullWidth}>
 	<div class="content">
-		{#if hoveredArticle}
-			<!-- Show hovered article preview -->
-			<div class="article-preview">
-				{#if hoveredArticle.cover?.url}
-					<img
-						src={hoveredArticle.cover.url}
-						alt={hoveredArticle.cover.alt || hoveredArticle.title}
-						class="preview-image"
-					/>
-				{/if}
-			</div>
-		{:else}
-			<!-- Show default home content -->
-			<div class="sentences">
-				{#if sentences && sentences.length > 0}
-					{#each sentences as sentence}
-						<p>({sentence})</p>
-					{/each}
-				{/if}
-			</div>
-			<br />
-			{#if about && about.length > 0}
-				<div class="about">
-					{#each about as block}
-						<ContentBlock content={block} />
-					{/each}
-				</div>
+		<!-- Show default home content -->
+		<div class="sentences">
+			{#if sentences && sentences.length > 0}
+				{#each sentences as sentence}
+					<p>({sentence})</p>
+				{/each}
 			{/if}
+		</div>
+		<br />
+		{#if about && about.length > 0}
+			<div class="about">
+				{#each about as block}
+					<ContentBlock content={block} />
+				{/each}
+			</div>
 		{/if}
 	</div>
 </div>

@@ -1,19 +1,14 @@
 <script lang="ts">
 	import type { Issue, Article } from '$lib/api';
-	import type { ArticlePreview } from '../composables/useArticles.js';
 
 	const {
 		issues,
 		selectedTag: initialSelectedTag,
-		onCloseAllViews,
-		onArticleHover,
-		onArticleLeave
+		onCloseAllViews
 	}: {
 		issues?: Issue[];
 		selectedTag?: string | null;
 		onCloseAllViews: () => void;
-		onArticleHover: (article: ArticlePreview) => void;
-		onArticleLeave: () => void;
 	} = $props();
 
 	let selectedTag = $state<string | null>(initialSelectedTag || null);
@@ -54,12 +49,7 @@
 			{#if filteredArticles.length > 0}
 				<ul class="filtered-articles">
 					{#each filteredArticles as article}
-						<a
-							href={`article/${article.slug}`}
-							onclick={onCloseAllViews}
-							onmouseenter={() => onArticleHover(article)}
-							onmouseleave={onArticleLeave}
-						>
+						<a href={`article/${article.slug}`} onclick={onCloseAllViews}>
 							<li
 								class="filtered-article-item"
 								style="--issue-color: {article.issueColor}"
@@ -87,12 +77,7 @@
 						<br />
 						<ul>
 							{#each issue.articles as article}
-								<a
-									href={`article/${article.slug}`}
-									onclick={onCloseAllViews}
-									onmouseenter={() => onArticleHover(article)}
-									onmouseleave={onArticleLeave}
-								>
+								<a href={`article/${article.slug}`} onclick={onCloseAllViews}>
 									<li data-cover={article.cover.url} data-alt-text={article.cover.alt}>
 										<p>({article.tags.join(', ')})</p>
 										<p>{article.title}</p>
