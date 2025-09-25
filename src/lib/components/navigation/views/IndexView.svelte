@@ -74,8 +74,7 @@
 	}
 
 	.index-content button:hover {
-		font-family: 'OTParellel', serif;
-		font-style: oblique;
+		font-style: italic;
 		font-synthesis: none;
 	}
 

@@ -134,7 +134,7 @@
 					});
 				},
 				{
-					threshold: 0.1, // Consider visible when at least 10% is in view
+					threshold: 0.28, // Consider visible when at least 10% is in view
 					rootMargin: '0px'
 				}
 			);
