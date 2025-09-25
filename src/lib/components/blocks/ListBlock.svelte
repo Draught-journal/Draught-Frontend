@@ -12,8 +12,9 @@
 
 <style>
 	.list-block {
-		margin: 1.5rem 0;
+		/* margin: 1.5rem 0; */
 		/* padding-inline-start: 1.5rem; */
+		margin-inline-end: 4rem;
 	}
 
 	.list-block :global(ul),
@@ -26,15 +27,18 @@
 	}
 
 	.list-block :global(ul) {
-		list-style: disc;
+		list-style: none;
+	}
+
+	.list-block :global(ul li::before) {
+		content: '·'; /* Bullet character */
+		display: inline-block;
+		width: 1em; /* Space for the bullet */
+		margin-left: -1em; /* Position the bullet */
 	}
 
 	.list-block :global(ol) {
 		list-style: decimal;
-	}
-
-	.list-block :global(li) {
-		margin-bottom: 0.5rem;
 	}
 
 	.list-block :global(li:last-child) {

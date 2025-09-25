@@ -59,6 +59,7 @@
 	}
 
 	.issue:hover .heading {
+		font-family: 'OTParellel-cursive';
 		font-style: italic;
 		font-synthesis: none;
 		line-height: 3px;

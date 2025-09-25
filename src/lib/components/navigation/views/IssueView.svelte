@@ -184,6 +184,7 @@
 	}
 
 	a:hover {
+		font-family: 'OTParellel-cursive';
 		font-style: italic;
 		font-synthesis: none;
 	}
