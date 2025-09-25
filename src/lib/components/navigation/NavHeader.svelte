@@ -67,21 +67,29 @@
 				<p>draught</p>
 			</button>
 		</div>
-		<div
-			id="issue"
-			class="nav-item"
-			class:active={navState?.activeViews.issue}
-			hidden={!navState?.showIssue}
-		>
-			<button type="button" style={textColorStyle}>
-				<p>{navState?.issueText}</p>
-			</button>
-		</div>
-		<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
-			<button type="button" onclick={handleIndexToggle} style={textColorStyle}>
-				<p>(index)</p>
-			</button>
-		</div>
+		{#if navState?.activeViews.home}
+			<!-- Show return button when home view is active -->
+			<div id="return" class="nav-item">
+				<button type="button" onclick={handleHomeToggle} style={textColorStyle}> (return) </button>
+			</div>
+		{:else}
+			<!-- Show issue and index buttons when home view is not active -->
+			<div
+				id="issue"
+				class="nav-item"
+				class:active={navState?.activeViews.issue}
+				hidden={!navState?.showIssue}
+			>
+				<button type="button" style={textColorStyle}>
+					<p>{navState?.issueText}</p>
+				</button>
+			</div>
+			<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
+				<button type="button" onclick={handleIndexToggle} style={textColorStyle}>
+					<p>(index)</p>
+				</button>
+			</div>
+		{/if}
 	{/if}
 </div>
 
