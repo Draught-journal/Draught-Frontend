@@ -36,14 +36,12 @@
 
 			return chosenSentence;
 		} catch (error) {
-			// Fallback to random selection if localStorage fails
 			console.warn('Failed to access localStorage, falling back to random selection:', error);
 			return sentences[Math.floor(Math.random() * sentences.length)];
 		}
 	}
 
 	onMount(() => {
-		// Initialize the selected sentence
 		if (sentences && sentences.length > 0) {
 			selectedSentence = getRandomSentence(sentences);
 		}
