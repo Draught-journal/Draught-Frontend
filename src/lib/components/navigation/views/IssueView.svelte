@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Issue, Article } from '$lib/api';
+	import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
 
 	const {
 		issues,
@@ -39,6 +40,15 @@
 	$effect(() => {
 		selectedTag = initialSelectedTag || null;
 	});
+
+	// Hover image handlers
+	function handlePointerEnter(article: Article) {
+		hoverImageStore.setFromPointer(article);
+	}
+
+	function handlePointerLeave(article: Article) {
+		hoverImageStore.clear(article.id, { source: 'pointer' });
+	}
 </script>
 
 <div class="issue-content">
@@ -48,7 +58,14 @@
 			{#if filteredArticles.length > 0}
 				<ul class="filtered-articles">
 					{#each filteredArticles as article}
-						<a href={`article/${article.slug}`} onclick={onCloseAllViews}>
+						<a
+							href={`article/${article.slug}`}
+							onclick={onCloseAllViews}
+							onfocusin={() => handlePointerEnter(article)}
+							onfocusout={() => handlePointerLeave(article)}
+							onmouseenter={() => handlePointerEnter(article)}
+							onmouseleave={() => handlePointerLeave(article)}
+						>
 							<li
 								class="filtered-article-item"
 								style="--issue-color: {article.issueColor}"
@@ -76,7 +93,14 @@
 						<br />
 						<ul>
 							{#each issue.articles as article}
-								<a href={`article/${article.slug}`} onclick={onCloseAllViews}>
+								<a
+									href={`article/${article.slug}`}
+									onclick={onCloseAllViews}
+									onfocusin={() => handlePointerEnter(article)}
+									onfocusout={() => handlePointerLeave(article)}
+									onmouseenter={() => handlePointerEnter(article)}
+									onmouseleave={() => handlePointerLeave(article)}
+								>
 									<li data-cover={article.cover.url} data-alt-text={article.cover.alt}>
 										<p>({article.tags.join(', ')})</p>
 										<p>{article.title}</p>
