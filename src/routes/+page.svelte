@@ -2,6 +2,7 @@
 	import Header from '$lib/components/layout/Header.svelte';
 	import SplashScreen from '$lib/components/SplashScreen.svelte';
 	import IssueSection from '$lib/components/IssueSection.svelte';
+	import HoverImageSection from '$lib/components/HoverImageSection.svelte';
 
 	import { createSEOData } from '$lib/seo';
 	import type { PageData } from './$types';
@@ -34,3 +35,5 @@
 		issueTitle={issue.title}
 	/>
 {/each}
+
+<HoverImageSection />
