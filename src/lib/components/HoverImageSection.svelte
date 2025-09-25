@@ -24,7 +24,7 @@
 		position: fixed;
 		left: clamp(16px, 3vw, 48px);
 		bottom: clamp(16px, 5vh, 80px);
-			width: clamp(220px, 28vw, 420px);
+		width: clamp(220px, 28vw, 420px);
 		max-height: min(75vh, 520px);
 		padding: clamp(12px, 2vw, 20px);
 		pointer-events: none;

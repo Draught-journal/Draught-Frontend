@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
 	import type { Article } from '$lib/api';
 	import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
 	import ContentBlurb from './ContentBlurb.svelte';
@@ -7,7 +6,6 @@
 	const { article }: { article: Article } = $props();
 
 	let cardElement: HTMLElement | null = null;
-	let observer: IntersectionObserver | null = null;
 
 	function handlePointerEnter() {
 		hoverImageStore.setFromPointer(article);
@@ -16,41 +14,6 @@
 	function handlePointerLeave() {
 		hoverImageStore.clear(article.id, { source: 'pointer' });
 	}
-
-	onMount(() => {
-		if (typeof window === 'undefined' || !cardElement) {
-			return;
-		}
-
-		observer = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					const ratio = entry.intersectionRatio;
-
-					if (ratio > 0) {
-						hoverImageStore.setFromViewport(article, ratio);
-					} else {
-						hoverImageStore.clear(article.id, { source: 'viewport' });
-					}
-				}
-			},
-			{
-				threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
-				rootMargin: '0px 0px -20% 0px'
-			}
-		);
-
-		observer.observe(cardElement);
-
-		return () => {
-			observer?.disconnect();
-		};
-	});
-
-	onDestroy(() => {
-		observer?.disconnect();
-		hoverImageStore.clear(article.id);
-	});
 </script>
 
 <article class="issue" bind:this={cardElement}>
