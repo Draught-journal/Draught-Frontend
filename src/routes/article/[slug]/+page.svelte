@@ -24,9 +24,10 @@
 <article>
 	<div class="title">
 		<!-- tag -->
-		<p>{article?.tags ? `(${article.tags})` : ''}</p>
-		<p>{article?.title || 'Article not found'}</p>
-		<p>{article?.author || ''}</p>
+		<h2>
+			{article?.tags ? `(${article.tags})` : ''} <br />{article?.title || ''}<br
+			/>{article?.author || ''}
+		</h2>
 		<br />
 		<p class="version">1.1.1</p>
 		<br />
@@ -57,12 +58,13 @@
 		margin-inline: auto;
 		padding-block: 5rem;
 	}
-	article .title p {
+	article .title h2,
+	article .title .version {
 		text-align: center;
 		margin: 0;
 		padding: 0;
 		font-size: var(--font-size-lg);
-		line-height: 29px;
+		line-height: 26px;
 	}
 
 	article .title .version {
