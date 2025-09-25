@@ -34,11 +34,11 @@
 		min-height: 300px; /* Ensure consistent height */
 		max-width: 30vw;
 		width: 100%;
+		font-variant-numeric: oldstyle-nums;
 	}
 
-	.issue:hover {
-		font-family: 'OTParellel', serif;
-		font-style: oblique;
+	.issue:hover .heading {
+		font-style: italic;
 		font-synthesis: none;
 	}
 
@@ -60,7 +60,7 @@
 	.issue .issue__number {
 		font-size: var(--font-size-base);
 		font-variant-numeric: oldstyle-nums;
-		margin-block: 1.2rem 2rem;
+		margin-block: 1.2rem 1.5rem;
 	}
 
 	.blurb {

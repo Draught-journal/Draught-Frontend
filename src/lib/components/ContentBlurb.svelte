@@ -7,7 +7,7 @@
 		maxLength?: number;
 	}
 
-	const { content, maxLength = 150 }: Props = $props();
+	const { content, maxLength = 220 }: Props = $props();
 
 	// Find the first text content block and extract text
 	function getBlurbText(): string {
@@ -39,7 +39,7 @@
 </script>
 
 {#if blurbText}
-	<p class="content-blurb">{blurbText}</p>
+	<p class="content-blurb">{@html blurbText}</p>
 {/if}
 
 <style>
