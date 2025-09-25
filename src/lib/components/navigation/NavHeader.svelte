@@ -3,16 +3,15 @@
 		isArticlePage,
 		navState,
 		onNavigateHome,
+		onShowHome,
 		onToggleIndex
 	}: {
 		isArticlePage: boolean;
 		navState: any;
 		onNavigateHome: () => void;
+		onShowHome?: () => void;
 		onToggleIndex: () => void;
 	} = $props();
-
-	import { onMount } from 'svelte';
-
 	// Store the original color
 	let originalColor = '';
 
@@ -40,9 +39,19 @@
 		// isIndexToggled will be updated via the effect when navState changes
 	}
 
+	function handleHomeClick(event: MouseEvent) {
+		if (onShowHome) {
+			event.preventDefault();
+			onShowHome();
+			return;
+		}
+
+		onNavigateHome();
+	}
+
 	// Calculate the dynamic text color style
 	const textColorStyle = $derived(
-		navState?.activeViews.index
+		navState?.activeViews.index || navState?.activeViews.home
 			? 'color: #000000;' // Black when index is toggled on
 			: navState?.issueColor
 				? `color: ${navState.issueColor};`
@@ -59,7 +68,7 @@
 	{:else}
 		<!-- Default layout: show home, issue, and index -->
 		<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
-			<a href="/" onclick={onNavigateHome} style={textColorStyle}>
+			<a href="/" onclick={handleHomeClick} style={textColorStyle}>
 				<p>draught</p>
 			</a>
 		</div>

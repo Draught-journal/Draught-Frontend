@@ -6,52 +6,57 @@
 	const {
 		about,
 		sentences,
-		hoveredArticle
+		hoveredArticle,
+		fullWidth = false
 	}: {
 		about?: ContentBlockType[];
 		sentences?: string[];
 		hoveredArticle: ArticlePreview | null;
+		fullWidth?: boolean;
 	} = $props();
 </script>
 
-<div class="home-content">
-	{#if hoveredArticle}
-		<!-- Show hovered article preview -->
-		<div class="article-preview">
-			{#if hoveredArticle.cover?.url}
-				<img
-					src={hoveredArticle.cover.url}
-					alt={hoveredArticle.cover.alt || hoveredArticle.title}
-					class="preview-image"
-				/>
-			{/if}
-		</div>
-	{:else}
-		<!-- Show default home content -->
-		<div class="sentences">
-			{#if sentences && sentences.length > 0}
-				{#each sentences as sentence}
-					<p>({sentence})</p>
-				{/each}
-			{/if}
-		</div>
-		<br />
-		{#if about && about.length > 0}
-			<div class="about">
-				{#each about as block}
-					<ContentBlock content={block} />
-				{/each}
+<div class="home-content" class:full-width={fullWidth}>
+	<div class="content">
+		{#if hoveredArticle}
+			<!-- Show hovered article preview -->
+			<div class="article-preview">
+				{#if hoveredArticle.cover?.url}
+					<img
+						src={hoveredArticle.cover.url}
+						alt={hoveredArticle.cover.alt || hoveredArticle.title}
+						class="preview-image"
+					/>
+				{/if}
 			</div>
+		{:else}
+			<!-- Show default home content -->
+			<div class="sentences">
+				{#if sentences && sentences.length > 0}
+					{#each sentences as sentence}
+						<p>({sentence})</p>
+					{/each}
+				{/if}
+			</div>
+			<br />
+			{#if about && about.length > 0}
+				<div class="about">
+					{#each about as block}
+						<ContentBlock content={block} />
+					{/each}
+				</div>
+			{/if}
 		{/if}
-	{/if}
+	</div>
 </div>
 
 <style>
 	.home-content {
-		grid-column: 1;
-		grid-row: 2;
+		/* grid-column: 1; */
+		/* grid-row: 2; */
 		padding: 1rem;
 		max-height: calc(100dvh - 5rem);
+		align-self: center;
 		overflow-y: auto;
 		scrollbar-width: none;
 		-ms-overflow-style: none;
@@ -61,6 +66,11 @@
 		text-align: center;
 		line-height: 23px;
 		z-index: 1;
+	}
+
+	.content {
+		max-width: calc(var(--content-width, 1200px) * 0.5);
+		margin: 0 auto;
 	}
 
 	.home-content::-webkit-scrollbar {
@@ -96,6 +106,10 @@
 			opacity: 1;
 			transform: translateY(0);
 		}
+	}
+
+	.home-content.full-width {
+		grid-column: 1 / -1;
 	}
 
 	@media (max-width: 768px) {

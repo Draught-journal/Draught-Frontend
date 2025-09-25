@@ -40,8 +40,6 @@
 		</div>
 	{/if}
 
-	<br />
-	<button onclick={() => onShowView('home')} id="about-btn">(about)</button>
 </div>
 
 <style>

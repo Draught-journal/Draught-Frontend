@@ -5,6 +5,7 @@ export type ViewType = 'home' | 'issue' | 'index';
 
 export function useNavigation() {
 	let prevShowIssue: boolean | null = null;
+	let prevShowIssueForHome: boolean | null = null;
 
 	function toggleView(view: ViewType) {
 		navStore.update((store) => ({
@@ -26,7 +27,8 @@ export function useNavigation() {
 					activeViews: {
 						...store.activeViews,
 						home: view === 'home',
-						issue: view === 'issue'
+						issue: view === 'issue',
+						index: view === 'home' ? false : store.activeViews.index
 					}
 				};
 			}
@@ -38,6 +40,68 @@ export function useNavigation() {
 					[view]: true
 				}
 			};
+		});
+	}
+
+	function showHomeView() {
+		navStore.update((store) => {
+			const isHomeActive = Boolean(store.activeViews.home);
+
+		if (isHomeActive) {
+			const restoredShowIssue = prevShowIssueForHome ?? store.showIssue;
+			prevShowIssueForHome = null;
+
+			return {
+				...store,
+				showIssue: restoredShowIssue,
+				activeViews: {
+					...store.activeViews,
+					home: false
+				}
+			};
+		}
+
+			const wasIndexActive = Boolean(store.activeViews.index);
+			let restoredShowIssue = store.showIssue;
+
+			if (wasIndexActive) {
+				restoredShowIssue = prevShowIssue !== null ? prevShowIssue : store.showIssue;
+				prevShowIssue = null;
+
+				if (typeof window !== 'undefined') {
+					requestAnimationFrame(() => {
+						scrollStore.update((s) => {
+							if (s.shouldRestoreFromIndex && s.indexScrollY !== null) {
+								window.scrollTo({
+									top: s.indexScrollY,
+									left: 0,
+									behavior: 'auto'
+								});
+								return {
+									...s,
+									shouldRestoreFromIndex: false,
+									indexScrollY: null
+								};
+							}
+							return s;
+						});
+					});
+				}
+			}
+
+		prevShowIssueForHome = restoredShowIssue;
+
+		return {
+			...store,
+			showIssue: false,
+			selectedTag: wasIndexActive ? null : store.selectedTag,
+			activeViews: {
+				...store.activeViews,
+				home: true,
+				issue: false,
+				index: false
+			}
+		};
 		});
 	}
 
@@ -151,6 +215,7 @@ export function useNavigation() {
 		toggleView,
 		showView,
 		showIssuesWithoutFilter,
+		showHomeView,
 		toggleIndex,
 		closeAllViews,
 		navigateHome,
