@@ -30,8 +30,6 @@
 	const navigation = useNavigation();
 	const articles = useArticles();
 
-	const showHomeView = navigation.showHomeView;
-
 	// Article hover state (reactive)
 	let hoveredArticle = $state<ArticlePreview | null>(null);
 	let isMobile = $state(false);
@@ -115,21 +113,22 @@
 	<NavHeader
 		{isArticlePage}
 		{navState}
-		onNavigateHome={navigation.navigateHome}
-		onShowHome={showHomeView}
+		onToggleHome={navigation.toggleHome}
 		onToggleIndex={navigation.toggleIndex}
 	/>
 
 	<div class="nav-view">
 		{#if hasActiveViews}
-		{#if navState?.activeViews.home || (!isMobile && hoveredArticle)}
-			<HomeView
-				{about}
-				{sentences}
-				{hoveredArticle}
-				fullWidth={navState?.activeViews.home && !navState?.activeViews.issue && !navState?.activeViews.index}
-			/>
-		{/if}
+			{#if navState?.activeViews.home || (!isMobile && hoveredArticle)}
+				<HomeView
+					{about}
+					{sentences}
+					{hoveredArticle}
+					fullWidth={navState?.activeViews.home &&
+						!navState?.activeViews.issue &&
+						!navState?.activeViews.index}
+				/>
+			{/if}
 
 			{#if navState?.activeViews.issue}
 				<IssueView

@@ -68,12 +68,22 @@ export interface QuoteContentBlock {
 	};
 }
 
+export interface ListContentBlock {
+	id: string;
+	type: 'list';
+	isHidden?: boolean;
+	content: {
+		text: string;
+	};
+}
+
 export type ContentBlock =
 	| TextContentBlock
 	| HeadingContentBlock
 	| ImageContentBlock
 	| QuoteContentBlock
-	| LineContentBlock;
+	| LineContentBlock
+	| ListContentBlock;
 
 export interface Site {
 	title: string;
@@ -140,6 +150,10 @@ export function isQuoteContentBlock(block: ContentBlock): block is QuoteContentB
 
 export function isLineContentBlock(block: ContentBlock): block is LineContentBlock {
 	return block.type === 'line';
+}
+
+export function isListContentBlock(block: ContentBlock): block is ListContentBlock {
+	return block.type === 'list';
 }
 
 export function isHeadingBlock(block: ContentBlock): block is HeadingContentBlock {

@@ -6,6 +6,7 @@ export type ViewType = 'home' | 'issue' | 'index';
 export function useNavigation() {
 	let prevShowIssue: boolean | null = null;
 	let prevShowIssueForHome: boolean | null = null;
+	let homeScrollBeforeOpen: number | null = null;
 
 	function toggleView(view: ViewType) {
 		navStore.update((store) => ({
@@ -43,26 +44,39 @@ export function useNavigation() {
 		});
 	}
 
-	function showHomeView() {
+	function toggleHome() {
 		navStore.update((store) => {
 			const isHomeActive = Boolean(store.activeViews.home);
 
-		if (isHomeActive) {
-			const restoredShowIssue = prevShowIssueForHome ?? store.showIssue;
-			prevShowIssueForHome = null;
+			if (isHomeActive) {
+				const restoredShowIssue = prevShowIssueForHome ?? store.showIssue;
+				prevShowIssueForHome = null;
 
-			return {
-				...store,
-				showIssue: restoredShowIssue,
-				activeViews: {
-					...store.activeViews,
-					home: false
+				const targetScroll = homeScrollBeforeOpen;
+				homeScrollBeforeOpen = null;
+
+				if (typeof window !== 'undefined' && targetScroll !== null) {
+					requestAnimationFrame(() => {
+						window.scrollTo({ top: targetScroll, left: 0, behavior: 'auto' });
+					});
 				}
-			};
-		}
+
+				return {
+					...store,
+					showIssue: restoredShowIssue,
+					activeViews: {
+						...store.activeViews,
+						home: false
+					}
+				};
+			}
 
 			const wasIndexActive = Boolean(store.activeViews.index);
 			let restoredShowIssue = store.showIssue;
+
+			if (typeof window !== 'undefined') {
+				homeScrollBeforeOpen = window.scrollY;
+			}
 
 			if (wasIndexActive) {
 				restoredShowIssue = prevShowIssue !== null ? prevShowIssue : store.showIssue;
@@ -89,19 +103,19 @@ export function useNavigation() {
 				}
 			}
 
-		prevShowIssueForHome = restoredShowIssue;
+			prevShowIssueForHome = restoredShowIssue;
 
-		return {
-			...store,
-			showIssue: false,
-			selectedTag: wasIndexActive ? null : store.selectedTag,
-			activeViews: {
-				...store.activeViews,
-				home: true,
-				issue: false,
-				index: false
-			}
-		};
+			return {
+				...store,
+				showIssue: false,
+				selectedTag: wasIndexActive ? null : store.selectedTag,
+				activeViews: {
+					...store.activeViews,
+					home: true,
+					issue: false,
+					index: false
+				}
+			};
 		});
 	}
 
@@ -192,11 +206,6 @@ export function useNavigation() {
 		prevShowIssue = null;
 	}
 
-	function navigateHome() {
-		closeAllViews();
-		scrollStore.update((s) => ({ ...s, shouldRestore: true }));
-	}
-
 	function setSelectedTag(tag: string) {
 		navStore.update((store) => ({
 			...store,
@@ -215,10 +224,9 @@ export function useNavigation() {
 		toggleView,
 		showView,
 		showIssuesWithoutFilter,
-		showHomeView,
+		toggleHome,
 		toggleIndex,
 		closeAllViews,
-		navigateHome,
 		setSelectedTag,
 		clearSelectedTag
 	};

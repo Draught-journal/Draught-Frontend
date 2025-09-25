@@ -5,7 +5,8 @@
 		isImageContentBlock,
 		isQuoteContentBlock,
 		isLineContentBlock,
-		isHeadingBlock
+		isHeadingBlock,
+		isListContentBlock
 	} from '$lib/api/schemas/draughtSchema';
 
 	import TextBlock from './blocks/TextBlock.svelte';
@@ -15,6 +16,7 @@
 
 	import LineBlock from './blocks/LineBlock.svelte';
 	import HeadingBlock from './blocks/HeadingBlock.svelte';
+	import ListBlock from './blocks/ListBlock.svelte';
 
 	const { content }: { content: ContentBlock } = $props();
 </script>
@@ -30,6 +32,8 @@
 		<LineBlock />
 	{:else if isHeadingBlock(content)}
 		<HeadingBlock {content} />
+	{:else if isListContentBlock(content)}
+		<ListBlock {content} />
 	{:else}
 		<UnknownBlock {content} />
 	{/if}

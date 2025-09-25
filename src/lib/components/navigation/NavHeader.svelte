@@ -2,14 +2,12 @@
 	const {
 		isArticlePage,
 		navState,
-		onNavigateHome,
-		onShowHome,
+		onToggleHome,
 		onToggleIndex
 	}: {
 		isArticlePage: boolean;
 		navState: any;
-		onNavigateHome: () => void;
-		onShowHome?: () => void;
+		onToggleHome: () => void;
 		onToggleIndex: () => void;
 	} = $props();
 	// Store the original color
@@ -25,7 +23,6 @@
 			if (originalColor === '' && navState.issueColor) {
 				originalColor = navState.issueColor;
 			}
-
 			// Sync toggle state with navState
 			isIndexToggled = navState.activeViews.index || false;
 		}
@@ -35,18 +32,10 @@
 	function handleIndexToggle() {
 		// Toggle the index via the parent component function
 		onToggleIndex();
-
-		// isIndexToggled will be updated via the effect when navState changes
 	}
 
-	function handleHomeClick(event: MouseEvent) {
-		if (onShowHome) {
-			event.preventDefault();
-			onShowHome();
-			return;
-		}
-
-		onNavigateHome();
+	function handleHomeToggle() {
+		onToggleHome();
 	}
 
 	// Calculate the dynamic text color style
@@ -63,14 +52,14 @@
 	{#if isArticlePage}
 		<!-- Article page layout: only show return in third column -->
 		<div id="return" class="nav-item">
-			<a href="/" onclick={onNavigateHome} style={textColorStyle}> (return) </a>
+			<a href="/" style={textColorStyle}> (return) </a>
 		</div>
 	{:else}
 		<!-- Default layout: show home, issue, and index -->
 		<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
-			<a href="/" onclick={handleHomeClick} style={textColorStyle}>
+			<button type="button" on:click={handleHomeToggle} style={textColorStyle}>
 				<p>draught</p>
-			</a>
+			</button>
 		</div>
 		<div
 			id="issue"
@@ -78,12 +67,12 @@
 			class:active={navState?.activeViews.issue}
 			hidden={!navState?.showIssue}
 		>
-			<button style={textColorStyle}>
+			<button type="button" style={textColorStyle}>
 				<p>{navState?.issueText}</p>
 			</button>
 		</div>
 		<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
-			<button onclick={handleIndexToggle} style={textColorStyle}>
+			<button type="button" on:click={handleIndexToggle} style={textColorStyle}>
 				<p>(index)</p>
 			</button>
 		</div>
@@ -141,7 +130,7 @@
 		color: inherit;
 	}
 
-	#home a p {
+	#home button p {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
 		font-weight: 400;
