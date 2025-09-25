@@ -39,7 +39,6 @@
 			{/each}
 		</div>
 	{/if}
-
 </div>
 
 <style>
@@ -72,6 +71,7 @@
 	}
 
 	.index-content button:hover {
+		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
 		font-synthesis: none;
 	}

@@ -58,11 +58,10 @@
 		font-variant-numeric: oldstyle-nums;
 	}
 
-	.issue:hover .heading {
-		font-family: 'OTParellel-cursive';
+	.issue:hover .heading .title p span {
+		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
 		font-synthesis: none;
-		line-height: 3px;
 	}
 
 	.content {

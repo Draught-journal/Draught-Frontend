@@ -183,8 +183,8 @@
 		color: inherit;
 	}
 
-	a:hover {
-		font-family: 'OTParellel-cursive';
+	a:hover li p {
+		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
 		font-synthesis: none;
 	}
