@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+
 	const {
 		isArticlePage,
 		navState,
@@ -38,6 +40,10 @@
 		onToggleHome();
 	}
 
+	function handleReturnHome() {
+		goto('/');
+	}
+
 	// Calculate the dynamic text color style
 	const textColorStyle = $derived(
 		navState?.activeViews.index || navState?.activeViews.home
@@ -52,12 +58,12 @@
 	{#if isArticlePage}
 		<!-- Article page layout: only show return in third column -->
 		<div id="return" class="nav-item">
-			<a href="/" style={textColorStyle}> (return) </a>
+			<button type="button" onclick={handleReturnHome} style={textColorStyle}> (return) </button>
 		</div>
 	{:else}
 		<!-- Default layout: show home, issue, and index -->
 		<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
-			<button type="button" on:click={handleHomeToggle} style={textColorStyle}>
+			<button type="button" onclick={handleHomeToggle} style={textColorStyle}>
 				<p>draught</p>
 			</button>
 		</div>
@@ -72,7 +78,7 @@
 			</button>
 		</div>
 		<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
-			<button type="button" on:click={handleIndexToggle} style={textColorStyle}>
+			<button type="button" onclick={handleIndexToggle} style={textColorStyle}>
 				<p>(index)</p>
 			</button>
 		</div>
@@ -116,18 +122,6 @@
 		padding: 0.5rem;
 		width: 100%;
 		transition: background-color 0.2s ease;
-	}
-
-	.nav-item a {
-		display: block;
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 0.5rem;
-		width: 100%;
-		transition: background-color 0.2s ease;
-		text-decoration: none;
-		color: inherit;
 	}
 
 	#home button p {

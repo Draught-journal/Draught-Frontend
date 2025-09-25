@@ -16,7 +16,11 @@
 		if (typeof window === 'undefined') return;
 		// We only care about client-side link/goto navigations
 		if (nav.to && nav.to.url.pathname.startsWith('/article/') && page.url.pathname === '/') {
-			scrollStore.update((s) => ({ ...s, homeScrollY: window.scrollY }));
+			scrollStore.update((s) => ({
+				...s,
+				homeScrollY: window.scrollY,
+				shouldRestore: true
+			}));
 			console.log('Navigating away, captured scroll if needed', page.url.pathname, nav);
 		}
 
