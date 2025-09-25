@@ -15,8 +15,10 @@
 	}
 
 	.text-block:not(:first-child) {
-		text-indent: 2em;
+		text-indent: 4em;
 	}
 
-	/* Responsive adjustments */
+	:global(.heading-block + .text-block) {
+		text-indent: 0 !important;
+	}
 </style>

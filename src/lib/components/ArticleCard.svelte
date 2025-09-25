@@ -11,7 +11,7 @@
 			<div class="heading">
 				<div class="tag"><p>({article.tags || ''})</p></div>
 				<div class="title"><p>{article.title || 'Untitled'}</p></div>
-				<div class="author"><p>{article.author || 'Anonymous'}</p></div>
+				<div class="author"><p>{article.author || ''}</p></div>
 			</div>
 
 			<div class="issue__number"><p>2.1.1</p></div>

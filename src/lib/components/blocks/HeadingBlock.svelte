@@ -3,7 +3,9 @@
 	const { content }: { content: HeadingBlockType } = $props();
 </script>
 
-<h3>{content.content.text}</h3>
+<div class="heading-block">
+	<h3>{@html content.content.text}</h3>
+</div>
 
 <style>
 	h3 {

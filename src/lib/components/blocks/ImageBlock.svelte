@@ -86,7 +86,7 @@
 
 	.full-width-container {
 		position: relative;
-		width: 100vw;
+		width: calc((var(--content-width, 1200px) * 0.5) + 5rem);
 		left: 50%;
 		transform: translateX(-50%);
 		box-sizing: border-box;

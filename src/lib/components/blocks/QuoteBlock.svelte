@@ -11,9 +11,8 @@
 
 <style>
 	.quote-block {
-		margin: 0 auto;
+		margin-inline: 4em;
 		margin-bottom: 2rem;
-		width: 90%;
 	}
 
 	.quote-content {
