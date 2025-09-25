@@ -15,7 +15,7 @@
 	}
 
 	.text-block:not(:first-child) {
-		text-indent: 4em;
+		text-indent: 4rem;
 	}
 
 	:global(.heading-block + .text-block) {

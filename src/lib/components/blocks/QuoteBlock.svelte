@@ -11,7 +11,7 @@
 
 <style>
 	.quote-block {
-		margin-inline: 4em;
+		margin-inline: 4rem;
 		margin-bottom: 2rem;
 	}
 

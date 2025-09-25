@@ -64,22 +64,6 @@
 		text-align: left;
 	}
 
-	.article-preview {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1rem;
-		height: 100%;
-		justify-content: center;
-	}
-
-	.preview-image {
-		width: 100%;
-		max-width: 200px;
-		height: auto;
-		object-fit: cover;
-	}
-
 	@keyframes slideDown {
 		from {
 			opacity: 0;
