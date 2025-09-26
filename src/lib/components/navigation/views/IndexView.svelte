@@ -45,7 +45,7 @@
 	.index-content {
 		grid-column: 3;
 		grid-row: 2;
-		padding: 1rem;
+		padding-inline: 1rem;
 		max-height: calc(100dvh - 5rem);
 		overflow-y: auto;
 		scrollbar-width: none;
