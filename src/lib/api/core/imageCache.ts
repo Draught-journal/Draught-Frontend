@@ -3,9 +3,13 @@
  * Production-ready image optimization and caching with multiple strategies
  */
 
-import type { ContentBlock, ImageContent, MediaCover } from './types';
+import type { ContentBlock, ImageContent } from '../schemas/draughtSchema';
+import type { MediaAsset } from './types';
 import { formatBytes, getFileExtension, isAbsoluteUrl, batchProcess } from './utils';
 import { errorLogger, ApiErrorFactory } from './errors';
+
+// Type alias for MediaCover to match MediaAsset
+export type MediaCover = MediaAsset;
 
 // Environment detection
 const isNode = typeof process !== 'undefined' && !!process.versions?.node;
@@ -374,17 +378,16 @@ export async function procesContentBlockImages(blocks: ContentBlock[]): Promise<
 	}
 
 	// Extract all image URLs for batch processing
-	const imageUrls: Array<{ blockIndex: number; imageIndex: number; url: string }> = [];
+	const imageUrls: Array<{ blockIndex: number; url: string }> = [];
 
 	imageBlocks.forEach((block) => {
 		const content = block.content as ImageContent;
-		content.image?.forEach((img, imgIdx) => {
+		if (content.image?.url) {
 			imageUrls.push({
 				blockIndex: blocks.indexOf(block),
-				imageIndex: imgIdx,
-				url: img.url
+				url: content.image.url
 			});
-		});
+		}
 	});
 
 	// Process images in batches
