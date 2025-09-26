@@ -79,7 +79,8 @@
 	}
 
 	.image-block {
-		margin-block: 2rem;
+		margin-block-start: 2rem;
+		margin-block-end: 0.8rem;
 		overflow-x: hidden; /* Prevent horizontal scrolling */
 		position: relative; /* Establish containing block */
 	}

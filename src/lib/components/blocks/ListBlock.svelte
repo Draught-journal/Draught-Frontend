@@ -44,4 +44,9 @@
 	.list-block :global(li:last-child) {
 		margin-bottom: 0;
 	}
+
+	.list-block :global(li) {
+		line-height: 23px;
+		font-variant-numeric: oldstyle-nums;
+	}
 </style>

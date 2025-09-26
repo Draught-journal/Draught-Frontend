@@ -16,7 +16,7 @@
 	let originalColor = '';
 
 	// Track whether index is toggled
-	let isIndexToggled = false;
+	let isIndexToggled = $state(false);
 
 	// Update isIndexToggled based on navState and save original color
 	$effect(() => {
@@ -86,7 +86,7 @@
 			</div>
 			<div id="index" class="nav-item" class:active={navState?.activeViews.index}>
 				<button type="button" onclick={handleIndexToggle} style={textColorStyle}>
-					<p>(index)</p>
+					<p>{isIndexToggled ? '(return)' : '(index)'}</p>
 				</button>
 			</div>
 		{/if}

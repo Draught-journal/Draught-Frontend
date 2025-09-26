@@ -21,4 +21,15 @@
 	:global(.heading-block + .text-block) {
 		text-indent: 0 !important;
 	}
+	:global(.quote-block + .text-block) {
+		text-indent: 0 !important;
+	}
+
+	:global(.image-block + .text-block) {
+		text-indent: 0 !important;
+	}
+
+	:global(.list-block + .text-block) {
+		text-indent: 0 !important;
+	}
 </style>

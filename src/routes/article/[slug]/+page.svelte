@@ -89,7 +89,12 @@
 		margin-top: 3rem;
 		padding-block-start: 1rem;
 		font-size: var(--font-size-sm);
-		line-height: 1.5;
+		font-variant-numeric: oldstyle-nums;
+		line-height: 120%;
+	}
+
+	:global(.footnote) {
+		font-size: var(--font-size-sm);
 	}
 
 	/* media query mobile */

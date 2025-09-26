@@ -58,7 +58,7 @@
 		font-variant-numeric: oldstyle-nums;
 	}
 
-	.issue:hover .heading .title p span {
+	.issue:hover .heading .title p span.tag {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
 		font-synthesis: none;
