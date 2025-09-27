@@ -30,7 +30,7 @@
 					<p>
 						<span class="tag">({article.tags || ''})</span> <br />
 						<span class="title">{article.title || 'Untitled'}</span> <br />
-						<span class="author">{article.author || ''}</span>
+						<span class="author">{@html article.author || '&nbsp;'}</span>
 					</p>
 				</div>
 			</div>
