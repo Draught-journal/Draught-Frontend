@@ -134,7 +134,7 @@
 	}
 
 	.image-caption.scale-small {
-		width: 60%;
+		width: 90%;
 	}
 
 	.image-caption.scale-medium {
