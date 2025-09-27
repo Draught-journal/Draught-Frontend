@@ -131,6 +131,7 @@
 		font-size: var(--font-size-sm);
 		text-align: center;
 		font-variant-numeric: oldstyle-nums;
+		line-height: 1.2;
 	}
 
 	.image-caption.scale-small {
