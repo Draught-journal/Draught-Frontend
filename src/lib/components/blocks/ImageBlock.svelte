@@ -176,15 +176,7 @@
 			width: 100%;
 		}
 
-		.image-caption {
-			font-size: 0.8rem;
-			padding: 0.75rem;
-		}
-
-		.image-caption.scale-small {
-			width: 80%;
-		}
-
+		.image-caption.scale-small,
 		.image-caption.scale-medium,
 		.image-caption.scale-large {
 			width: 100%;

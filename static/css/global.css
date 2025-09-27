@@ -53,6 +53,7 @@
 	--content-width: 95vw;
 	--arrow-size: 4rem; /* Default static size for arrow buttons */
 	--scroll-bar-width: 5px; /* Default static size for scroll bars */
+	--block-margin: 4rem; /* Margin between content blocks */
 }
 
 /* [hidden="true"] {
@@ -127,5 +128,7 @@ main {
 		--nav-height: calc(
 			(var(--font-size-xl) * 1.5 + 20px + 2rem) * 1.5
 		); /* Adjusted for smaller screens */
+
+		--block-margin: 2rem; /* Reduced margin between content blocks */
 	}
 }

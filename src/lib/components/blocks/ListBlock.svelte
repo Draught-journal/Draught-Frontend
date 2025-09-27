@@ -14,7 +14,7 @@
 	.list-block {
 		/* margin: 1.5rem 0; */
 		/* padding-inline-start: 1.5rem; */
-		margin-inline-end: 4rem;
+		margin-inline-end: var(--block-margin);
 	}
 
 	.list-block :global(ul),

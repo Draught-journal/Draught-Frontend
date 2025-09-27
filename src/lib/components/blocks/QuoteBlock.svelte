@@ -11,7 +11,7 @@
 
 <style>
 	.quote-block {
-		margin-inline: 4rem;
+		margin-inline: var(--block-margin);
 	}
 
 	.quote-content {
@@ -28,14 +28,6 @@
 	@media (max-width: 768px) {
 		.quote-block {
 			margin-bottom: 1.5rem;
-		}
-
-		.quote-content {
-			padding: 1rem;
-		}
-
-		.quote-text {
-			font-size: 1em;
 		}
 	}
 </style>
