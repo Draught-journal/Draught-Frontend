@@ -5,6 +5,7 @@
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import { scrollStore } from '$lib/stores/scrollStore';
 	import { navStore } from '$lib/stores/navStore';
+	import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
 
 	let { children, data }: { children: any; data: LayoutData } = $props();
 
@@ -37,6 +38,7 @@
 	afterNavigate(() => {
 		if (typeof window === 'undefined') return;
 		if (page.url.pathname === '/') {
+			hoverImageStore.reset();
 			scrollStore.update((s) => {
 				if (s.shouldRestore && s.homeScrollY !== null) {
 					// Defer to next frame to ensure DOM is rendered
