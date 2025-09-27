@@ -13,10 +13,16 @@
 		label: string;
 	};
 
+	type GridConfig = {
+		columns: number;
+		rows: number;
+		selection: GridItem[];
+	};
+
 	let {
 		issueColor = '#000000',
 		issueTitle = 'issue one',
-		grid = '[]',
+		grid = '{"columns":3,"rows":3,"selection":[]}',
 		articles = []
 	}: {
 		issueColor?: string;
@@ -25,8 +31,21 @@
 		articles?: Article[];
 	} = $props();
 
-	// Parse grid JSON if it's a string
-	const gridConfig = $derived(typeof grid === 'string' ? JSON.parse(grid) : grid) as GridItem[];
+	// Parse grid JSON if it's a string and extract selection array
+	const gridConfig = $derived(() => {
+		try {
+			const parsed = typeof grid === 'string' ? JSON.parse(grid) : grid;
+			// If it's the new format with columns, rows, and selection
+			if (parsed && typeof parsed === 'object' && 'selection' in parsed) {
+				return (parsed as GridConfig).selection;
+			}
+			// If it's the old format (array of GridItems), return as is
+			return Array.isArray(parsed) ? parsed : [];
+		} catch (e) {
+			console.error('Failed to parse grid config:', e);
+			return [];
+		}
+	});
 
 	// For demo purposes, create 8 issues if none provided
 	const displayIssues = $derived(articles.length > 0 ? articles : (Array(8).fill({}) as Article[]));
@@ -176,16 +195,17 @@
 		<p>{issueTitle}</p>
 	</div>
 	<section class="articles">
-		{#if gridConfig && gridConfig.length > 0}
-			{@const maxRow = Math.max(...gridConfig.map((item) => item.row))}
+		{#if gridConfig() && gridConfig().length > 0}
+			{@const gridSelection = gridConfig()}
+			{@const maxRow = Math.max(...gridSelection.map((item: GridItem) => item.row))}
 
 			<!-- Process the grid data in template -->
 			{@const groupedRows = (() => {
 				// Pre-process articles by row
 				const result: Record<number, { article: Article; gridItem: GridItem }[]> = {};
 
-				for (let index = 0; index < Math.min(gridConfig.length, displayIssues.length); index++) {
-					const gridItem = gridConfig[index];
+				for (let index = 0; index < Math.min(gridSelection.length, displayIssues.length); index++) {
+					const gridItem = gridSelection[index];
 					const article = displayIssues[index];
 					const row = gridItem.row;
 
