@@ -22,7 +22,6 @@
 				homeScrollY: window.scrollY,
 				shouldRestore: true
 			}));
-			console.log('Navigating away, captured scroll if needed', page.url.pathname, nav);
 		}
 
 		// Close any open nav views when navigating to an article
