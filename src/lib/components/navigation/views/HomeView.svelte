@@ -80,9 +80,8 @@
 	}
 
 	@media (max-width: 768px) {
-		.home-content {
-			grid-column: 1 / 3;
-			z-index: 1;
+		.content {
+			max-width: 100%;
 		}
 	}
 </style>
