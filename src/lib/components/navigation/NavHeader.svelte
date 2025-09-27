@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
 
 	const {
 		isArticlePage,
@@ -27,6 +28,13 @@
 			}
 			// Sync toggle state with navState
 			isIndexToggled = navState.activeViews.index || false;
+		}
+	});
+
+	// Hide hover images when home view is active
+	$effect(() => {
+		if (navState?.activeViews.home) {
+			hoverImageStore.reset();
 		}
 	});
 
