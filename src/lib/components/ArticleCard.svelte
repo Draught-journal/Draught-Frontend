@@ -3,7 +3,10 @@
 	import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
 	import ContentBlurb from './ContentBlurb.svelte';
 
-	const { article }: { article: Article } = $props();
+	const {
+		article,
+		articleNumber = '0.0.0'
+	}: { article: Article; articleNumber?: string } = $props();
 
 	let cardElement: HTMLElement | null = null;
 
@@ -35,7 +38,7 @@
 				</div>
 			</div>
 
-			<div class="issue__number"><p>2.1.1</p></div>
+			<div class="article__number"><p>{articleNumber}</p></div>
 
 			<div class="blurb">
 				<ContentBlurb content={article.content} />
@@ -79,7 +82,7 @@
 		line-height: 22px;
 	}
 
-	.issue .issue__number {
+	.issue .article__number {
 		font-size: var(--font-size-base);
 		font-variant-numeric: oldstyle-nums;
 		margin-block: 1.2rem 1.5rem;

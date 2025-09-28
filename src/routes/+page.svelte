@@ -27,12 +27,13 @@
 <Header {...seoData} />
 <SplashScreen sentences={data.props?.site?.sentences} />
 
-{#each issues as issue (issue.id)}
+{#each issues as issue, issueIndex (issue.id)}
 	<IssueSection
 		issueColor={issue.color}
 		articles={issue.articles}
 		grid={issue.grid}
 		issueTitle={issue.title}
+		issueNumber={issueIndex + 1}
 	/>
 {/each}
 

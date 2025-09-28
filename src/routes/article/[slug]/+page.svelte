@@ -8,6 +8,7 @@
 	let { data }: PageProps = $props();
 	let article: Article | null = data.article;
 	const errorMessage = data.errorMessage;
+	const articleNumber = data.articleNumber || '1.0.1';
 
 	// Create SEO metadata
 	const seoData = createSEOData({
@@ -29,7 +30,7 @@
 			/>{article?.author || ''}
 		</h2>
 		<br />
-		<p class="version">1.1.1</p>
+		<p class="article__number">{articleNumber}</p>
 		<br />
 		<br />
 		<br />
@@ -59,7 +60,7 @@
 		padding-block: 5rem;
 	}
 	article .title h2,
-	article .title .version {
+	article .title .article__number {
 		text-align: center;
 		margin: 0;
 		padding: 0;
@@ -67,7 +68,7 @@
 		line-height: 26px;
 	}
 
-	article .title .version {
+	article .title .article__number {
 		font-variant-numeric: oldstyle-nums;
 	}
 	article .content p {
