@@ -77,6 +77,7 @@
 		text-align: center;
 		font-size: var(--font-size-lg);
 		line-height: 26px;
+		cursor: pointer;
 	}
 	.head .title {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;
