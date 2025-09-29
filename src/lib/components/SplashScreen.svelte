@@ -60,23 +60,23 @@
 </script>
 
 <div class="splash">
-	<div class="head" on:click={handleHeadClick}>
+	<button class="head" onclick={handleHeadClick}>
 		<p class="title">draught <br /><span class="sentence">({selectedSentence})</span></p>
-	</div>
+	</button>
 </div>
 
 <style>
-	.splash .head {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
+	.splash {
+		display: grid;
+		place-content: center;
 		height: 100vh;
-		text-align: center;
 		margin-bottom: 20vh;
+	}
+	.splash button.head {
+		all: unset;
+		text-align: center;
 		font-size: var(--font-size-lg);
 		line-height: 26px;
-		cursor: pointer;
 	}
 	.head .title {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;

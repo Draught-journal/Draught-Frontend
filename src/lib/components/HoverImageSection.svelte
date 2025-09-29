@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
-	const hoverImage = hoverImageStore;
-
-	$: hoveredStack = $hoverImage.stack ?? [];
-	$: activeId = $hoverImage.active?.articleId ?? null;
-	$: stackLength = hoveredStack.length;
+	const hoverImage = $store(hoverImageStore);
+	const hoveredStack = $derived(hoverImage.stack ?? []);
+	const activeId = $derived(hoverImage.active?.articleId ?? null);
+	const stackLength = $derived(hoveredStack.length);
 </script>
 
 <div
