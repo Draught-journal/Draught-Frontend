@@ -64,6 +64,13 @@
 		text-align: left;
 	}
 
+	:global(strong em) {
+		font-family: 'OTParellel-cursive', 'OTParellel', serif;
+		font-style: italic;
+		font-weight: 400;
+		font-synthesis: none;
+	}
+
 	@keyframes slideDown {
 		from {
 			opacity: 0;
