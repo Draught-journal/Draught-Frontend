@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 import type { Article } from '$lib/api';
 
 export interface HoverImagePayload {
+	articleId: string;
 	src: string;
 	alt: string;
 	title: string;
@@ -9,6 +10,7 @@ export interface HoverImagePayload {
 
 interface HoverImageState {
 	active: HoverImagePayload | null;
+	stack: HoverImagePayload[];
 }
 
 type HoverSource = 'viewport' | 'pointer';
@@ -20,7 +22,8 @@ interface InternalEntry {
 	payload: HoverImagePayload;
 }
 
-const INITIAL_STATE: HoverImageState = { active: null };
+const STACK_LIMIT = 12;
+const INITIAL_STATE: HoverImageState = { active: null, stack: [] };
 
 function toEntry(article: Article, weight: number, source: HoverSource): InternalEntry | null {
 	const src = article?.cover?.url;
@@ -34,6 +37,7 @@ function toEntry(article: Article, weight: number, source: HoverSource): Interna
 		weight,
 		source,
 		payload: {
+			articleId: article.id,
 			src,
 			alt: article.cover?.alt || article.title || 'Article cover',
 			title: article.title || 'Untitled'
@@ -44,9 +48,35 @@ function toEntry(article: Article, weight: number, source: HoverSource): Interna
 function createHoverImageStore() {
 	const { subscribe, set } = writable<HoverImageState>(INITIAL_STATE);
 	const entries = new Map<string, InternalEntry>();
+	const stackOrder: string[] = [];
+	const stackValues = new Map<string, HoverImagePayload>();
 
 	function entryKey(articleId: string, source: HoverSource) {
 		return `${source}:${articleId}`;
+	}
+
+	function ensureOrder(articleId: string) {
+		const currentIndex = stackOrder.indexOf(articleId);
+
+		if (currentIndex !== -1) {
+			stackOrder.splice(currentIndex, 1);
+		}
+
+		stackOrder.push(articleId);
+
+		if (stackOrder.length > STACK_LIMIT) {
+			const removedId = stackOrder.shift();
+
+			if (removedId) {
+				stackValues.delete(removedId);
+			}
+		}
+	}
+
+	function currentStack() {
+		return stackOrder
+			.map((id) => stackValues.get(id))
+			.filter((payload): payload is HoverImagePayload => Boolean(payload));
 	}
 
 	function hasPointerEntries() {
@@ -59,9 +89,10 @@ function createHoverImageStore() {
 		return false;
 	}
 
-	function emit() {
+	function emit(preferredActiveId?: string) {
 		if (entries.size === 0) {
-			set(INITIAL_STATE);
+			const stack = currentStack();
+			set({ active: null, stack });
 			return;
 		}
 
@@ -73,7 +104,17 @@ function createHoverImageStore() {
 			}
 		}
 
-		set({ active: best ? best.payload : null });
+		const activeEntry = preferredActiveId
+			? [...entries.values()].find((entry) => entry.articleId === preferredActiveId) ?? best
+			: best;
+
+		if (activeEntry) {
+			ensureOrder(activeEntry.articleId);
+			stackValues.set(activeEntry.articleId, activeEntry.payload);
+		}
+
+		const stack = currentStack();
+		set({ active: activeEntry ? activeEntry.payload : null, stack });
 	}
 
 	function upsert(article: Article, weight: number, source: HoverSource) {
@@ -84,7 +125,8 @@ function createHoverImageStore() {
 		}
 
 		entries.set(entryKey(entry.articleId, source), entry);
-		emit();
+		stackValues.set(entry.articleId, entry.payload);
+		emit(entry.articleId);
 	}
 
 	return {
@@ -109,7 +151,8 @@ function createHoverImageStore() {
 
 					if (!hasPointerEntries()) {
 						entries.clear();
-						set(INITIAL_STATE);
+						const stack = currentStack();
+						set({ active: null, stack });
 						return;
 					}
 				}
@@ -124,7 +167,8 @@ function createHoverImageStore() {
 			if (removedPointer || removedViewport) {
 				if (!hasPointerEntries() && removedPointer) {
 					entries.clear();
-					set(INITIAL_STATE);
+					const stack = currentStack();
+					set({ active: null, stack });
 					return;
 				}
 
@@ -133,6 +177,8 @@ function createHoverImageStore() {
 		},
 		reset() {
 			entries.clear();
+			stackOrder.length = 0;
+			stackValues.clear();
 			set(INITIAL_STATE);
 		}
 	};
