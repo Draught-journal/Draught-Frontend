@@ -36,4 +36,5 @@
 	/>
 {/each}
 
+<SplashScreen sentences={data.props?.site?.sentences} />
 <HoverImageSection />
