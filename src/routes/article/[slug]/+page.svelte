@@ -8,7 +8,7 @@
 	let { data }: PageProps = $props();
 	let article: Article | null = data.article;
 	const errorMessage = data.errorMessage;
-	const articleNumber = data.articleNumber || '1.0.1';
+	const articleNumber = article?.articleNumber || '1.0.1';
 
 	// Create SEO metadata
 	const seoData = createSEOData({
@@ -26,7 +26,7 @@
 	<div class="title">
 		<!-- tag -->
 		<h2>
-			{article?.tags ? `(${article.tags})` : ''} <br />{article?.title || ''}<br
+			{article?.tags ? `(${article.tags})` : ''} <br />{@html article?.title || ''}<br
 			/>{article?.author || ''}
 		</h2>
 		<br />

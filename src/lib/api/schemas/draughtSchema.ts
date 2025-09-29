@@ -111,6 +111,7 @@ export interface Article extends GenericEntity {
 	content: ContentBlock[];
 	footnotes: string;
 	tags: string[];
+	articleNumber: string;
 }
 
 export interface Issues extends GenericCollection<Issue> {

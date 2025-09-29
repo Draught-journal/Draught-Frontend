@@ -23,20 +23,13 @@
 		issueColor = '#000000',
 		issueTitle = 'issue one',
 		grid = '{"columns":3,"rows":3,"selection":[]}',
-		articles = [],
-		issueNumber = 0
+		articles = []
 	}: {
 		issueColor?: string;
 		issueTitle?: string;
 		grid?: string;
 		articles?: Article[];
-		issueNumber?: number;
 	} = $props();
-
-	const formatArticleNumber = (articleIndex: number) => {
-		const safeIssueNumber = Number.isFinite(issueNumber) && issueNumber > 0 ? issueNumber : 1;
-		return `${safeIssueNumber}.0.${articleIndex + 1}`;
-	};
 
 	// Parse grid JSON if it's a string and extract selection array
 	const gridConfig = $derived(() => {
@@ -234,7 +227,7 @@
 					<div class="issue-wrapper single-last" style="grid-row: {rowNum}; grid-column: 1 / -1;">
 						<ArticleCard
 							article={rowArticles[0].article}
-							articleNumber={formatArticleNumber(rowArticles[0].index)}
+							articleNumber={rowArticles[0].article.articleNumber}
 						/>
 					</div>
 				{:else if rowArticles.length === 2}
@@ -242,18 +235,18 @@
 					<div class="issue-wrapper double-row" style="grid-row: {rowNum}; grid-column: 1 / -1;">
 						<ArticleCard
 							article={rowArticles[0].article}
-							articleNumber={formatArticleNumber(rowArticles[0].index)}
+							articleNumber={rowArticles[0].article.articleNumber}
 						/>
 						<ArticleCard
 							article={rowArticles[1].article}
-							articleNumber={formatArticleNumber(rowArticles[1].index)}
+							articleNumber={rowArticles[1].article.articleNumber}
 						/>
 					</div>
 				{:else}
 					<!-- Standard grid layout for 3+ articles in a row -->
 					{#each rowArticles as { article, gridItem, index }}
 						<div class="issue-wrapper" style="grid-row: {rowNum}; grid-column: {gridItem.col};">
-							<ArticleCard {article} articleNumber={formatArticleNumber(index)} />
+							<ArticleCard {article} articleNumber={article.articleNumber} />
 						</div>
 					{/each}
 				{/if}
@@ -270,16 +263,16 @@
 					{@const nextArticle = displayIssues[index + 1]}
 					<!-- Create a 2-column subgrid for the last 2 items -->
 					<div class="issue-wrapper double-row">
-						<ArticleCard {article} articleNumber={formatArticleNumber(index)} />
+						<ArticleCard {article} articleNumber={article.articleNumber} />
 						{#if nextArticle}
-							<ArticleCard article={nextArticle} articleNumber={formatArticleNumber(index + 1)} />
+							<ArticleCard article={nextArticle} articleNumber={nextArticle.articleNumber} />
 						{/if}
 					</div>
 				{:else if remainder === 2 && isInLastRow && positionInLastRow === 1}
 					<!-- Skip the second item as it's already included in the double-row above -->
 				{:else}
 					<div class="issue-wrapper" class:single-last={remainder === 1 && isInLastRow}>
-						<ArticleCard {article} articleNumber={formatArticleNumber(index)} />
+						<ArticleCard {article} articleNumber={article.articleNumber} />
 					</div>
 				{/if}
 			{/each}

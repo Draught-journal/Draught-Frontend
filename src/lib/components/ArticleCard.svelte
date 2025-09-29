@@ -3,10 +3,8 @@
 	import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
 	import ContentBlurb from './ContentBlurb.svelte';
 
-	const {
-		article,
-		articleNumber = '0.0.0'
-	}: { article: Article; articleNumber?: string } = $props();
+	const { article, articleNumber = '0.0.0' }: { article: Article; articleNumber?: string } =
+		$props();
 
 	let cardElement: HTMLElement | null = null;
 
@@ -32,7 +30,7 @@
 				<div class="title">
 					<p>
 						<span class="tag">({article.tags || ''})</span> <br />
-						<span class="title">{article.title || 'Untitled'}</span> <br />
+						<span class="title">{@html article.title || 'Untitled'}</span> <br />
 						<span class="author">{@html article.author || '&nbsp;'}</span>
 					</p>
 				</div>

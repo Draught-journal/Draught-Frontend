@@ -33,7 +33,6 @@
 		articles={issue.articles}
 		grid={issue.grid}
 		issueTitle={issue.title}
-		issueNumber={issueIndex + 1}
 	/>
 {/each}
 
