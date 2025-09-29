@@ -19,7 +19,7 @@
 	}
 
 	.quote-text {
-		margin: 0 0 1rem 0;
+		margin: 0;
 		line-height: 23px;
 		font-variant-numeric: oldstyle-nums;
 	}

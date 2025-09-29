@@ -99,6 +99,10 @@
 		font-size: var(--font-size-sm);
 	}
 
+	:global(#footnotes li) {
+		text-indent: 0;
+	}
+
 	/* media query mobile */
 
 	@media (max-width: 768px) {
