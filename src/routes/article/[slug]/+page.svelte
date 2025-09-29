@@ -65,6 +65,7 @@
 		margin: 0;
 		padding: 0;
 		font-size: var(--font-size-lg);
+		font-variant-numeric: oldstyle-nums;
 		line-height: 26px;
 	}
 

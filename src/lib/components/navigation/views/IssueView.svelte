@@ -102,8 +102,8 @@
 									onmouseleave={() => handlePointerLeave(article)}
 								>
 									<li data-cover={article.cover.url} data-alt-text={article.cover.alt}>
-										<p>({article.tags.join(', ')})</p>
-										<p>{article.title}</p>
+										<p class="tags">({article.tags.join(', ')})</p>
+										<p>{@html article.title || 'Untitled'}</p>
 										<p>{article.author}</p>
 									</li>
 								</a>
@@ -174,6 +174,14 @@
 		border-bottom: 1px solid var(--color-border);
 	}
 
+	li p {
+		font-variant-numeric: oldstyle-nums;
+	}
+
+	li:first-child {
+		padding-top: 0;
+	}
+
 	li:last-child {
 		border-bottom: none;
 	}
@@ -183,7 +191,7 @@
 		color: inherit;
 	}
 
-	a:hover li p {
+	a:hover li p.tags {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
 		font-synthesis: none;

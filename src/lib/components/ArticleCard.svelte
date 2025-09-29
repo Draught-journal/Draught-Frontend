@@ -59,6 +59,10 @@
 		font-variant-numeric: oldstyle-nums;
 	}
 
+	.issue .title {
+		font-variant-numeric: oldstyle-nums;
+	}
+
 	.issue:hover .heading .title p span.tag {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
