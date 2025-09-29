@@ -107,6 +107,13 @@ main {
 } */
 
 /* Custom Scroll bar */
+/* Firefox scrollbar styling */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--color-gray-700) var(--color-gray-100);
+}
+
+/* WebKit browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
 	width: var(--scroll-bar-width);
 }
