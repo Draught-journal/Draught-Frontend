@@ -3,11 +3,11 @@ import { scrollStore } from '$lib/stores/scrollStore.js';
 
 export type ViewType = 'home' | 'issue' | 'index';
 
-export function useNavigation() {
-	let prevShowIssue: boolean | null = null;
-	let prevShowIssueForHome: boolean | null = null;
-	let homeScrollBeforeOpen: number | null = null;
+let prevShowIssue: boolean | null = null;
+let prevShowIssueForHome: boolean | null = null;
+let homeScrollBeforeOpen: number | null = null;
 
+export function useNavigation() {
 	function toggleView(view: ViewType) {
 		navStore.update((store) => ({
 			...store,
@@ -49,6 +49,7 @@ export function useNavigation() {
 			const isHomeActive = Boolean(store.activeViews.home);
 
 			if (isHomeActive) {
+				// Closing home view
 				const restoredShowIssue = prevShowIssueForHome ?? store.showIssue;
 				prevShowIssueForHome = null;
 
@@ -71,9 +72,11 @@ export function useNavigation() {
 				};
 			}
 
+			// Opening home view
 			const wasIndexActive = Boolean(store.activeViews.index);
 			let restoredShowIssue = store.showIssue;
 
+			// Always save current scroll position when opening home view
 			if (typeof window !== 'undefined') {
 				homeScrollBeforeOpen = window.scrollY;
 			}
@@ -82,6 +85,7 @@ export function useNavigation() {
 				restoredShowIssue = prevShowIssue !== null ? prevShowIssue : store.showIssue;
 				prevShowIssue = null;
 
+				// If we were in index view, restore that scroll position
 				if (typeof window !== 'undefined') {
 					requestAnimationFrame(() => {
 						scrollStore.update((s) => {

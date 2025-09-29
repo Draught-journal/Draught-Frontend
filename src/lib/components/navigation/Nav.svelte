@@ -2,7 +2,6 @@
 	import { navStore } from '$lib/stores/navStore.js';
 	import { onMount } from 'svelte';
 	import type { ContentBlock as ContentBlockType, Issue } from '$lib/api';
-	import type { ArticlePreview } from './composables/useArticles.js';
 
 	// Import our new modular components
 	import NavHeader from './NavHeader.svelte';
@@ -46,9 +45,26 @@
 	});
 
 	// Handle body overflow when nav is active
+	let savedScrollPosition = 0;
 	$effect(() => {
 		if (typeof document !== 'undefined') {
-			document.body.style.overflow = hasActiveViews ? 'hidden' : '';
+			if (hasActiveViews) {
+				// Save current scroll position before hiding overflow
+				savedScrollPosition = window.scrollY;
+				document.body.style.overflow = 'hidden';
+				// Keep the page at the same visual position
+				document.body.style.top = `-${savedScrollPosition}px`;
+				document.body.style.position = 'fixed';
+				document.body.style.width = '100%';
+			} else {
+				// Restore scroll position when hiding nav
+				document.body.style.overflow = '';
+				document.body.style.position = '';
+				document.body.style.top = '';
+				document.body.style.width = '';
+				// Restore the scroll position
+				window.scrollTo(0, savedScrollPosition);
+			}
 		}
 	});
 
@@ -67,6 +83,9 @@
 		return () => {
 			if (typeof document !== 'undefined') {
 				document.body.style.overflow = '';
+				document.body.style.position = '';
+				document.body.style.top = '';
+				document.body.style.width = '';
 			}
 			clearTimeout(timeoutId);
 		};
