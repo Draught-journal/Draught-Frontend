@@ -1,9 +1,20 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
+	import { useNavigation } from '$lib/components/navigation/composables/useNavigation.js';
+	import { navStore } from '$lib/stores/navStore.js';
 
 	const { sentences }: { sentences?: string[] } = $props();
 
 	let selectedSentence = $state('');
+	const navigation = useNavigation();
+
+	function handleHeadClick() {
+		const navState = get(navStore);
+		if (!navState.activeViews.home) {
+			navigation.toggleHome();
+		}
+	}
 
 	// Function to get a random sentence and cycle through them
 	function getRandomSentence(sentences: string[]): string {
@@ -49,7 +60,7 @@
 </script>
 
 <div class="splash">
-	<div class="head">
+	<div class="head" on:click={handleHeadClick}>
 		<p class="title">draught <br /><span class="sentence">({selectedSentence})</span></p>
 	</div>
 </div>
@@ -65,6 +76,7 @@
 		margin-bottom: 20vh;
 		font-size: var(--font-size-lg);
 		line-height: 26px;
+		cursor: pointer;
 	}
 	.head .title {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;

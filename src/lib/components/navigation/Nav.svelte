@@ -73,7 +73,11 @@
 	});
 </script>
 
-<nav class:hidden={!navState?.showNav} class:active={hasActiveViews} bind:this={navElement}>
+<nav
+	class:hidden={!navState?.showNav && !hasActiveViews}
+	class:active={hasActiveViews}
+	bind:this={navElement}
+>
 	<NavHeader
 		{isArticlePage}
 		{navState}
