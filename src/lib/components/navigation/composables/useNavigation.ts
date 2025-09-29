@@ -1,5 +1,6 @@
 import { navStore } from '$lib/stores/navStore.js';
 import { scrollStore } from '$lib/stores/scrollStore.js';
+import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
 
 export type ViewType = 'home' | 'issue' | 'index';
 
@@ -140,7 +141,7 @@ export function useNavigation() {
 			const currentIndex = store.activeViews.index;
 
 			if (!currentIndex) {
-				// Opening index: save scroll position and remember previous state
+				// Opening index: save scroll position, remember previous state, and clear hover images
 				if (typeof window !== 'undefined') {
 					scrollStore.update((s) => ({
 						...s,
@@ -148,6 +149,9 @@ export function useNavigation() {
 						shouldRestoreFromIndex: true
 					}));
 				}
+
+				// Clear hover images when opening index
+				hoverImageStore.reset();
 
 				prevShowIssue = store.showIssue;
 				return {
