@@ -25,7 +25,7 @@
 </script>
 
 <Header {...seoData} />
-<SplashScreen sentences={data.props?.site?.sentences} />
+<SplashScreen sentences={data.props?.site?.sentences} controlsNav={true} />
 
 {#each issues as issue, issueIndex (issue.id)}
 	<IssueSection
@@ -36,5 +36,5 @@
 	/>
 {/each}
 
-<SplashScreen sentences={data.props?.site?.sentences} />
+<SplashScreen sentences={data.props?.site?.sentences} controlsNav={true} />
 <HoverImageSection />

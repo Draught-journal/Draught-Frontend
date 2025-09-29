@@ -4,9 +4,16 @@
 	import { useNavigation } from '$lib/components/navigation/composables/useNavigation.js';
 	import { navStore } from '$lib/stores/navStore.js';
 
-	const { sentences }: { sentences?: string[] } = $props();
+	const {
+		sentences,
+		controlsNav = false
+	}: {
+		sentences?: string[];
+		controlsNav?: boolean;
+	} = $props();
 
 	let selectedSentence = $state('');
+	let splashElement: HTMLElement;
 	const navigation = useNavigation();
 
 	function handleHeadClick() {
@@ -56,10 +63,65 @@
 		if (sentences && sentences.length > 0) {
 			selectedSentence = getRandomSentence(sentences);
 		}
+
+		// Set up Intersection Observer only if this splash screen should control nav visibility
+		if (controlsNav && splashElement) {
+			// Create a unique ID for this splash screen instance
+			const splashId = `splash-${Math.random().toString(36).substr(2, 9)}`;
+
+			const observer = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						navStore.update((store) => {
+							// Get current list of visible splash screens
+							const visibleSplashes = store.visibleSplashes || new Set();
+
+							if (entry.isIntersecting) {
+								// Add this splash to visible list
+								visibleSplashes.add(splashId);
+							} else {
+								// Remove this splash from visible list
+								visibleSplashes.delete(splashId);
+							}
+
+							// Hide nav if any splash screens are visible
+							return {
+								...store,
+								visibleSplashes,
+								showNav: visibleSplashes.size === 0 ? false : false // Keep nav hidden when any splash is visible
+							};
+						});
+					});
+				},
+				{
+					// Trigger when 50% of the splash screen is visible
+					threshold: 0.5,
+					// Add some margin to make the transition smoother
+					rootMargin: '-10% 0px -10% 0px'
+				}
+			);
+
+			observer.observe(splashElement);
+
+			// Cleanup observer on component destroy
+			return () => {
+				observer.disconnect();
+				// Remove this splash from the visible list when component unmounts
+				navStore.update((store) => {
+					const visibleSplashes = store.visibleSplashes || new Set();
+					visibleSplashes.delete(splashId);
+					return {
+						...store,
+						visibleSplashes,
+						showNav: visibleSplashes.size === 0
+					};
+				});
+			};
+		}
 	});
 </script>
 
-<div class="splash">
+<div class="splash" bind:this={splashElement}>
 	<button class="head" onclick={handleHeadClick}>
 		<p class="title">draught <br /><span class="sentence">({selectedSentence})</span></p>
 	</button>
