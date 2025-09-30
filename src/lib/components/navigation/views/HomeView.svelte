@@ -16,14 +16,14 @@
 <div class="home-content" class:full-width={fullWidth}>
 	<div class="content">
 		<!-- Show default home content -->
-		<div class="sentences">
+		<!-- <div class="sentences">
 			{#if sentences && sentences.length > 0}
 				{#each sentences as sentence}
 					<p>({sentence})</p>
 				{/each}
 			{/if}
-		</div>
-		<br />
+		</div> -->
+		<!-- <br /> -->
 		{#if about && about.length > 0}
 			<div class="about">
 				{#each about as block}

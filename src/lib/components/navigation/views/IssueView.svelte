@@ -72,8 +72,8 @@
 								data-cover={article.cover.url}
 								data-alt-text={article.cover.alt}
 							>
-								<p>({article.tags.join(', ')})</p>
-								<p>{article.title}</p>
+								<p class="tags">({article.tags.join(', ')})</p>
+								<p>{@html article.title || 'Untitled'}</p>
 								<p>{article.author}</p>
 							</li>
 						</a>

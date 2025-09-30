@@ -148,6 +148,13 @@
 		margin: 0;
 	}
 
+	#return:hover button,
+	#index:hover button p {
+		font-family: 'OTParellel-cursive', 'OTParellel', serif;
+		font-style: italic;
+		font-synthesis: none;
+	}
+
 	p {
 		margin: 0;
 	}
