@@ -139,7 +139,8 @@ export function useNavigation() {
 	function toggleIndex() {
 		navStore.update((store) => {
 			const currentIndex = store.activeViews.index;
-
+			// Clear hover images when opening index
+			hoverImageStore.reset();
 			if (!currentIndex) {
 				// Opening index: save scroll position, remember previous state, and clear hover images
 				if (typeof window !== 'undefined') {
@@ -149,9 +150,6 @@ export function useNavigation() {
 						shouldRestoreFromIndex: true
 					}));
 				}
-
-				// Clear hover images when opening index
-				hoverImageStore.reset();
 
 				prevShowIssue = store.showIssue;
 				return {
