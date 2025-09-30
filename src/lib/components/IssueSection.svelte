@@ -2,6 +2,8 @@
 	import { onMount, onDestroy } from 'svelte';
 	import ArticleCard from './ArticleCard.svelte';
 	import { navStore } from '$lib/stores/navStore.js';
+	import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
+	import { createIssueVisibilityHandle } from '$lib/stores/issueVisibilityRegistry.js';
 	import type { Article } from '$lib/api';
 
 	// Threshold in pixels for when the nav should appear (distance from top of viewport)
@@ -52,8 +54,10 @@
 
 	let issueNumElement: HTMLDivElement;
 	let thumbnailsElement: HTMLDivElement;
+	let issuesWrapperElement: HTMLDivElement;
 	let issueObserver: IntersectionObserver;
 	let thumbnailsObserver: IntersectionObserver;
+	let issuesWrapperObserver: IntersectionObserver;
 	// Track if nav is visible (to conditionally hide the issue number)
 	let isNavVisible = $state(false);
 	// Track if issue number element is in view
@@ -72,6 +76,8 @@
 				coverSize: article.scale || 'medium'
 			}))
 	);
+
+	const issueVisibilityHandle = createIssueVisibilityHandle(() => hoverImageStore.reset());
 
 	onMount(() => {
 		// Ensure nav is hidden initially
@@ -160,6 +166,26 @@
 
 			thumbnailsObserver.observe(thumbnailsElement);
 		}
+
+		// Track visibility of the issues wrapper and reset hover images when no wrappers are on screen
+		if (issuesWrapperElement) {
+			issuesWrapperObserver = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							issueVisibilityHandle.markVisible();
+						} else {
+							issueVisibilityHandle.markHidden();
+						}
+					});
+				},
+				{
+					threshold: 0
+				}
+			);
+
+			issuesWrapperObserver.observe(issuesWrapperElement);
+		}
 	});
 
 	onDestroy(() => {
@@ -169,6 +195,10 @@
 		if (thumbnailsObserver) {
 			thumbnailsObserver.disconnect();
 		}
+		if (issuesWrapperObserver) {
+			issuesWrapperObserver.disconnect();
+		}
+		issueVisibilityHandle.destroy();
 	});
 </script>
 
@@ -190,7 +220,7 @@
 	{/if}
 </div>
 
-<div class="issues__wrapper" style="--issue-color: {issueColor};">
+<div class="issues__wrapper" style="--issue-color: {issueColor};" bind:this={issuesWrapperElement}>
 	<div class="issue__num" class:hidden={isNavVisible} bind:this={issueNumElement}>
 		<p>{issueTitle}</p>
 	</div>
