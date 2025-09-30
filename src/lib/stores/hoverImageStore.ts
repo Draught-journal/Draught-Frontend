@@ -3,6 +3,7 @@ import type { Article } from '$lib/api';
 
 export interface HoverImagePayload {
 	articleId: string;
+	scale: 'large' | 'medium' | 'small';
 	src: string;
 	alt: string;
 	title: string;
@@ -32,12 +33,15 @@ function toEntry(article: Article, weight: number, source: HoverSource): Interna
 		return null;
 	}
 
+	const scale = (article.scale || article.cover?.scale || 'medium') as HoverImagePayload['scale'];
+
 	return {
 		articleId: article.id,
 		weight,
 		source,
 		payload: {
 			articleId: article.id,
+			scale,
 			src,
 			alt: article.cover?.alt || article.title || 'Article cover',
 			title: article.title || 'Untitled'

@@ -16,7 +16,7 @@
 				src={image.src}
 				alt={image.alt}
 				loading="lazy"
-				class="hover-image"
+				class={`hover-image scale-${image.scale ?? 'medium'}`}
 				class:active={image.articleId === activeId}
 				style={`--stack-index: ${index}; z-index: ${image.articleId === activeId ? stackLength + 1 : index + 1};`}
 			/>
@@ -54,26 +54,34 @@
 		width: 100%;
 	}
 
-	.hover-image {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		overflow: hidden;
-		object-fit: cover;
-		transform-origin: center;
-		/* opacity: 0.85; */
-		/* transform: translate(calc(var(--stack-index) * -10px), calc(var(--stack-index) * -6px))
-			scale(calc(1 - var(--stack-index) * 0.015)); */
-		transition:
-			opacity 0.3s ease,
-			transform 0.3s ease;
-	}
+		.hover-image {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			overflow: hidden;
+			object-fit: cover;
+			transform-origin: center;
+			transition:
+				opacity 0.3s ease,
+				transform 0.3s ease;
+		}
 
-	.hover-image.active {
-		opacity: 1;
-		transform: translate(0, 0) scale(1);
-	}
+		.hover-image.scale-small {
+			width: 60%;
+		}
+
+		.hover-image.scale-medium {
+			width: 80%;
+		}
+
+		.hover-image.scale-large {
+			width: 100%;
+		}
+
+		.hover-image.active {
+			opacity: 1;
+			transform: translate(0, 0) scale(1);
+		}
 
 	@media (max-width: 900px) {
 		.hover-image-container {
