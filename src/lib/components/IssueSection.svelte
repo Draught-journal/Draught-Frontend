@@ -77,7 +77,25 @@
 			}))
 	);
 
-	const issueVisibilityHandle = createIssueVisibilityHandle(() => hoverImageStore.reset());
+	const getSectionArticleIds = () => {
+		const maybeValue =
+			typeof displayIssues === 'function'
+				? (displayIssues as () => Article[])()
+				: (displayIssues as unknown as Article[]);
+		const issues = Array.isArray(maybeValue) ? maybeValue : [];
+		return issues.map((article) => article?.id).filter((id): id is string => Boolean(id));
+	};
+
+	const clearSectionHoverImages = () => {
+		for (const articleId of getSectionArticleIds()) {
+			hoverImageStore.clear(articleId);
+		}
+	};
+
+	const issueVisibilityHandle = createIssueVisibilityHandle({
+		onHidden: clearSectionHoverImages,
+		onAllHidden: () => hoverImageStore.reset()
+	});
 
 	onMount(() => {
 		// Ensure nav is hidden initially
@@ -167,20 +185,18 @@
 			thumbnailsObserver.observe(thumbnailsElement);
 		}
 
-		// Track visibility of the issues wrapper and reset hover images when no wrappers are on screen
+		// Track visibility of the issues wrapper and coordinate hover-image resets across sections
 		if (issuesWrapperElement) {
 			issuesWrapperObserver = new IntersectionObserver(
 				(entries) => {
 					entries.forEach((entry) => {
-						if (entry.isIntersecting) {
-							issueVisibilityHandle.markVisible();
-						} else {
-							issueVisibilityHandle.markHidden();
-						}
+						const isVisible = entry.isIntersecting && entry.intersectionRatio > 0;
+						issueVisibilityHandle.updateVisibility(isVisible);
 					});
 				},
 				{
-					threshold: 0
+					threshold: 0,
+					rootMargin: '0px'
 				}
 			);
 
