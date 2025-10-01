@@ -36,5 +36,5 @@
 	/>
 {/each}
 
-<SplashScreen sentences={data.props?.site?.sentences} controlsNav={true} />
+<SplashScreen sentences={data.props?.site?.sentences} controlsNav={true} isFooter={true} />
 <HoverImageSection />

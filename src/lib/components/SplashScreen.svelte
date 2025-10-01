@@ -6,10 +6,12 @@
 
 	const {
 		sentences,
-		controlsNav = false
+		controlsNav = false,
+		isFooter = false
 	}: {
 		sentences?: string[];
 		controlsNav?: boolean;
+		isFooter?: boolean;
 	} = $props();
 
 	let selectedSentence = $state('');
@@ -121,11 +123,24 @@
 	});
 </script>
 
-<div class="splash" bind:this={splashElement}>
-	<button class="head" onclick={handleHeadClick}>
-		<p class="title">draught <br /><span class="sentence">({selectedSentence})</span></p>
-	</button>
-</div>
+{#if !isFooter}
+	<div class="splash" bind:this={splashElement}>
+		<button class="head" onclick={handleHeadClick}>
+			<p class="title">draught <br /><span class="sentence">({selectedSentence})</span></p>
+		</button>
+	</div>
+{:else}
+	<!-- Sentences show if Is Footer -->
+	<div class="splash" bind:this={splashElement}>
+		<div class="sentences">
+			{#if sentences && sentences.length > 0}
+				{#each sentences as sentence}
+					<p>({sentence})</p>
+				{/each}
+			{/if}
+		</div>
+	</div>
+{/if}
 
 <style>
 	.splash {
@@ -134,6 +149,21 @@
 		height: 100vh;
 		margin-bottom: 20vh;
 	}
+
+	.splash:has(.sentences) {
+		align-content: end;
+		padding-block-end: var(--space-8);
+	}
+
+	.sentences {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		max-width: var(--content-width);
+		width: 100%;
+		column-gap: var(--space-4);
+	}
+
 	.splash button.head {
 		all: unset;
 		text-align: center;

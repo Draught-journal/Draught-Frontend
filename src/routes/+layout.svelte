@@ -57,12 +57,7 @@
 	});
 </script>
 
-<Nav
-	about={data.props?.site?.about}
-	sentences={data.props?.site?.sentences}
-	issues={data.props?.site?.issues}
-	{isArticlePage}
-/>
+<Nav about={data.props?.site?.about} issues={data.props?.site?.issues} {isArticlePage} />
 <main>
 	{@render children()}
 </main>
