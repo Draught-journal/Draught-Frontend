@@ -67,81 +67,59 @@
 			selectedSentence = getRandomSentence(sentences);
 		}
 
-		// Set up Intersection Observer only if this splash screen should control nav visibility
-		if (controlsNav && splashElement) {
-			// Create a unique ID for this splash screen instance
-			const splashId = `splash-${Math.random().toString(36).substr(2, 9)}`;
-
-			const observer = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((entry) => {
-						navStore.update((store) => {
-							// Get current list of visible splash screens
-							const visibleSplashes = store.visibleSplashes || new Set();
-
-							if (entry.isIntersecting) {
-								// Add this splash to visible list
-								visibleSplashes.add(splashId);
-							} else {
-								// Remove this splash from visible list
-								visibleSplashes.delete(splashId);
-							}
-
-							// Hide nav if any splash screens are visible
-							return {
-								...store,
-								visibleSplashes,
-								showNav: visibleSplashes.size === 0 ? false : false // Keep nav hidden when any splash is visible
-							};
-						});
-					});
-				},
-				{
-					// Trigger when 50% of the splash screen is visible
-					threshold: 0.5,
-					// Add some margin to make the transition smoother
-					rootMargin: '-10% 0px -10% 0px'
-				}
-			);
-
-			// Observer for hover image reset (100% threshold)
-			const hoverImageObserver = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((entry) => {
-						if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-							// Reset hover images when splash is 50% in view
-							hoverImageStore.reset();
-							console.log('Hover images reset on splash 100% visibility');
-						}
-					});
-				},
-				{
-					// Trigger when 50% of the splash screen is visible
-					threshold: 0.5,
-					// No margin for precise 100% detection
-					rootMargin: '0px'
-				}
-			);
-
-			observer.observe(splashElement);
-			hoverImageObserver.observe(splashElement);
-
-			// Cleanup observer on component destroy
-			return () => {
-				observer.disconnect();
-				hoverImageObserver.disconnect();
-				// Remove this splash from the visible list when component unmounts
-				navStore.update((store) => {
-					const visibleSplashes = store.visibleSplashes || new Set();
-					visibleSplashes.delete(splashId);
-					return {
-						...store,
-						visibleSplashes,
-						showNav: visibleSplashes.size === 0
-					};
-				});
-			};
+		if (!controlsNav || !splashElement) {
+			return;
 		}
+
+		const splashId = `splash-${Math.random().toString(36).substr(2, 9)}`;
+		// Single observer handles nav visibility and hover image resets
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					const isVisible = entry.isIntersecting;
+					const isHalfVisible = isVisible && entry.intersectionRatio >= 0.5;
+
+					navStore.update((store) => {
+						const visibleSplashes = new Set(store.visibleSplashes || []);
+
+						if (isVisible) {
+							visibleSplashes.add(splashId);
+						} else {
+							visibleSplashes.delete(splashId);
+						}
+
+						return {
+							...store,
+							visibleSplashes,
+							showNav: false
+						};
+					});
+
+					if (isHalfVisible) {
+						hoverImageStore.reset();
+					}
+				});
+			},
+			{
+				threshold: [0, 0.5],
+				rootMargin: '-10% 0px -10% 0px'
+			}
+		);
+
+		observer.observe(splashElement);
+
+		return () => {
+			observer.disconnect();
+			navStore.update((store) => {
+				const visibleSplashes = new Set(store.visibleSplashes || []);
+				visibleSplashes.delete(splashId);
+				return {
+					...store,
+					visibleSplashes,
+					showNav: visibleSplashes.size === 0
+				};
+			});
+		};
 	});
 </script>
 
