@@ -3,6 +3,7 @@
 	import { get } from 'svelte/store';
 	import { useNavigation } from '$lib/components/navigation/composables/useNavigation.js';
 	import { navStore } from '$lib/stores/navStore.js';
+	import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
 
 	const {
 		sentences,
@@ -15,7 +16,7 @@
 	} = $props();
 
 	let selectedSentence = $state('');
-	let splashElement: HTMLElement;
+	let splashElement: HTMLElement | null = $state(null);
 	const navigation = useNavigation();
 
 	function handleHeadClick() {
@@ -103,11 +104,32 @@
 				}
 			);
 
+			// Observer for hover image reset (100% threshold)
+			const hoverImageObserver = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+							// Reset hover images when splash is 50% in view
+							hoverImageStore.reset();
+							console.log('Hover images reset on splash 100% visibility');
+						}
+					});
+				},
+				{
+					// Trigger when 50% of the splash screen is visible
+					threshold: 0.5,
+					// No margin for precise 100% detection
+					rootMargin: '0px'
+				}
+			);
+
 			observer.observe(splashElement);
+			hoverImageObserver.observe(splashElement);
 
 			// Cleanup observer on component destroy
 			return () => {
 				observer.disconnect();
+				hoverImageObserver.disconnect();
 				// Remove this splash from the visible list when component unmounts
 				navStore.update((store) => {
 					const visibleSplashes = store.visibleSplashes || new Set();
