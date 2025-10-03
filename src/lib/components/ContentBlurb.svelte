@@ -94,4 +94,10 @@
 		color: inherit;
 		font-size: inherit;
 	}
+
+	@media (max-width: 600px) {
+		.content-blurb {
+			line-height: 1.2;
+		}
+	}
 </style>

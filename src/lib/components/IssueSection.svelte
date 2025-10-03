@@ -413,10 +413,6 @@
 	/* CSS for grid-based layout is handled by existing styles */
 
 	@media (max-width: 768px) {
-		.issues__wrapper .issue__num {
-			font-size: var(--font-size-sm);
-		}
-
 		.articles {
 			grid-template-columns: 1fr;
 			width: 100%;
