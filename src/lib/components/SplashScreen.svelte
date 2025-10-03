@@ -149,7 +149,7 @@
 		margin-bottom: 20vh;
 	}
 
-	.splash:has(.sentence) {
+	.splash:has(button.sentence) {
 		align-content: end;
 		padding-block-end: var(--space-8);
 	}
