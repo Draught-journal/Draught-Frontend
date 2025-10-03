@@ -32,4 +32,10 @@
 	:global(.list-block + .text-block) {
 		text-indent: 0 !important;
 	}
+
+	@media (max-width: 600px) {
+		.text-block {
+			line-height: 1.25;
+		}
+	}
 </style>

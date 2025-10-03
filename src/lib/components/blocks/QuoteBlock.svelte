@@ -29,5 +29,9 @@
 		.quote-block {
 			margin-bottom: 1.5rem;
 		}
+
+		.quote-text {
+			line-height: 1.25;
+		}
 	}
 </style>

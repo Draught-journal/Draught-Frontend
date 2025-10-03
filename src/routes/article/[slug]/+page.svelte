@@ -109,5 +109,10 @@
 		article {
 			width: 90%;
 		}
+
+		article .title h2,
+		article .title .article__number {
+			line-height: 1.25;
+		}
 	}
 </style>

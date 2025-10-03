@@ -97,7 +97,7 @@
 
 	@media (max-width: 600px) {
 		.content-blurb {
-			line-height: 1.2;
+			line-height: 1.25;
 		}
 	}
 </style>
