@@ -332,7 +332,7 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 10rem;
-		padding-block: 20rem;
+		padding-block: 10rem;
 	}
 
 	.thumbnails .image {
