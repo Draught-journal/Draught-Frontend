@@ -132,13 +132,12 @@
 {:else}
 	<!-- Sentences show if Is Footer -->
 	<div class="splash" bind:this={splashElement}>
-		<div class="sentences">
-			{#if sentences && sentences.length > 0}
-				{#each sentences as sentence}
-					<p>({sentence})</p>
-				{/each}
-			{/if}
-		</div>
+		<button class="sentence" onclick={handleHeadClick}>
+			<p>
+				<span class="title">draught</span> is made at the School of the Arts and Humanities at the
+				Royal College of Art, London.
+			</p>
+		</button>
 	</div>
 {/if}
 
@@ -150,28 +149,23 @@
 		margin-bottom: 20vh;
 	}
 
-	.splash:has(.sentences) {
+	.splash:has(.sentence) {
 		align-content: end;
 		padding-block-end: var(--space-8);
 	}
 
-	.sentences {
-		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
-		max-width: var(--content-width);
-		width: 100%;
-		column-gap: var(--space-4);
-	}
-
-	.splash button.head {
+	.splash button {
 		all: unset;
-		text-align: center;
 		font-size: var(--font-size-lg);
 		line-height: 26px;
 		cursor: pointer;
 	}
-	.head .title {
+
+	.splash button.head {
+		text-align: center;
+	}
+	.head .title,
+	.sentence .title {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
 		font-weight: 400;
