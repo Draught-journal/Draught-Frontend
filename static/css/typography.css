@@ -159,6 +159,10 @@ h6,
 	margin-bottom: var(--margin-heading-bottom);
 }
 
+a{
+	cursor: alias;
+}
+
 p,
 span,
 small {
