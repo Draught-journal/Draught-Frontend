@@ -156,13 +156,19 @@
 
 	.splash button {
 		all: unset;
-		font-size: var(--font-size-lg);
-		line-height: 26px;
 		cursor: pointer;
+	}
+
+	.splash button.sentence {
+		text-align: center;
+		font-size: var(--font-size-base);
+		line-height: 1.25;
 	}
 
 	.splash button.head {
 		text-align: center;
+		font-size: var(--font-size-lg);
+		line-height: 26px;
 	}
 	.head .title,
 	.sentence .title {
