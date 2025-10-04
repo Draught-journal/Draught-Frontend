@@ -103,6 +103,10 @@
 		text-indent: 0;
 	}
 
+	:global(#footnotes li a[target]) {
+		cursor: alias;
+	}
+
 	/* media query mobile */
 
 	@media (max-width: 768px) {
