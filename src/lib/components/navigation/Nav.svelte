@@ -167,15 +167,30 @@
 
 	.nav-view {
 		display: contents;
+		grid-column: 1 / -1;
 	}
 
 	@media (max-width: 768px) {
 		nav {
 			padding-inline: 0.25rem;
+			grid-template-rows: min-content 1fr;
 		}
 		nav.active {
 			max-height: 100dvh;
 			height: 100dvh;
+		}
+
+		.nav-view {
+			grid-column: 1 / -1;
+			overflow-y: auto;
+			display: flex;
+			flex-direction: column;
+			scrollbar-width: none;
+			-ms-overflow-style: none;
+		}
+
+		.nav-view::-webkit-scrollbar {
+			display: none;
 		}
 	}
 </style>

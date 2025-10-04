@@ -45,20 +45,14 @@
 	.index-content {
 		grid-column: 3;
 		grid-row: 2;
+		/* grid-column: 1; */
+		/* grid-row: 2; */
 		padding-inline: 1rem;
-		max-height: calc(100dvh - 5rem);
-		overflow-y: auto;
-		scrollbar-width: none;
-		-ms-overflow-style: none;
 		border-top: 1px solid var(--color-border);
 		background-color: var(--color-bg);
 		animation: slideDown 0.3s ease-in-out;
 		text-align: center;
 		line-height: 23px;
-	}
-
-	.index-content::-webkit-scrollbar {
-		display: none;
 	}
 
 	.index-content button {
@@ -102,9 +96,11 @@
 
 	@media (max-width: 768px) {
 		.index-content {
-			grid-column: 3;
+			grid-column: unset;
+			grid-row: unset;
 			border-left: 1px solid var(--color-border);
 			border-right: none;
+			order: 1;
 		}
 	}
 </style>

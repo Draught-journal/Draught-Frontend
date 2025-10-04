@@ -135,10 +135,6 @@
 		padding-top: 2rem;
 	}
 
-	.issue-content::-webkit-scrollbar {
-		display: none;
-	}
-
 	.filtered-articles {
 		list-style: none;
 		padding: 0;
@@ -210,11 +206,12 @@
 
 	@media (max-width: 768px) {
 		.issue-content {
-			grid-column: 1 / 3;
-			grid-row: auto;
+			grid-column: unset;
+			grid-row: unset;
 			border-left: none;
 			border-right: 1px solid var(--color-border);
 			z-index: 1;
+			order: 2;
 		}
 	}
 </style>

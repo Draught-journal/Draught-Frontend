@@ -45,10 +45,6 @@
 		margin: 0 auto;
 	}
 
-	.home-content::-webkit-scrollbar {
-		display: none;
-	}
-
 	.home-content .about {
 		text-align: left;
 	}
@@ -77,6 +73,14 @@
 	@media (max-width: 768px) {
 		.content {
 			max-width: 100%;
+		}
+
+		.home-content {
+			grid-column: unset;
+		}
+
+		.home-content.full-width {
+			grid-column: unset;
 		}
 	}
 </style>
