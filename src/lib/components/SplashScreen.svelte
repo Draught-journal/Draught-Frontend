@@ -181,4 +181,10 @@
 		font-family: 'OTParellel', serif;
 		font-style: normal;
 	}
+
+	@media (max-width: 768px) {
+		.splash button.head {
+			line-height: 1.25;
+		}
+	}
 </style>

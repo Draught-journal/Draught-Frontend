@@ -210,8 +210,10 @@
 			grid-row: unset;
 			border-left: none;
 			border-right: 1px solid var(--color-border);
+			overflow: unset;
 			z-index: 1;
 			order: 2;
+			line-height: 1.25;
 		}
 	}
 </style>
