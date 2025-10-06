@@ -166,9 +166,14 @@
 		.image-block {
 			margin-bottom: 1.5rem;
 		}
+		.full-width-container {
+			width: 100%;
+			left: 0;
+			transform: none;
+		}
 
 		.block-image.scale-small {
-			width: 80%;
+			width: 70%;
 		}
 
 		.block-image.scale-medium,

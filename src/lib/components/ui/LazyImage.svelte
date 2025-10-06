@@ -44,6 +44,13 @@
 	let shouldLoad = $state(typeof window === 'undefined'); // Load immediately on SSR
 	let observer: IntersectionObserver | null = null;
 
+	const resolvedWidth = $derived(
+		width != null ? (typeof width === 'number' ? `${width}px` : width) : undefined
+	);
+	const resolvedHeight = $derived(
+		height != null ? (typeof height === 'number' ? `${height}px` : height) : undefined
+	);
+
 	// Initialize Intersection Observer on mount
 	onMount(() => {
 		if (!containerElement || typeof window === 'undefined' || shouldLoad) return;
@@ -85,6 +92,8 @@
 	class="lazy-image-container"
 	bind:this={containerElement}
 	style="--placeholder-color: {placeholderColor}; {style}"
+	style:width={resolvedWidth}
+	style:height={resolvedHeight}
 >
 	{#if shouldLoad}
 		<img
@@ -100,9 +109,16 @@
 			srcset={useSrcset ? srcset : undefined}
 			sizes={useSrcset ? sizes : undefined}
 		/>
-	{:else}
-		<!-- Empty placeholder to maintain space -->
-		<div class="placeholder" style="width: {width}; height: {height};" aria-hidden="true"></div>
+	{/if}
+
+	{#if !imageLoaded}
+		<!-- Placeholder shimmer displayed until image load completes -->
+		<div
+			class="placeholder"
+			aria-hidden="true"
+			style:width={resolvedWidth}
+			style:height={resolvedHeight}
+		></div>
 	{/if}
 </div>
 
@@ -134,7 +150,26 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: var(--placeholder-color, transparent);
+		border-radius: inherit;
+		/* background-color: var(--placeholder-color, #fefefe); */
 		z-index: 1;
+		animation: placeholderShimmer 15s infinite linear;
+		background: linear-gradient(
+			90deg,
+			var(--placeholder-color, #fefefe) 25%,
+			#e0e0e0 50%,
+			var(--placeholder-color, #fefefe) 75%
+		);
+		background-size: 200% 100%;
+	}
+
+	/* gradient like animation on placeholder to show loading container */
+	@keyframes placeholderShimmer {
+		0% {
+			background-position: -200% 0;
+		}
+		100% {
+			background-position: 200% 0;
+		}
 	}
 </style>
