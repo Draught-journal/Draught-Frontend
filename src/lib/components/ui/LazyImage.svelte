@@ -1,30 +1,12 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 
-	/**
-	 * A reusable component for lazy loading images
-	 */
+	type IntersectionCallback = (entry: IntersectionObserverEntry) => void;
 
-	// Props
-	const {
-		src = '',
-		alt = '',
-		className = '',
-		style = '',
-		width,
-		height,
-		objectFit = 'cover',
-		placeholderColor = 'transparent',
-		rootMargin = '200px 0px', // Load images 200px before they enter viewport
-		threshold = 0.01,
-		useSrcset = false, // Whether to use srcset for responsive images
-		sizes = '',
-		srcset = '',
-		onLoad = () => {} // Callback function when image loads
-	} = $props<{
+	interface Props {
 		src: string;
 		alt: string;
-		className?: string;
+		class?: string;
 		style?: string;
 		width?: number | string;
 		height?: number | string;
@@ -35,74 +17,195 @@
 		useSrcset?: boolean;
 		sizes?: string;
 		srcset?: string;
+		fetchPriority?: 'auto' | 'high' | 'low';
+		decoding?: 'async' | 'auto' | 'sync';
+		nativeLazy?: boolean;
 		onLoad?: () => void;
-	}>();
+	}
 
-	// State
-	let containerElement = $state<HTMLDivElement | null>(null);
-	let imageLoaded = $state(false);
-	let shouldLoad = $state(typeof window === 'undefined'); // Load immediately on SSR
-	let observer: IntersectionObserver | null = null;
+	let {
+		src = '',
+		alt = '',
+		class: className = '',
+		style = '',
+		width = $bindable(),
+		height = $bindable(),
+		objectFit = 'cover',
+		placeholderColor = '#fefefe',
+		rootMargin = '200px 0px',
+		threshold = 0.01,
+		useSrcset = false,
+		sizes = '',
+		srcset = '',
+		fetchPriority = 'auto',
+		decoding = 'async',
+		nativeLazy = false,
+		onLoad = () => {}
+	}: Props = $props();
 
-	// Initialize Intersection Observer on mount
-	onMount(() => {
-		if (!containerElement || typeof window === 'undefined' || shouldLoad) return;
+	// Share observers across instances so we only create them when their options differ.
+	const hasWindow = typeof window !== 'undefined';
+	const observerRegistry = new Map<
+		string,
+		{ observer: IntersectionObserver; targets: Map<Element, IntersectionCallback> }
+	>();
+	const loadedSources = new Set<string>();
 
-		observer = new IntersectionObserver(
-			(entries) => {
-				const [entry] = entries;
-				if (entry.isIntersecting) {
-					shouldLoad = true;
-					observer?.disconnect();
+	const createObserverKey = (options: IntersectionObserverInit) => {
+		const { root, rootMargin: rm, threshold: t } = options;
+		const thresholdArray = Array.isArray(t) ? t : [t ?? 0];
+		return `${root ? 'rooted' : 'root:null'}|${rm ?? '0px'}|${thresholdArray.join(',')}`;
+	};
+
+	const observeElement = (
+		element: Element,
+		options: IntersectionObserverInit,
+		callback: IntersectionCallback
+	) => {
+		const key = createObserverKey(options);
+		let entry = observerRegistry.get(key);
+
+		if (!entry) {
+			const targets = new Map<Element, IntersectionCallback>();
+			const observer = new IntersectionObserver((entries) => {
+				for (const entry of entries) {
+					const cb = targets.get(entry.target);
+					if (cb) cb(entry);
 				}
-			},
-			{ rootMargin, threshold }
-		);
+			}, options);
 
-		observer.observe(containerElement);
+			entry = { observer, targets };
+			observerRegistry.set(key, entry);
+		}
+
+		entry.targets.set(element, callback);
+		entry.observer.observe(element);
 
 		return () => {
-			observer?.disconnect();
+			entry?.targets.delete(element);
+			entry?.observer.unobserve(element);
+
+			if (entry && entry.targets.size === 0) {
+				entry.observer.disconnect();
+				observerRegistry.delete(key);
+			}
+		};
+	};
+
+	const normaliseDimension = (dimension?: number | string) => {
+		if (typeof dimension === 'number') return `${dimension}px`;
+		return dimension?.toString().trim() || '';
+	};
+
+	const buildDimensionStyle = (
+		dimensionWidth?: number | string,
+		dimensionHeight?: number | string
+	) => {
+		const widthValue = normaliseDimension(dimensionWidth);
+		const heightValue = normaliseDimension(dimensionHeight);
+
+		return [widthValue && `width: ${widthValue};`, heightValue && `height: ${heightValue};`]
+			.filter(Boolean)
+			.join(' ');
+	};
+
+	const buildContainerStyle = (color: string, inlineStyle?: string) => {
+		const userStyle = inlineStyle?.trim();
+		return `--placeholder-color: ${color};${userStyle ? ` ${userStyle}` : ''}`;
+	};
+
+	const getSourceKey = (baseSrc: string, srcset?: string) => {
+		const trimmedSrc = baseSrc?.trim() || '';
+		const trimmedSrcset = srcset?.trim();
+		return trimmedSrcset ? `${trimmedSrc}|${trimmedSrcset}` : trimmedSrc;
+	};
+
+	const effectiveSrcset = $derived(useSrcset ? srcset : '');
+	const sourceKey = $derived(getSourceKey(src, effectiveSrcset));
+	const containerStyle = $derived(buildContainerStyle(placeholderColor, style));
+	const placeholderStyle = $derived(buildDimensionStyle(width, height));
+	const loadingMode = $derived(nativeLazy ? 'lazy' : 'eager');
+
+	let containerElement = $state<HTMLDivElement | null>(null);
+	let unobserve: (() => void) | null = $state(null);
+	let shouldLoad = $state(false);
+	let imageLoaded = $state(false);
+
+	// Initialize load states based on sourceKey
+	$effect(() => {
+		if (!hasWindow) {
+			shouldLoad = true;
+			imageLoaded = true;
+			return;
+		}
+
+		if (sourceKey && loadedSources.has(sourceKey)) {
+			shouldLoad = true;
+			imageLoaded = true;
+		}
+	});
+
+	$effect(() => {
+		if (shouldLoad && unobserve) {
+			unobserve();
+			unobserve = null;
+		}
+	});
+
+	onMount(() => {
+		if (!hasWindow) return;
+
+		if (!containerElement || shouldLoad) return;
+
+		if (!('IntersectionObserver' in window)) {
+			shouldLoad = true;
+			return;
+		}
+
+		unobserve = observeElement(containerElement, { rootMargin, threshold }, (entry) => {
+			if (entry.isIntersecting) {
+				shouldLoad = true;
+			}
+		});
+
+		return () => {
+			if (unobserve) {
+				unobserve();
+				unobserve = null;
+			}
 		};
 	});
 
-	// Clean up observer on destroy
-	onDestroy(() => {
-		observer?.disconnect();
-	});
-
-	// Handle image load event
 	const handleImageLoad = () => {
+		if (sourceKey) {
+			loadedSources.add(sourceKey);
+		}
+
 		imageLoaded = true;
 		onLoad();
 	};
 
-	// Combine class names
 	const imageClasses = $derived(`lazy-image ${imageLoaded ? 'loaded' : ''} ${className}`.trim());
 </script>
 
-<div
-	class="lazy-image-container"
-	bind:this={containerElement}
-	style="--placeholder-color: {placeholderColor}; {style}"
->
+<div class="lazy-image-container" bind:this={containerElement} style={containerStyle}>
 	{#if shouldLoad}
 		<img
 			{src}
 			{alt}
 			class={imageClasses}
 			style="object-fit: {objectFit};"
-			loading="lazy"
-			decoding="async"
+			loading={loadingMode}
+			{decoding}
+			fetchpriority={fetchPriority}
 			onload={handleImageLoad}
 			{width}
 			{height}
-			srcset={useSrcset ? srcset : undefined}
-			sizes={useSrcset ? sizes : undefined}
+			srcset={effectiveSrcset || undefined}
+			sizes={effectiveSrcset ? sizes : undefined}
 		/>
 	{:else}
-		<!-- Empty placeholder to maintain space -->
-		<div class="placeholder" style="width: {width}; height: {height};" aria-hidden="true"></div>
+		<div class="placeholder" style={placeholderStyle} aria-hidden="true"></div>
 	{/if}
 </div>
 
@@ -122,6 +225,7 @@
 		transition: opacity 0.3s ease;
 		position: relative;
 		z-index: 2;
+		display: block;
 	}
 
 	.lazy-image.loaded {
