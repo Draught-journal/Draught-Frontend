@@ -101,6 +101,9 @@
 			border-left: 1px solid var(--color-border);
 			border-right: none;
 			order: 1;
+		}
+		.tag-button,
+		.index-content {
 			line-height: 1.25;
 		}
 	}
