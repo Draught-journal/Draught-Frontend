@@ -49,4 +49,10 @@
 		line-height: 23px;
 		font-variant-numeric: oldstyle-nums;
 	}
+
+	@media (max-width: 768px) {
+		.list-block :global(li) {
+			line-height: 1.25;
+		}
+	}
 </style>

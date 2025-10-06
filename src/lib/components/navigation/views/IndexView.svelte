@@ -101,6 +101,7 @@
 			border-left: 1px solid var(--color-border);
 			border-right: none;
 			order: 1;
+			padding-bottom: 2rem;
 		}
 		.tag-button,
 		.index-content {
