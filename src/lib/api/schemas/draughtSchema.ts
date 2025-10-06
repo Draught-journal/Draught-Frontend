@@ -89,7 +89,8 @@ export interface Site {
 	title: string;
 	about: ContentBlock[];
 	sentences: string[];
-	colophon: ContentBlock[];
+	mailingList: string;
+	subjectLine: string;
 	issues: Issue[];
 }
 

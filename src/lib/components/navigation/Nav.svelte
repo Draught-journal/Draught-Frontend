@@ -15,10 +15,14 @@
 
 	const {
 		about,
+		mailingList,
+		subjectLine,
 		issues,
 		isArticlePage = false
 	}: {
 		about?: ContentBlockType[];
+		mailingList?: string;
+		subjectLine?: string;
 		issues?: Issue[];
 		isArticlePage?: boolean;
 	} = $props();
@@ -107,6 +111,8 @@
 			{#if navState?.activeViews.home}
 				<HomeView
 					{about}
+					{mailingList}
+					{subjectLine}
 					fullWidth={navState?.activeViews.home &&
 						!navState?.activeViews.issue &&
 						!navState?.activeViews.index}

@@ -4,9 +4,13 @@
 
 	const {
 		about,
+		mailingList,
+		subjectLine,
 		fullWidth = false
 	}: {
 		about?: ContentBlockType[];
+		mailingList?: string;
+		subjectLine?: string;
 		fullWidth?: boolean;
 	} = $props();
 </script>
@@ -18,6 +22,23 @@
 				{#each about as block}
 					<ContentBlock content={block} />
 				{/each}
+				<div class="mailing__list text-block">
+					{#if mailingList && mailingList.length > 0}
+						<br />
+						<p class="">
+							Join our mailing list:
+							<a
+								href={`mailto:${mailingList}?subject=${encodeURIComponent(
+									subjectLine || 'Subscribe to Draught'
+								)}`}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{mailingList}
+							</a>
+						</p>
+					{/if}
+				</div>
 			</div>
 		{/if}
 	</div>
@@ -47,6 +68,10 @@
 
 	.home-content .about {
 		text-align: left;
+	}
+
+	.mailing__list {
+		text-indent: 4rem;
 	}
 
 	:global(strong em) {
