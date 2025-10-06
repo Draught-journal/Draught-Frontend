@@ -31,7 +31,7 @@
 					<p>
 						<span class="tag">({article.tags || ''})</span> <br />
 						<span class="title">{@html article.title || 'Untitled'}</span> <br />
-						<span class="author">{@html article.author || '&nbsp;'}</span>
+						<span class="author">{@html article.author || ''}</span>
 					</p>
 				</div>
 			</div>
