@@ -13,5 +13,6 @@
 		margin-block: 2rem 1.2rem;
 		font-weight: normal;
 		text-align: center;
+		font-variant-numeric: oldstyle-nums;
 	}
 </style>
