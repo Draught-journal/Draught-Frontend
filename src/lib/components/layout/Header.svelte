@@ -3,14 +3,14 @@
 	import type { SEOData } from '$lib/types/seo';
 
 	let {
-		title = 'Draught',
-		description = 'Welcome to Draught',
+		title = 'draught',
+		description = 'draught is a journal that comes from a place of making. It is a journal on the in-progress and the provisional, on the idea, the practice, and the process of making work.',
 		keywords = '',
 		image = '',
 		imageAlt = '',
 		url = '',
 		type = 'website',
-		siteName = 'Draught',
+		siteName = 'draught',
 		locale = 'en_US',
 		author = '',
 		publishedTime = '',
@@ -26,7 +26,7 @@
 	const currentUrl = $derived(url || page.url.href);
 
 	// Create the full page title
-	const pageTitle = $derived(title === 'Draught' ? title : `${title} | Draught`);
+	const pageTitle = $derived(title === 'draught' ? title : `${title} | draught`);
 
 	// Ensure image has full URL if it's a relative path
 	const fullImageUrl = $derived(
