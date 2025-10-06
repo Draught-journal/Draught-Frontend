@@ -88,10 +88,12 @@
 							visibleSplashes.delete(splashId);
 						}
 
+						const shouldHideNav = visibleSplashes.size > 0;
+
 						return {
 							...store,
 							visibleSplashes,
-							showNav: false
+							showNav: shouldHideNav ? false : store.showNav
 						};
 					});
 
