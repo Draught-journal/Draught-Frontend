@@ -70,10 +70,6 @@
 		text-align: left;
 	}
 
-	.mailing__list {
-		text-indent: 4rem;
-	}
-
 	:global(strong em) {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;

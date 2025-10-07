@@ -136,8 +136,8 @@
 	<div class="splash" bind:this={splashElement}>
 		<button class="sentence" onclick={handleHeadClick}>
 			<p>
-				<span class="title">draught</span> is made at the School of the Arts and Humanities at the
-				Royal College of Art, London.
+				<span class="title">draught</span> is made at the School of Arts and Humanities at the Royal
+				College of Art, London.
 			</p>
 		</button>
 	</div>
