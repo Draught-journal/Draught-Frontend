@@ -17,10 +17,8 @@
 			: [];
 
 	const seoData = createSEOData({
-		title: 'Draught',
-		description: 'A digital platform for a creative community.',
 		image: '',
-		url: 'https://draught.com'
+		url: 'https://draughtjournal.com'
 	});
 </script>
 

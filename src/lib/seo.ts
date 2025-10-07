@@ -4,15 +4,15 @@ import type { SEOData } from './types/seo';
  * Default SEO configuration for the GICA website
  */
 export const defaultSEO: SEOData = {
-	title: 'Draught',
+	title: 'draught',
 	description: 'Description',
-	siteName: 'Draught',
+	siteName: 'draught',
 	type: 'website',
 	locale: 'en_US',
 	twitterCard: 'summary_large_image',
-	keywords: 'Draught',
+	keywords: 'draught',
 	// image: '/images/og-default.jpg',
-	imageAlt: 'Draught '
+	imageAlt: 'draught'
 };
 
 /**
