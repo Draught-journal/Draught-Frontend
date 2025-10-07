@@ -8,14 +8,14 @@
 	let { data }: PageProps = $props();
 	let article: Article | null = data.article;
 	const errorMessage = data.errorMessage;
-	const articleNumber = article?.articleNumber || '1.0.1';
+	const articleNumber = article?.articleNumber || '1.1.1';
 
 	// Create SEO metadata
 	const seoData = createSEOData({
 		title: article?.title || 'Article not found',
 		description:
 			article?.content?.find((block) => block.type === 'text')?.content?.text?.substring(0, 150) ||
-			'No description available',
+			'draught article',
 		image: article?.cover?.url || '',
 		url: `https://draught.com/article/${article?.slug || ''}`
 	});
