@@ -32,7 +32,7 @@
 		height = $bindable(),
 		objectFit = 'cover',
 		placeholderColor = '#efefef',
-		rootMargin = '200px 0px',
+		rootMargin = '900px 0px',
 		threshold = 0.01,
 		useSrcset = false,
 		sizes = '',
