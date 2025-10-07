@@ -31,7 +31,7 @@
 		width = $bindable(),
 		height = $bindable(),
 		objectFit = 'cover',
-		placeholderColor = '#fefefe',
+		placeholderColor = '#efefef',
 		rootMargin = '200px 0px',
 		threshold = 0.01,
 		useSrcset = false,
@@ -109,9 +109,18 @@
 			.join(' ');
 	};
 
-	const buildContainerStyle = (color: string, inlineStyle?: string) => {
-		const userStyle = inlineStyle?.trim();
-		return `--placeholder-color: ${color};${userStyle ? ` ${userStyle}` : ''}`;
+	const buildContainerStyle = (color: string, inlineStyle?: string, dimensionStyle?: string) => {
+		const pieces = [`--placeholder-color: ${color};`];
+
+		if (dimensionStyle?.length) {
+			pieces.push(dimensionStyle);
+		}
+
+		if (inlineStyle?.trim()) {
+			pieces.push(inlineStyle.trim());
+		}
+
+		return pieces.join(' ');
 	};
 
 	const getSourceKey = (baseSrc: string, srcset?: string) => {
@@ -122,8 +131,9 @@
 
 	const effectiveSrcset = $derived(useSrcset ? srcset : '');
 	const sourceKey = $derived(getSourceKey(src, effectiveSrcset));
-	const containerStyle = $derived(buildContainerStyle(placeholderColor, style));
-	const placeholderStyle = $derived(buildDimensionStyle(width, height));
+	const dimensionStyle = $derived(buildDimensionStyle(width, height));
+	const containerStyle = $derived(buildContainerStyle(placeholderColor, style, dimensionStyle));
+	const placeholderStyle = $derived(dimensionStyle);
 	const loadingMode = $derived(nativeLazy ? 'lazy' : 'eager');
 
 	let containerElement = $state<HTMLDivElement | null>(null);
@@ -204,9 +214,14 @@
 			srcset={effectiveSrcset || undefined}
 			sizes={effectiveSrcset ? sizes : undefined}
 		/>
-	{:else}
-		<div class="placeholder" style={placeholderStyle} aria-hidden="true"></div>
 	{/if}
+
+	<div
+		class="placeholder"
+		class:placeholder--visible={!imageLoaded}
+		style={placeholderStyle}
+		aria-hidden="true"
+	></div>
 </div>
 
 <style>
@@ -238,7 +253,31 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: var(--placeholder-color, #fefefe);
+		background-color: var(--placeholder-color, #efefef);
 		z-index: 1;
+		opacity: 0;
+		transition: opacity 0.35s ease;
+		background-image: linear-gradient(
+			90deg,
+			var(--placeholder-color, #efefef) 25%,
+			rgba(255, 255, 255, 0.35) 45%,
+			var(--placeholder-color, #efefef) 65%
+		);
+		background-size: 200% 100%;
+		animation: placeholder-shimmer 1.2s ease-in-out infinite;
+		pointer-events: none;
+	}
+
+	.placeholder--visible {
+		opacity: 1;
+	}
+
+	@keyframes placeholder-shimmer {
+		from {
+			background-position: 0% 50%;
+		}
+		to {
+			background-position: -200% 50%;
+		}
 	}
 </style>
