@@ -12,6 +12,9 @@
 	// Check if current route is an article page
 	const isArticlePage = $derived(page.route.id?.includes('/article/[slug]') ?? false);
 
+	// Check if current route is a static content page (accessibility, etc.)
+	const isStaticPage = $derived(page.route.id === '/accessibility');
+
 	// Capture scroll position when leaving home for an article
 	beforeNavigate((nav) => {
 		if (typeof window === 'undefined') return;
@@ -63,6 +66,7 @@
 	subjectLine={data.props?.site?.subjectLine}
 	issues={data.props?.site?.issues}
 	{isArticlePage}
+	{isStaticPage}
 />
 <main>
 	{@render children()}

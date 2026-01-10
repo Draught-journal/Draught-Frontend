@@ -4,11 +4,13 @@
 
 	const {
 		isArticlePage,
+		isStaticPage = false,
 		navState,
 		onToggleHome,
 		onToggleIndex
 	}: {
 		isArticlePage: boolean;
+		isStaticPage?: boolean;
 		navState: any;
 		onToggleHome: () => void;
 		onToggleIndex: () => void;
@@ -63,7 +65,17 @@
 </script>
 
 <div class="nav-container">
-	{#if isArticlePage}
+	{#if isStaticPage}
+		<!-- Static page layout (accessibility, etc.): show draught + return -->
+		<div id="home" class="nav-item">
+			<a href="/" style={textColorStyle}>
+				<p>draught</p>
+			</a>
+		</div>
+		<div id="return" class="nav-item">
+			<button type="button" onclick={handleReturnHome} style={textColorStyle}> (return) </button>
+		</div>
+	{:else if isArticlePage}
 		<!-- Article page layout: only show return in third column -->
 		<div id="return" class="nav-item">
 			<button type="button" onclick={handleReturnHome} style={textColorStyle}> (return) </button>
@@ -140,7 +152,15 @@
 		transition: background-color 0.2s ease;
 	}
 
-	#home button p {
+	.nav-item a {
+		display: block;
+		text-decoration: none;
+		padding: 0.5rem;
+		width: 100%;
+	}
+
+	#home button p,
+	#home a p {
 		font-family: 'OTParellel-cursive', 'OTParellel', serif;
 		font-style: italic;
 		font-weight: 400;

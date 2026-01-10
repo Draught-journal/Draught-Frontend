@@ -18,13 +18,15 @@
 		mailingList,
 		subjectLine,
 		issues,
-		isArticlePage = false
+		isArticlePage = false,
+		isStaticPage = false
 	}: {
 		about?: ContentBlockType[];
 		mailingList?: string;
 		subjectLine?: string;
 		issues?: Issue[];
 		isArticlePage?: boolean;
+		isStaticPage?: boolean;
 	} = $props();
 
 	// Initialize composables
@@ -101,6 +103,7 @@
 >
 	<NavHeader
 		{isArticlePage}
+		{isStaticPage}
 		{navState}
 		onToggleHome={navigation.toggleHome}
 		onToggleIndex={navigation.toggleIndex}
