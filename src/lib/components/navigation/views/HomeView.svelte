@@ -22,9 +22,6 @@
 				{#each about as block}
 					<ContentBlock content={block} />
 				{/each}
-				<div class="accessibility">
-					See: <a href="/accessibility">website accessibility statement</a>
-				</div>
 				<div class="mailing__list text-block">
 					{#if mailingList && mailingList.length > 0}
 						<br />
