@@ -34,6 +34,14 @@
 				activeViews: { home: false, issue: false, index: false }
 			}));
 		}
+
+		// Close any open nav views when navigating to accessibility page
+		if (nav.to && nav.to.url.pathname === '/accessibility') {
+			navStore.update((store) => ({
+				...store,
+				activeViews: { home: false, issue: false, index: false }
+			}));
+		}
 	});
 
 	// Restore scroll when returning to home if flag is set
