@@ -97,7 +97,7 @@
 </script>
 
 <nav
-	class:hidden={!navState?.showNav && !hasActiveViews}
+	class:hidden={!navState?.showNav && !hasActiveViews && !isStaticPage}
 	class:active={hasActiveViews}
 	bind:this={navElement}
 >

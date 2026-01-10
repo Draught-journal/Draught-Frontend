@@ -66,15 +66,23 @@
 
 <div class="nav-container">
 	{#if isStaticPage}
-		<!-- Static page layout (accessibility, etc.): show draught + return -->
-		<div id="home" class="nav-item">
-			<a href="/" style={textColorStyle}>
+		<!-- Static page layout (accessibility, etc.): show draught (toggles home view) + return -->
+		<div id="home" class="nav-item" class:active={navState?.activeViews.home}>
+			<button type="button" onclick={handleHomeToggle} style={textColorStyle}>
 				<p>draught</p>
-			</a>
+			</button>
 		</div>
-		<div id="return" class="nav-item">
-			<button type="button" onclick={handleReturnHome} style={textColorStyle}> (return) </button>
-		</div>
+		{#if navState?.activeViews.home}
+			<!-- Show return button to close home view when it's active -->
+			<div id="return" class="nav-item">
+				<button type="button" onclick={handleHomeToggle} style={textColorStyle}> (return) </button>
+			</div>
+		{:else}
+			<!-- Show return button to go back to home page -->
+			<div id="return" class="nav-item">
+				<button type="button" onclick={handleReturnHome} style={textColorStyle}> (return) </button>
+			</div>
+		{/if}
 	{:else if isArticlePage}
 		<!-- Article page layout: only show return in third column -->
 		<div id="return" class="nav-item">
