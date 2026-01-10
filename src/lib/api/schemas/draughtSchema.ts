@@ -91,6 +91,7 @@ export interface Site {
 	sentences: string[];
 	mailingList: string;
 	subjectLine: string;
+	accessibilityStatement: ContentBlock[];
 	issues: Issue[];
 }
 
