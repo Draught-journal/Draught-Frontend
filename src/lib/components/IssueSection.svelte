@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import ArticleCard from './ArticleCard.svelte';
+	import LazyImage from '$lib/components/ui/LazyImage.svelte';
 	import { navStore } from '$lib/stores/navStore.js';
 	import { hoverImageStore } from '$lib/stores/hoverImageStore.js';
 	import { createIssueVisibilityHandle } from '$lib/stores/issueVisibilityRegistry.js';
@@ -66,15 +67,43 @@
 	let hasScrolledPast = $state(false);
 	// Track if thumbnails are currently visible
 	let isThumbnailsVisible = $state(true);
+	type CoverWithOptionalSrcsets = Article['cover'] & {
+		srcsets?: {
+			default?: string;
+			webp?: string;
+		};
+	};
+
+	const getThumbnailSizes = (coverSize: 'small' | 'medium' | 'large') => {
+		switch (coverSize) {
+			case 'small':
+				return '(max-width: 768px) min(70vw, 15rem), 15rem';
+			case 'large':
+				return '(max-width: 768px) min(90vw, 35rem), 35rem';
+			case 'medium':
+			default:
+				return '(max-width: 768px) min(85vw, 25rem), 25rem';
+		}
+	};
+
 	const images = $derived(
 		articles
 			.filter((article) => article.cover && article.cover.url)
-			.map((article) => ({
-				url: article.cover.url,
-				alt: article.cover.alt || `Cover image for ${article.title}`,
-				articleUrl: article.slug ? `/article/${article.slug}` : '#',
-				coverSize: article.scale || 'medium'
-			}))
+			.map((article) => {
+				const cover = article.cover as CoverWithOptionalSrcsets;
+				const coverSize = article.scale || 'medium';
+
+				return {
+					url: cover.url,
+					alt: cover.alt || `Cover image for ${article.title}`,
+					articleUrl: article.slug ? `/article/${article.slug}` : '#',
+					coverSize,
+					width: cover.width,
+					height: cover.height,
+					srcset: cover.srcset?.webp || cover.srcset?.default || cover.srcsets?.webp || cover.srcsets?.default || '',
+					sizes: getThumbnailSizes(coverSize)
+				};
+			})
 	);
 
 	const getSectionArticleIds = () => {
@@ -229,7 +258,20 @@
 				class:large={image.coverSize === 'large'}
 			>
 				<a href={image.articleUrl}>
-					<img class="thumbnail-image" src={image.url} alt={image.alt} />
+					<LazyImage
+						src={image.url}
+						alt={image.alt}
+						class="thumbnail-image"
+						width={image.width}
+						height={image.height}
+						objectFit="contain"
+						useSrcset={Boolean(image.srcset)}
+						srcset={image.srcset}
+						sizes={image.sizes}
+						rootMargin="1200px 0px"
+						fetchPriority="high"
+						decoding="async"
+					/>
 				</a>
 			</div>
 		{/each}

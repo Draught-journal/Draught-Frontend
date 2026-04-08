@@ -1,6 +1,6 @@
 /**
- * GICA API Adapter
- * Provides GICA-specific implementations and fallbacks
+ * Draught API Adapter
+ * Provides Draught-specific implementations and fallbacks
  */
 
 import { createDataManager } from '../core/dataManager';
