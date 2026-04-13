@@ -419,10 +419,6 @@
 		margin-bottom: 0;
 	}
 
-	.issues__wrapper:not(:last-child) {
-		margin-bottom: 100vh;
-	}
-
 	.issues__wrapper .issue__num {
 		width: 100%;
 		padding-block: calc(var(--space-16) * 4);
