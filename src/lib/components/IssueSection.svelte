@@ -26,12 +26,14 @@
 		issueColor = '#000000',
 		issueTitle = 'issue one',
 		grid = '{"columns":3,"rows":3,"selection":[]}',
-		articles = []
+		articles = [],
+		issueIndex = 0
 	}: {
 		issueColor?: string;
 		issueTitle?: string;
 		grid?: string;
 		articles?: Article[];
+		issueIndex?: number;
 	} = $props();
 
 	// Parse grid JSON if it's a string and extract selection array
@@ -53,9 +55,20 @@
 	// For demo purposes, create 8 issues if none provided
 	const displayIssues = $derived(articles.length > 0 ? articles : (Array(8).fill({}) as Article[]));
 
+	const issueVariantClass = $derived(() => {
+		const safeTitle = issueTitle
+			.toLowerCase()
+			.trim()
+			.replace(/[^a-z0-9]+/g, '-')
+			.replace(/(^-|-$)/g, '');
+
+		const issueNumber = `issue-${issueIndex + 1}`;
+		return safeTitle ? `${issueNumber}-${safeTitle}` : issueNumber;
+	});
+
 	let issueNumElement: HTMLDivElement;
 	let thumbnailsElement: HTMLDivElement;
-	let issuesWrapperElement: HTMLDivElement;
+	let issuesWrapperElement: HTMLElement;
 	let issueObserver: IntersectionObserver;
 	let thumbnailsObserver: IntersectionObserver;
 	let issuesWrapperObserver: IntersectionObserver;
@@ -67,6 +80,8 @@
 	let hasScrolledPast = $state(false);
 	// Track if thumbnails are currently visible
 	let isThumbnailsVisible = $state(true);
+	// Track if this section wrapper is currently visible in viewport
+	let isSectionVisible = $state(false);
 	type CoverWithOptionalSrcsets = Article['cover'] & {
 		srcsets?: {
 			default?: string;
@@ -145,9 +160,11 @@
 		// Function to update nav visibility based on both conditions
 		const updateNavVisibility = () => {
 			// Only show nav if:
-			// 1. Issue number is NOT in view AND we've scrolled past it at least once
-			// 2. AND thumbnails are NOT in view
-			const shouldShowNav = !issueNumInView && hasScrolledPast && !isThumbnailsVisible;
+			// 1. This section is currently visible in viewport
+			// 2. Issue number is NOT in view AND we've scrolled past it at least once
+			// 3. AND thumbnails are NOT in view
+			const shouldShowNav =
+				isSectionVisible && !issueNumInView && hasScrolledPast && !isThumbnailsVisible;
 
 			// Get the issue text from the element
 			const issueText = issueNumElement?.textContent?.trim() || '';
@@ -211,7 +228,7 @@
 					});
 				},
 				{
-					threshold: 0.28, // Consider visible when at least 28% is in view
+					threshold: 0.01, // Hide nav as soon as the next issue starts coming into view
 					rootMargin: '0px'
 				}
 			);
@@ -225,7 +242,9 @@
 				(entries) => {
 					entries.forEach((entry) => {
 						const isVisible = entry.isIntersecting && entry.intersectionRatio > 0;
+						isSectionVisible = isVisible;
 						issueVisibilityHandle.updateVisibility(isVisible);
+						updateNavVisibility();
 					});
 				},
 				{
@@ -252,7 +271,7 @@
 	});
 </script>
 
-<div class="thumbnails" bind:this={thumbnailsElement}>
+<div class={`thumbnails issue-variant--${issueVariantClass()}`} bind:this={thumbnailsElement}>
 	<!-- Lazy loaded thumbnails -->
 	{#if images && images.length > 0}
 		{#each images as image}
@@ -283,11 +302,15 @@
 	{/if}
 </div>
 
-<div class="issues__wrapper" style="--issue-color: {issueColor};" bind:this={issuesWrapperElement}>
+<section
+	class={`issues__wrapper issue-variant--${issueVariantClass()}`}
+	style="--issue-color: {issueColor};"
+	bind:this={issuesWrapperElement}
+>
 	<div class="issue__num" class:hidden={isNavVisible} bind:this={issueNumElement}>
 		<p>{issueTitle}</p>
 	</div>
-	<section class="articles">
+	<article class="articles">
 		{#if gridConfig() && gridConfig().length > 0}
 			{@const gridSelection = gridConfig()}
 			{@const maxRow = Math.max(...gridSelection.map((item: GridItem) => item.row))}
@@ -370,8 +393,8 @@
 				{/if}
 			{/each}
 		{/if}
-	</section>
-</div>
+	</article>
+</section>
 
 <style>
 	.thumbnails {
@@ -409,14 +432,15 @@
 		max-height: 100%;
 		object-fit: contain;
 	}
+
 	.issues__wrapper {
 		width: 100%;
 		color: var(--issue-color);
-		margin-bottom: 100vh;
+		margin-block-end: 100vh;
 	}
 
 	.issues__wrapper:last-of-type {
-		margin-bottom: 0;
+		margin-block-end: 0;
 	}
 
 	.issues__wrapper .issue__num {
