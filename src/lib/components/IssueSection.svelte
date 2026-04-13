@@ -412,6 +412,11 @@
 	.issues__wrapper {
 		width: 100%;
 		color: var(--issue-color);
+		margin-bottom: 100vh;
+	}
+
+	.issues__wrapper:last-child {
+		margin-bottom: 0;
 	}
 
 	.issues__wrapper:not(:last-child) {
