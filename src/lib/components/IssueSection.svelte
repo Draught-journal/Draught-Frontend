@@ -100,7 +100,12 @@
 					coverSize,
 					width: cover.width,
 					height: cover.height,
-					srcset: cover.srcset?.webp || cover.srcset?.default || cover.srcsets?.webp || cover.srcsets?.default || '',
+					srcset:
+						cover.srcset?.webp ||
+						cover.srcset?.default ||
+						cover.srcsets?.webp ||
+						cover.srcsets?.default ||
+						'',
 					sizes: getThumbnailSizes(coverSize)
 				};
 			})
@@ -409,6 +414,10 @@
 		color: var(--issue-color);
 	}
 
+	.issues__wrapper:not(:last-child) {
+		margin-bottom: 100vh;
+	}
+
 	.issues__wrapper .issue__num {
 		width: 100%;
 		padding-block: calc(var(--space-16) * 4);
@@ -488,7 +497,7 @@
 		/* Add more spacing between articles on mobile */
 		.articles {
 			gap: 2rem;
-			row-gap: 3.5rem;
+			row-gap: 0.5rem;
 		}
 
 		/* Make thumbnails smaller on mobile */
