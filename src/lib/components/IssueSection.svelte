@@ -415,7 +415,7 @@
 		margin-bottom: 100vh;
 	}
 
-	.issues__wrapper:last-child {
+	.issues__wrapper:last-of-type {
 		margin-bottom: 0;
 	}
 
