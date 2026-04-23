@@ -3,6 +3,7 @@
 	import {
 		isTextContentBlock,
 		isImageContentBlock,
+		isVideoContentBlock,
 		isQuoteContentBlock,
 		isLineContentBlock,
 		isHeadingBlock,
@@ -11,6 +12,7 @@
 
 	import TextBlock from './blocks/TextBlock.svelte';
 	import ImageBlock from './blocks/ImageBlock.svelte';
+	import VideoBlock from './blocks/VideoBlock.svelte';
 	import QuoteBlock from './blocks/QuoteBlock.svelte';
 	import UnknownBlock from './blocks/UnknownBlock.svelte';
 
@@ -26,6 +28,8 @@
 		<TextBlock {content} />
 	{:else if isImageContentBlock(content)}
 		<ImageBlock {content} />
+	{:else if isVideoContentBlock(content)}
+		<VideoBlock {content} />
 	{:else if isQuoteContentBlock(content)}
 		<QuoteBlock {content} />
 	{:else if isLineContentBlock(content)}

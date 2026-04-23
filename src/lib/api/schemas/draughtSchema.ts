@@ -25,6 +25,23 @@ export interface ImageContent {
 	crop: string;
 }
 
+export interface VideoContent {
+	location?: string;
+	video?: MediaAsset;
+	poster?: MediaAsset;
+	src?: string;
+	url?: string;
+	link?: string;
+	ratio?: string;
+	caption?: string;
+	autoplay?: boolean;
+	controls?: boolean;
+	loop?: boolean;
+	muted?: boolean;
+	playsinline?: boolean;
+	scale?: 'small' | 'medium' | 'large' | null;
+}
+
 export interface TextBlockValue {
 	value: string;
 }
@@ -58,6 +75,13 @@ export interface LineContentBlock {
 	content: null;
 }
 
+export interface VideoContentBlock {
+	id: string;
+	type: 'video';
+	isHidden?: boolean;
+	content: VideoContent;
+}
+
 export interface QuoteContentBlock {
 	id: string;
 	type: 'quote';
@@ -81,6 +105,7 @@ export type ContentBlock =
 	| TextContentBlock
 	| HeadingContentBlock
 	| ImageContentBlock
+	| VideoContentBlock
 	| QuoteContentBlock
 	| LineContentBlock
 	| ListContentBlock;
@@ -145,6 +170,10 @@ export function isTextContentBlock(block: ContentBlock): block is TextContentBlo
 
 export function isImageContentBlock(block: ContentBlock): block is ImageContentBlock {
 	return block.type === 'image';
+}
+
+export function isVideoContentBlock(block: ContentBlock): block is VideoContentBlock {
+	return block.type === 'video';
 }
 
 export function isQuoteContentBlock(block: ContentBlock): block is QuoteContentBlock {
