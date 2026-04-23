@@ -4,4 +4,5 @@ export { default as ImageBlock } from './ImageBlock.svelte';
 export { default as QuoteBlock } from './QuoteBlock.svelte';
 export { default as LineBlock } from './LineBlock.svelte';
 export { default as ListBlock } from './ListBlock.svelte';
+export { default as VideoBlock } from './VideoBlock.svelte';
 export { default as UnknownBlock } from './UnknownBlock.svelte';

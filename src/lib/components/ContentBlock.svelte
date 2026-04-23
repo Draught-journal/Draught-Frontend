@@ -15,7 +15,6 @@
 	import VideoBlock from './blocks/VideoBlock.svelte';
 	import QuoteBlock from './blocks/QuoteBlock.svelte';
 	import UnknownBlock from './blocks/UnknownBlock.svelte';
-
 	import LineBlock from './blocks/LineBlock.svelte';
 	import HeadingBlock from './blocks/HeadingBlock.svelte';
 	import ListBlock from './blocks/ListBlock.svelte';

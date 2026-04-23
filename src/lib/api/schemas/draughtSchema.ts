@@ -27,18 +27,19 @@ export interface ImageContent {
 
 export interface VideoContent {
 	location?: string;
-	video?: MediaAsset;
-	poster?: MediaAsset;
+	video?: string | MediaAsset | Array<string | MediaAsset>;
+	poster?: string | MediaAsset | Array<string | MediaAsset>;
 	src?: string;
 	url?: string;
 	link?: string;
 	ratio?: string;
 	caption?: string;
-	autoplay?: boolean;
-	controls?: boolean;
-	loop?: boolean;
-	muted?: boolean;
-	playsinline?: boolean;
+	autoplay?: boolean | string;
+	controls?: boolean | string;
+	loop?: boolean | string;
+	muted?: boolean | string;
+	playsinline?: boolean | string;
+	preload?: 'none' | 'metadata' | 'auto' | string;
 	scale?: 'small' | 'medium' | 'large' | null;
 }
 

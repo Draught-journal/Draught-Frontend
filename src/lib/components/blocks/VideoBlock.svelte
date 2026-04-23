@@ -3,20 +3,39 @@
 
 	const { content } = $props<{ content: VideoContentBlock }>();
 
-	const scale = $derived(content.content.video?.scale || content.content.scale || 'medium');
+	type VideoField = string | { url?: string | null } | Array<string | { url?: string | null }>;
+
+	const getMediaUrl = (field: VideoField | undefined, fallback = '') => {
+		if (!field) return fallback;
+
+		const value = Array.isArray(field) ? field[0] : field;
+		const url = typeof value === 'string' ? value : value?.url || '';
+
+		// `file://...` is a Kirby file reference, not a browser-loadable asset URL.
+		return url.startsWith('file://') ? '' : url;
+	};
+
+	const toBoolean = (value: boolean | string | undefined, fallback: boolean) => {
+		if (typeof value === 'boolean') return value;
+		if (typeof value === 'string') return value.toLowerCase() === 'true';
+		return fallback;
+	};
+
+	const scale = $derived(content.content.scale || 'medium');
 	const videoClass = $derived(`block-video scale-${scale}`);
 
 	const videoSrc = $derived(
-		content.content.video?.url || content.content.url || content.content.src || ''
+		getMediaUrl(content.content.video, content.content.url || content.content.src || '')
 	);
-	const posterSrc = $derived(content.content.poster?.url || '');
-	const caption = $derived(content.content.video?.caption || content.content.caption || '');
+	const posterSrc = $derived(getMediaUrl(content.content.poster));
+	const caption = $derived(content.content.caption || '');
 
-	const controls = $derived(content.content.controls ?? true);
-	const autoplay = $derived(content.content.autoplay ?? false);
-	const loop = $derived(content.content.loop ?? false);
-	const muted = $derived(content.content.muted ?? autoplay);
-	const playsinline = $derived(content.content.playsinline ?? true);
+	const controls = $derived(toBoolean(content.content.controls, true));
+	const autoplay = $derived(toBoolean(content.content.autoplay, false));
+	const loop = $derived(toBoolean(content.content.loop, false));
+	const muted = $derived(toBoolean(content.content.muted, autoplay));
+	const playsinline = $derived(toBoolean(content.content.playsinline, true));
+	const preload = $derived(content.content.preload || 'metadata');
 </script>
 
 {#if videoSrc}
@@ -34,7 +53,7 @@
 				{loop}
 				{muted}
 				{playsinline}
-				preload="metadata"
+				{preload}
 				style:aspect-ratio={content.content.ratio || undefined}
 			>
 				<track kind="captions" />
@@ -49,6 +68,13 @@
 		{#if content.content.link}
 			<a href={content.content.link} class="video-link"> View video </a>
 		{/if}
+	</div>
+{:else}
+	<div
+		class={`video-block ${scale === 'large' ? 'full-width-container' : ''}`}
+		data-block-id={content.id}
+	>
+		<p class="video-unavailable">Video source is unavailable.</p>
 	</div>
 {/if}
 
@@ -133,6 +159,14 @@
 		text-decoration: none;
 		font-size: 0.9rem;
 		transition: color 0.3s ease;
+	}
+
+	.video-unavailable {
+		width: min(100%, 80%);
+		margin: 0 auto;
+		padding: 1rem;
+		text-align: center;
+		border: 1px solid currentColor;
 	}
 
 	@media (max-width: 768px) {
