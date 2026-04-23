@@ -73,6 +73,7 @@
 	<div
 		class={`video-block ${scale === 'large' ? 'full-width-container' : ''}`}
 		data-block-id={content.id}
+		hidden
 	>
 		<p class="video-unavailable">Video source is unavailable.</p>
 	</div>
