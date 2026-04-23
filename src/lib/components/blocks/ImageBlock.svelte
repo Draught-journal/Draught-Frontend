@@ -58,7 +58,7 @@
 			{srcset}
 			{sizes}
 			objectFit={content.content.crop || 'cover'}
-			className={imageClass}
+			class={imageClass}
 		/>
 
 		{#if content.content.image.caption}

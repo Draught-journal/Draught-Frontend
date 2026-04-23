@@ -1,9 +1,10 @@
 <script lang="ts">
-	import type { VideoContentBlock } from '$lib/api/schemas/draughtSchema';
+	import type { MediaAsset } from '$lib/api/core/types';
+	import type { VideoAsset, VideoContentBlock } from '$lib/api/schemas/draughtSchema';
 
 	const { content } = $props<{ content: VideoContentBlock }>();
 
-	type VideoField = string | { url?: string | null } | Array<string | { url?: string | null }>;
+	type VideoField = string | MediaAsset | VideoAsset | Array<string | MediaAsset | VideoAsset>;
 
 	const getMediaUrl = (field: VideoField | undefined, fallback = '') => {
 		if (!field) return fallback;
@@ -21,21 +22,30 @@
 		return fallback;
 	};
 
-	const scale = $derived(content.content.scale || 'medium');
+	const getVideoObject = (field: VideoField | undefined): VideoAsset | null => {
+		if (!field || Array.isArray(field) || typeof field === 'string') return null;
+		return field;
+	};
+
+	const videoData = $derived(getVideoObject(content.content.video));
+
+	const scale = $derived(videoData?.scale || content.content.scale || 'medium');
 	const videoClass = $derived(`block-video scale-${scale}`);
 
 	const videoSrc = $derived(
 		getMediaUrl(content.content.video, content.content.url || content.content.src || '')
 	);
-	const posterSrc = $derived(getMediaUrl(content.content.poster));
-	const caption = $derived(content.content.caption || '');
+	const posterSrc = $derived(getMediaUrl(videoData?.poster || content.content.poster));
+	const caption = $derived(videoData?.caption || content.content.caption || '');
 
-	const controls = $derived(toBoolean(content.content.controls, true));
-	const autoplay = $derived(toBoolean(content.content.autoplay, false));
-	const loop = $derived(toBoolean(content.content.loop, false));
-	const muted = $derived(toBoolean(content.content.muted, autoplay));
-	const playsinline = $derived(toBoolean(content.content.playsinline, true));
-	const preload = $derived(content.content.preload || 'metadata');
+	const controls = $derived(toBoolean(videoData?.controls ?? content.content.controls, true));
+	const autoplay = $derived(toBoolean(videoData?.autoplay ?? content.content.autoplay, false));
+	const loop = $derived(toBoolean(videoData?.loop ?? content.content.loop, false));
+	const muted = $derived(toBoolean(videoData?.muted ?? content.content.muted, autoplay));
+	const playsinline = $derived(
+		toBoolean(videoData?.playsinline ?? content.content.playsinline, true)
+	);
+	const preload = $derived(videoData?.preload || content.content.preload || 'metadata');
 </script>
 
 {#if videoSrc}

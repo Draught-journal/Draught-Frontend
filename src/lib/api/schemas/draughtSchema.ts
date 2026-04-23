@@ -25,9 +25,21 @@ export interface ImageContent {
 	crop: string;
 }
 
+export type VideoAsset = Omit<MediaAsset, 'size'> & {
+	poster?: MediaAsset | null;
+	autoplay?: boolean | string;
+	controls?: boolean | string;
+	loop?: boolean | string;
+	muted?: boolean | string;
+	playsinline?: boolean | string;
+	preload?: 'none' | 'metadata' | 'auto' | string;
+	mime?: string;
+	size?: number | string | null;
+};
+
 export interface VideoContent {
 	location?: string;
-	video?: string | MediaAsset | Array<string | MediaAsset>;
+	video?: string | VideoAsset | Array<string | VideoAsset>;
 	poster?: string | MediaAsset | Array<string | MediaAsset>;
 	src?: string;
 	url?: string;
