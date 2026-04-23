@@ -10,11 +10,11 @@ import {
 	type Programmes,
 	type Exhibitions,
 	type Contributors,
-	type ContentBlock,
 	type MediaCover,
 	type CollectionType,
 	type DetailType
 } from './types';
+import type { ContentBlock } from '../schemas/draughtSchema';
 import { imageCache, procesContentBlockImages, cacheMediaImage } from '../core/imageCache';
 import { generalCache } from '../core/cache';
 import { batchProcess, deepClone } from '../core/utils';

@@ -28,6 +28,7 @@
 	};
 
 	const videoData = $derived(getVideoObject(content.content.video));
+	let showHoverControls = $state(false);
 
 	const scale = $derived(videoData?.scale || content.content.scale || 'medium');
 	const videoClass = $derived(`block-video scale-${scale}`);
@@ -38,7 +39,10 @@
 	const posterSrc = $derived(getMediaUrl(videoData?.poster || content.content.poster));
 	const caption = $derived(videoData?.caption || content.content.caption || '');
 
-	const controls = $derived(toBoolean(videoData?.controls ?? content.content.controls, true));
+	const configuredControls = $derived(
+		toBoolean(videoData?.controls ?? content.content.controls, true)
+	);
+	const controls = $derived(configuredControls || showHoverControls);
 	const autoplay = $derived(toBoolean(videoData?.autoplay ?? content.content.autoplay, false));
 	const loop = $derived(toBoolean(videoData?.loop ?? content.content.loop, false));
 	const muted = $derived(toBoolean(videoData?.muted ?? content.content.muted, autoplay));
@@ -58,6 +62,10 @@
 				class={videoClass}
 				src={videoSrc}
 				poster={posterSrc || undefined}
+				onmouseenter={() => (showHoverControls = true)}
+				onmouseleave={() => (showHoverControls = false)}
+				onfocus={() => (showHoverControls = true)}
+				onblur={() => (showHoverControls = false)}
 				{controls}
 				{autoplay}
 				{loop}

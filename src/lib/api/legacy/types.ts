@@ -3,6 +3,8 @@
  * Comprehensive type system with better discriminated unions and validation
  */
 
+import type { MediaAsset } from '../core/types';
+
 // Base interfaces
 export interface BaseEntity {
 	id: string;
@@ -16,21 +18,9 @@ export interface BaseCollection<T extends BaseEntity> {
 }
 
 // Media and content types
-export interface SrcSet {
-	[key: string]: string;
-	default: string;
-	webp: string;
-}
+export type SrcSet = Record<string, string>;
 
-export interface MediaCover {
-	url: string;
-	alt?: string | null;
-	caption?: string;
-	photographer?: string;
-	width?: number;
-	height?: number;
-	srcset?: SrcSet;
-}
+export type MediaCover = MediaAsset;
 
 export interface TextContent {
 	text: string;
@@ -54,7 +44,7 @@ export interface TextBlockValue {
 // Content blocks with discriminated unions
 export interface BaseContentBlock {
 	id: string;
-	isHidden: boolean;
+	isHidden?: boolean;
 }
 
 export interface TextContentBlock extends BaseContentBlock {
