@@ -1,7 +1,9 @@
-export const prerender = true;
 import { getSite } from '$lib/api/adapters/draughtAdapter';
+import type { LayoutServerLoad } from './$types';
 
-export async function load({ params }) {
+export const prerender = true;
+
+export const load: LayoutServerLoad = async ({ params }) => {
 	const site = await getSite();
 	const issues = Array.isArray(site?.issues) ? site.issues : site?.issues ? [site.issues] : [];
 
@@ -31,4 +33,4 @@ export async function load({ params }) {
 		// Signal that nav should be visible on article pages
 		showNav: true
 	};
-}
+};
