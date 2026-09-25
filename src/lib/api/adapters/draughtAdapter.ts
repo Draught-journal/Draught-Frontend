@@ -6,6 +6,7 @@
 import { createDataManager } from '../core/dataManager';
 import { draughtSchemaConfig } from '../schemas/draughtSchema';
 import type { FallbackFactory } from '../core/types';
+import { building } from '$app/environment';
 
 // GICA-specific fallback data
 const draughtFallbacks: Record<string, FallbackFactory> = {
@@ -38,7 +39,8 @@ const draughtFallbacks: Record<string, FallbackFactory> = {
  * Create a configured GICA data manager
  */
 export function createDraughtDataManager() {
-	return createDataManager(draughtSchemaConfig, draughtFallbacks);
+	// A failed CMS request must not silently publish an incomplete static site.
+	return createDataManager(draughtSchemaConfig, building ? undefined : draughtFallbacks);
 }
 
 /**

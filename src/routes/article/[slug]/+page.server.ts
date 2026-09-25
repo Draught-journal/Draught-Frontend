@@ -5,7 +5,14 @@ export const entries: EntryGenerator = async () => {
 	const site = await getSite();
 	const issues = Array.isArray(site?.issues) ? site.issues : site?.issues ? [site.issues] : [];
 
-	return issues.flatMap((issue) =>
-		(issue.articles ?? []).flatMap((article) => (article.slug ? [{ slug: article.slug }] : []))
+	const slugs = issues.flatMap((issue) =>
+		(issue.articles ?? []).map((article) => {
+			if (!article.slug || /[/?#]/.test(article.slug)) {
+				throw new Error(`Cannot prerender article with invalid slug: ${article.slug}`);
+			}
+			return article.slug;
+		})
 	);
+
+	return [...new Set(slugs)].map((slug) => ({ slug }));
 };
